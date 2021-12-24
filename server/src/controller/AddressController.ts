@@ -10,4 +10,8 @@ export default class AddressController {
         return this.addressRepository.find();
     }
 
+    async save(request: Request, response: Response, next: NextFunction) {
+        return this.addressRepository.save(request.body);
+    }
+
 }

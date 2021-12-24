@@ -26,4 +26,9 @@ export const Routes = [{
     route: "/addresses",
     controller: AddressController,
     action: "all"
+}, {
+    method: "post",
+    route: "/addresses",
+    controller: AddressController,
+    action: "save"
 }];

@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
 import { Address } from "./Address";
 
 export enum AccountType {
@@ -7,15 +7,20 @@ export enum AccountType {
     CLIENT = "client"
 }
 
-@Entity()
+@Entity('users')
 export class User {
 
     @PrimaryGeneratedColumn()
     id: number;
 
-    @JoinColumn()
-    @OneToOne(type => Address)
+    @Column({ type: "integer" })
     addressId: number;
+
+    @JoinColumn({ name: 'addressId' })
+    @OneToOne(type => Address, {
+        eager: true
+    })
+    address: Address;
 
     @Column()
     firstName: string;
