@@ -5,6 +5,8 @@ import * as bodyParser from "body-parser";
 import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { PORT } from "./config";
+import populateDatabaseWithTestData from "./populate";
+
 
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({ message: err.message });
@@ -33,6 +35,9 @@ createConnection().then(async connection => {
 
     // start express server
     app.listen(PORT);
+
+    // Populate database with example test data
+    // populateDatabaseWithTestData(connection);
 
     console.log(`Express server has started on port ${PORT}`);
 

@@ -20,6 +20,9 @@ export class Address {
     flatNumber?: number;
 
     @Column()
+    city: string;
+
+    @Column()
     country: string;
 
     @Column()

@@ -13,12 +13,10 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: "integer" })
-    addressId: number;
-
-    @JoinColumn({ name: 'addressId' })
+    @JoinColumn()
     @OneToOne(type => Address, {
-        eager: true
+        eager: true,
+        cascade: true
     })
     address: Address;
 
