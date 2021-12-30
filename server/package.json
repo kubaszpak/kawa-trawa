@@ -3,6 +3,7 @@
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "devDependencies": {
+      "@types/bcrypt": "^5.0.0",
       "@types/express": "^4.17.13",
       "@types/node": "^8.0.29",
       "nodemon": "^2.0.15",
@@ -10,6 +11,7 @@
       "typescript": "3.3.3333"
    },
    "dependencies": {
+      "bcrypt": "^5.0.1",
       "body-parser": "^1.18.1",
       "dotenv": "^10.0.0",
       "express": "^4.15.4",
