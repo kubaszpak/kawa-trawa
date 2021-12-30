@@ -15,7 +15,6 @@ export default class AuthController {
     }
 
     private async generateAccessToken(user: User) {
-
         return jwt.sign(
             await this.generatePayload(user),
             process.env.JWT_ACCESS_SECRET,
@@ -25,13 +24,13 @@ export default class AuthController {
     private async generateRefreshToken(user: User) {
         return jwt.sign(
             await this.generatePayload(user),
-            process.env.JWT_REFRESH_SECRET);
+            process.env.JWT_REFRESH_SECRET,
+            { expiresIn: process.env.JWT_REFRESH_EXPIRATION });
     }
 
     private async generatePayload(user: User) {
         return { email: user.email, id: user.id, firstName: user.firstName, lastName: user.lastName };
     }
-
 
     async register(request: Request, response: Response, next: NextFunction) {
         let user = request.body;
