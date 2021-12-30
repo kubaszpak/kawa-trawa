@@ -2,7 +2,7 @@ import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
 import { Complaint } from "../entity/Complaint";
 
-export default class UserController {
+export default class ComplaintController {
 
     private complaintRepository = getRepository(Complaint);
 
