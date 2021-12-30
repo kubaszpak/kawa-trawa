@@ -1,7 +1,9 @@
 import AddressController from "./controller/AddressController";
+import ComplaintController from "./controller/ComplaintController";
 import UserController from "./controller/UserController";
 
 export const Routes = [{
+    //users
     method: "get",
     route: "/users",
     controller: UserController,
@@ -22,6 +24,7 @@ export const Routes = [{
     controller: UserController,
     action: "remove"
 }, {
+    //adresses
     method: "get",
     route: "/addresses",
     controller: AddressController,
@@ -31,4 +34,26 @@ export const Routes = [{
     route: "/addresses",
     controller: AddressController,
     action: "save"
-}];
+},{
+    //complaints
+    method: "get",
+    route: "/complaints",
+    controller: ComplaintController,
+    action: "all"
+},{
+    method: "get",
+    route: "/complaints/:id",
+    controller: ComplaintController,
+    action: "one"
+},{
+    method: "post",
+    route: "/complaints",
+    controller: ComplaintController,
+    action: "save"
+},{
+    method: "delete",
+    route: "/complaints/:id",
+    controller: ComplaintController,
+    action: "remove"
+}
+];

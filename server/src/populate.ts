@@ -1,10 +1,12 @@
 import { Connection } from "typeorm"
 import { Address } from "./entity/Address";
+import { Complaint } from "./entity/Complaint";
 import { AccountType, User } from "./entity/User";
 
 async function populateDatabaseWithTestData(connection: Connection) {
     const addressRepository = connection.getRepository(Address)
     const userRepository = connection.getRepository(User)
+    const complaintRepository = connection.getRepository(Complaint)
 
     // cascade is true, so there is no need to save the address explicitly
     const address1 = addressRepository.create({
@@ -109,6 +111,12 @@ async function populateDatabaseWithTestData(connection: Connection) {
 
     userRepository.save(user5)
 
+    // cascade is true, so there is no need to save the address explicitly
+    const address5 = addressRepository.create({})
+
+    // const complaint1 = complaintRepository.create({
+
+    // })
 }
 
 export default populateDatabaseWithTestData;
