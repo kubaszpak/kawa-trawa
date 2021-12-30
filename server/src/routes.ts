@@ -1,5 +1,6 @@
 import AddressController from "./controller/AddressController";
 import UserController from "./controller/UserController";
+import AuthController from "./controller/AuthController";
 
 export const Routes = [{
     method: "get",
@@ -11,11 +12,6 @@ export const Routes = [{
     route: "/users/:id",
     controller: UserController,
     action: "one"
-}, {
-    method: "post",
-    route: "/users",
-    controller: UserController,
-    action: "save"
 }, {
     method: "delete",
     route: "/users/:id",
@@ -31,4 +27,9 @@ export const Routes = [{
     route: "/addresses",
     controller: AddressController,
     action: "save"
+}, {
+    method: "post",
+    route: "/auth/register",
+    controller: AuthController,
+    action: "register"
 }];
