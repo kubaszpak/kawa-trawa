@@ -43,7 +43,7 @@ export class Order {
 
     @ManyToMany(type => Product)
     @JoinTable()
-    products: Product[] //quantities??
+    products: Product[] 
 
     @Column()
     totalPrice: number

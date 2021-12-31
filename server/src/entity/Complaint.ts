@@ -10,15 +10,13 @@ export class Complaint {
 
     @JoinColumn()
     @OneToOne(type => Order, {
-        eager: true,
-        cascade: false //order already exists
+        eager: true
     })
     order: Order;
 
     @JoinColumn()
     @OneToOne(type => User, {
-        eager: true,
-        cascade: false //user already exists
+        eager: true
     })
     user: User;
 

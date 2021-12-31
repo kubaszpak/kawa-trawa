@@ -13,8 +13,8 @@ export class Discount {
     @JoinTable()
     categories: Category[];
     
-    // @OneToMany(() => Product, product => product.discount)
-    @OneToOne(type => Product) //onetomany?
+    @OneToMany(() => Product, product => product.discount)
+    // @OneToOne(type => Product) //onetomany?
     @JoinTable()
     products: Product[];   
 

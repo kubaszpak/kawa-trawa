@@ -165,6 +165,8 @@ async function populateDatabaseWithTestData(connection: Connection) {
 
     productRepository.save(productGreenTea)
 
+
+    //todo: produkty nie wyswietlaja kategorii czemu nie wiem
     const productBlackTea = productRepository.create({
         "categories": [grassCategory],
         "name": "Black tee 100g",
