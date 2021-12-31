@@ -2,6 +2,7 @@ import { Connection } from "typeorm"
 import { Address } from "./entity/Address";
 import { Category } from "./entity/Category";
 import { Complaint } from "./entity/Complaint";
+import { CouponCode } from "./entity/CouponCode";
 import { Order, OrderStatus } from "./entity/Order";
 import { Product } from "./entity/Product";
 import { AccountType, User } from "./entity/User";
@@ -13,6 +14,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
     const productRepository = connection.getRepository(Product)
     const orderRepository = connection.getRepository(Order)
     const complaintRepository = connection.getRepository(Complaint)
+    const couponCodeRepository = connection.getRepository(CouponCode)
 
     // cascade is true, so there is no need to save the address explicitly
     const address1 = addressRepository.create({
@@ -184,6 +186,23 @@ async function populateDatabaseWithTestData(connection: Connection) {
 
     orderRepository.save(order1)
     
+    const coupon1 = couponCodeRepository.create({
+        "DiscountCode": "2022",
+        "endDate": new Date('January 31, 2022 23:59:59'),
+        "DiscountSum": 50,
+        "LowerBoundSum": 100
+    })
+
+    const coupon2 = couponCodeRepository.create({
+        "DiscountCode": "2021",
+        "endDate": new Date('December 31, 2021 23:59:59'),
+        "DiscountSum": 1000,
+        "LowerBoundSum": 10000
+    })
+
+    couponCodeRepository.save(coupon1)
+    couponCodeRepository.save(coupon2)
+
     const complaint1 = complaintRepository.create({
 
     })
