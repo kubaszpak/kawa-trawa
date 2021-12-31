@@ -5,6 +5,7 @@ import CategoryController from "./controller/CategoryController";
 import ProductController from "./controller/ProductController";
 import OrderController from "./controller/OrderController";
 import CouponController from "./controller/CouponController";
+import DiscountController from "./controller/DiscountController";
 
 export const Routes = [{
     //users
@@ -142,6 +143,27 @@ export const Routes = [{
     method: "delete",
     route: "/couponcodes/:id",
     controller: CouponController,
+    action: "remove"
+},{
+    //discounts
+    method: "get",
+    route: "/discounts",
+    controller: DiscountController,
+    action: "all"
+},{
+    method: "get",
+    route: "/discounts/:id",
+    controller: DiscountController,
+    action: "one"
+},{
+    method: "post",
+    route: "/discounts",
+    controller: DiscountController,
+    action: "save"
+},{
+    method: "delete",
+    route: "/discounts/:id",
+    controller: DiscountController,
     action: "remove"
 }
 ];

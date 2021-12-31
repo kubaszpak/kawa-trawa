@@ -3,6 +3,7 @@ import { Address } from "./entity/Address";
 import { Category } from "./entity/Category";
 import { Complaint } from "./entity/Complaint";
 import { CouponCode } from "./entity/CouponCode";
+import { Discount } from "./entity/Discount";
 import { Order, OrderStatus } from "./entity/Order";
 import { Product } from "./entity/Product";
 import { AccountType, User } from "./entity/User";
@@ -15,6 +16,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
     const orderRepository = connection.getRepository(Order)
     const complaintRepository = connection.getRepository(Complaint)
     const couponCodeRepository = connection.getRepository(CouponCode)
+    const discountRepository = connection.getRepository(Discount)
 
     // cascade is true, so there is no need to save the address explicitly
     const address1 = addressRepository.create({
@@ -139,7 +141,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
 
     categoryRepository.save(coffeeCategory)
 
-    const product1 = productRepository.create({
+    const productMintTea = productRepository.create({
         "categories": [grassCategory],
         "name": "Mint tee 30 teabags",
         "description": "Mentol zawarty w liściach tej rośliny zwiększa produkcję soków żołądkowych oraz ogranicza wydzielanie żółci, tym samym skutecznie a zarazem naturalnie łagodząc wzdęcia, kolki czy skurcze.",
@@ -149,9 +151,9 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "visibility": true
     })
 
-    productRepository.save(product1)
+    productRepository.save(productMintTea)
 
-    const product2 = productRepository.create({
+    const productGreenTea = productRepository.create({
         "categories": [grassCategory],
         "name": "Green tee 100g",
         "description": "Napój przyrządzany wyłącznie z liści herbaty chińskiej (Camellia sinensis), które poddane zostały w czasie przetwarzania jedynie minimalnej oksydacji.",
@@ -161,9 +163,9 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "visibility": true
     })
 
-    productRepository.save(product2)
+    productRepository.save(productGreenTea)
 
-    const product3 = productRepository.create({
+    const productBlackTea = productRepository.create({
         "categories": [grassCategory],
         "name": "Black tee 100g",
         "description": "Zawiera dużo teiny, przez co działa pobudzająco. Ma działanie antybakteryjne w układzie pokarmowym i wzmaga wydzielanie soków trawiennych. Zmniejsza ciśnienie krwi, przez co również wystąpienie chorób serca.",
@@ -173,14 +175,14 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "visibility": true
     })
 
-    productRepository.save(product3)
+    productRepository.save(productBlackTea)
 
     const order1 = orderRepository.create({
         "address": address1,
         "user": user1,
         "status": OrderStatus.PAID,
-        "products": [product1, product2],
-        "totalPrice": product1.price + product2.price,
+        "products": [productMintTea, productGreenTea],
+        "totalPrice": productMintTea.price + productGreenTea.price,
         "date": new Date()
     })
 
@@ -206,6 +208,25 @@ async function populateDatabaseWithTestData(connection: Connection) {
     const complaint1 = complaintRepository.create({
 
     })
+
+    const discount1 = discountRepository.create({
+        "categories": [coffeeCategory, grassCategory],
+        "products": [],
+        "discountPercentage": 20,
+        "name": "everything -20%",
+        "endDate": new Date('January 31, 2022 23:59:59'),
+    })
+
+    const discount2 = discountRepository.create({
+        "categories": [],
+        "products": [productMintTea],
+        "discountPercentage": 50,
+        "name": "Mint Tea -50% to end of week",
+        "endDate": new Date('January 31, 2022 23:59:59'),
+    })
+
+    discountRepository.save(discount1)
+    discountRepository.save(discount2)
 }
 
 export default populateDatabaseWithTestData;
