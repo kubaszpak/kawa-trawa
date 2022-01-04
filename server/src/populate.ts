@@ -1,22 +1,22 @@
 import { Connection } from "typeorm"
 import { Address } from "./entity/Address";
 import { Category } from "./entity/Category";
-import { Complaint } from "./entity/Complaint";
-import { CouponCode } from "./entity/CouponCode";
+// import { Complaint } from "./entity/Complaint";
+// import { CouponCode } from "./entity/CouponCode";
 import { Discount } from "./entity/Discount";
-import { Order, OrderStatus } from "./entity/Order";
+import { Order } from "./entity/Order";
 import { Product } from "./entity/Product";
 import { AccountType, User } from "./entity/User";
 
 async function populateDatabaseWithTestData(connection: Connection) {
     const addressRepository = connection.getRepository(Address)
     const userRepository = connection.getRepository(User)
-    const categoryRepository = connection.getRepository(Category)
     const productRepository = connection.getRepository(Product)
     const orderRepository = connection.getRepository(Order)
-    const complaintRepository = connection.getRepository(Complaint)
-    const couponCodeRepository = connection.getRepository(CouponCode)
+    const categoryRepository = connection.getRepository(Category)
     const discountRepository = connection.getRepository(Discount)
+    // const complaintRepository = connection.getRepository(Complaint)
+    // const couponCodeRepository = connection.getRepository(CouponCode)
 
     // cascade is true, so there is no need to save the address explicitly
     const address1 = addressRepository.create({
@@ -27,8 +27,10 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "country": "Poland"
     })
 
+    await addressRepository.save(address1)
+
     // Normal user
-    const user1 = userRepository.create({
+    let user1 = userRepository.create({
         "firstName": "John",
         "lastName": "Wick",
         "email": "email1@email.com",
@@ -37,7 +39,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "address": address1
     })
 
-    userRepository.save(user1)
+    await userRepository.save(user1)
 
     // cascade is true, so there is no need to save the address explicitly
     // User with no address
@@ -49,7 +51,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "password": "dummy",
     })
 
-    userRepository.save(user2)
+    await userRepository.save(user2)
 
     // cascade is true, so there is no need to save the address explicitly
     const address2 = addressRepository.create({
@@ -71,7 +73,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "address": address2
     })
 
-    userRepository.save(user3)
+    await userRepository.save(user3)
 
     // cascade is true, so there is no need to save the address explicitly
     const address3 = addressRepository.create({
@@ -97,7 +99,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "accountType": AccountType.EMPLOYEE
     })
 
-    userRepository.save(user4)
+    await userRepository.save(user4)
 
     // cascade is true, so there is no need to save the address explicitly
     const address4 = addressRepository.create({
@@ -119,10 +121,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "accountType": AccountType.ADMIN
     })
 
-    userRepository.save(user5)
-
-    // cascade is true, so there is no need to save the address explicitly
-    const address5 = addressRepository.create({})
+    await userRepository.save(user5)
 
 
     const grassCategory = categoryRepository.create({
@@ -131,7 +130,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "pathToImage": "images/grass/grass.png"
     })
 
-    categoryRepository.save(grassCategory)
+    await categoryRepository.save(grassCategory)
 
     const coffeeCategory = categoryRepository.create({
         "name": "Coffee",
@@ -139,7 +138,27 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "pathToImage": "images/coffee/coffee.png"
     })
 
-    categoryRepository.save(coffeeCategory)
+    await categoryRepository.save(coffeeCategory)
+
+    const subCoffeeCategory1 = categoryRepository.create({
+        "name": "sub Coffee 1",
+        "description": "Heals nothing 1",
+        "pathToImage": "images/coffee/subcoffee1.png",
+        "parent": coffeeCategory
+    })
+
+    await categoryRepository.save(subCoffeeCategory1)
+
+    const subCoffeeCategory2 = categoryRepository.create({
+        "name": "sub Coffee 2",
+        "description": "Heals nothing 2",
+        "pathToImage": "images/coffee/subcoffee2.png",
+        "parent": coffeeCategory
+    })
+
+    await categoryRepository.save(subCoffeeCategory2)
+
+
 
     const productMintTea = productRepository.create({
         "categories": [grassCategory],
@@ -151,10 +170,10 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "visibility": true
     })
 
-    productRepository.save(productMintTea)
+    await productRepository.save(productMintTea)
 
     const productGreenTea = productRepository.create({
-        "categories": [grassCategory],
+        "categories": [grassCategory, subCoffeeCategory1],
         "name": "Green tee 100g",
         "description": "Napój przyrządzany wyłącznie z liści herbaty chińskiej (Camellia sinensis), które poddane zostały w czasie przetwarzania jedynie minimalnej oksydacji.",
         "pathToImage": "images/grass/greenTee.png",
@@ -163,10 +182,9 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "visibility": true
     })
 
-    productRepository.save(productGreenTea)
+    await productRepository.save(productGreenTea)
 
 
-    //todo: produkty nie wyswietlaja kategorii czemu nie wiem
     const productBlackTea = productRepository.create({
         "categories": [grassCategory],
         "name": "Black tee 100g",
@@ -177,39 +195,45 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "visibility": true
     })
 
-    productRepository.save(productBlackTea)
+    await productRepository.save(productBlackTea)
 
     const order1 = orderRepository.create({
         "address": address1,
         "user": user1,
-        "status": OrderStatus.PAID,
         "products": [productMintTea, productGreenTea],
-        "totalPrice": productMintTea.price + productGreenTea.price,
+        "totalPrice": 20,
         "date": new Date()
     })
 
-    orderRepository.save(order1)
-    
-    const coupon1 = couponCodeRepository.create({
-        "DiscountCode": "2022",
-        "endDate": new Date('January 31, 2022 23:59:59'),
-        "DiscountSum": 50,
-        "LowerBoundSum": 100
+    await orderRepository.save(order1)
+
+    const order2 = orderRepository.create({
+        "address": address3,
+        "user": user4,
+        "products": [productBlackTea, productBlackTea],
+        "totalPrice": 40,
+        "date": new Date()
     })
 
-    const coupon2 = couponCodeRepository.create({
-        "DiscountCode": "2021",
-        "endDate": new Date('December 31, 2021 23:59:59'),
-        "DiscountSum": 1000,
-        "LowerBoundSum": 10000
-    })
+    await orderRepository.save(order2)
 
-    couponCodeRepository.save(coupon1)
-    couponCodeRepository.save(coupon2)
+    // const coupon1 = couponCodeRepository.create({
+    //     "DiscountCode": "2022",
+    //     "endDate": new Date('January 31, 2022 23:59:59'),
+    //     "DiscountSum": 50,
+    //     "LowerBoundSum": 100
+    // })
 
-    const complaint1 = complaintRepository.create({
+    // const coupon2 = couponCodeRepository.create({
+    //     "DiscountCode": "2021",
+    //     "endDate": new Date('December 31, 2021 23:59:59'),
+    //     "DiscountSum": 1000,
+    //     "LowerBoundSum": 10000
+    // })
 
-    })
+    // couponCodeRepository.save(coupon1)
+    // couponCodeRepository.save(coupon2)
+
 
     const discount1 = discountRepository.create({
         "categories": [coffeeCategory, grassCategory],
@@ -219,6 +243,8 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "endDate": new Date('January 31, 2022 23:59:59'),
     })
 
+    await discountRepository.save(discount1)
+
     const discount2 = discountRepository.create({
         "categories": [],
         "products": [productMintTea],
@@ -227,8 +253,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "endDate": new Date('January 31, 2022 23:59:59'),
     })
 
-    discountRepository.save(discount1)
-    discountRepository.save(discount2)
+    await discountRepository.save(discount2)
 }
 
 export default populateDatabaseWithTestData;

@@ -6,6 +6,9 @@ import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { PORT } from "./config";
 import populateDatabaseWithTestData from "./populate";
+import { Product } from "./entity/Product";
+import { Category } from "./entity/Category";
+import { Discount } from "./entity/Discount";
 
 
 function handleError(err, req, res, next) {
@@ -37,7 +40,7 @@ createConnection().then(async connection => {
     app.listen(PORT);
 
     // Populate database with example test data
-    // populateDatabaseWithTestData(connection);
+    populateDatabaseWithTestData(connection);
 
     console.log(`Express server has started on port ${PORT}`);
 

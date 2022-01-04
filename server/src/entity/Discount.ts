@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, OneToOne, ManyToMany, JoinTable, OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { Category } from "./Category";
 import { Product } from "./Product";
 
@@ -8,15 +8,15 @@ export class Discount {
     @PrimaryGeneratedColumn()
     id: number;
 
-    // @OneToMany(() => Category, category => category.discount)
-    @OneToOne(type => Category) //onetomany?
-    @JoinTable()
+    @OneToMany(type => Category, category => category.discount, {
+        eager: true
+    })
     categories: Category[];
-    
-    @OneToMany(() => Product, product => product.discount)
-    // @OneToOne(type => Product) //onetomany?
-    @JoinTable()
-    products: Product[];   
+
+    @OneToMany(type => Product, product => product.discount, {
+        eager: true
+    })
+    products: Product[];
 
     @Column()
     discountPercentage: number;
