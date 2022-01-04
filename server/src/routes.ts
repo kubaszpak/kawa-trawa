@@ -139,22 +139,22 @@ export const Routes = [{
     action: "remove"
 }, {
     method: "get",
-    route: "/couponcodes",
+    route: "/coupons",
     controller: CouponController,
     action: "all"
 }, {
     method: "get",
-    route: "/couponcodes/:id",
+    route: "/coupons/:id",
     controller: CouponController,
     action: "one"
 }, {
     method: "post",
-    route: "/couponcodes",
+    route: "/coupons",
     controller: CouponController,
     action: "save"
 }, {
     method: "delete",
-    route: "/couponcodes/:id",
+    route: "/coupons/:id",
     controller: CouponController,
     action: "remove"
 }];

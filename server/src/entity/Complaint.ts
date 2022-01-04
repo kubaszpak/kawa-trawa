@@ -1,6 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, OneToOne, ManyToOne } from "typeorm";
 import { Order } from "./Order";
 import { User } from "./User";
+
+export enum ComplaintStatus {
+    RECEIVED = "received",
+    CANCELLED = "cancelled",
+    REFUNDED = "refunded"
+}
 
 @Entity('complaints')
 export class Complaint {
@@ -10,13 +16,14 @@ export class Complaint {
 
     @JoinColumn()
     @OneToOne(type => Order, {
-        eager: true
+        eager: true,
+        nullable: false
     })
     order: Order;
 
-    @JoinColumn()
-    @OneToOne(type => User, {
-        eager: true
+    @ManyToOne(type => User, {
+        eager: true,
+        nullable: false
     })
     user: User;
 
@@ -27,7 +34,9 @@ export class Complaint {
     date: Date;
 
     @Column({
-        default: null
+        type: "enum",
+        enum: ComplaintStatus,
+        default: ComplaintStatus.RECEIVED
     })
-    status: string;
+    status?: ComplaintStatus;
 }

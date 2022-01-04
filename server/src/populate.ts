@@ -1,7 +1,7 @@
 import { Connection } from "typeorm"
 import { Address } from "./entity/Address";
 import { Category } from "./entity/Category";
-// import { Complaint } from "./entity/Complaint";
+import { Complaint, ComplaintStatus } from "./entity/Complaint";
 import { CouponCode } from "./entity/CouponCode";
 import { Discount } from "./entity/Discount";
 import { Order } from "./entity/Order";
@@ -15,7 +15,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
     const orderRepository = connection.getRepository(Order)
     const categoryRepository = connection.getRepository(Category)
     const discountRepository = connection.getRepository(Discount)
-    // const complaintRepository = connection.getRepository(Complaint)
+    const complaintRepository = connection.getRepository(Complaint)
     const couponCodeRepository = connection.getRepository(CouponCode)
 
     // cascade is true, so there is no need to save the address explicitly
@@ -254,6 +254,64 @@ async function populateDatabaseWithTestData(connection: Connection) {
     })
 
     await discountRepository.save(discount2)
+
+    const complaint1 = complaintRepository.create({
+        "date": new Date(),
+        "user": user1,
+        "order": order1,
+        "description": "Słaba kawa"
+    })
+
+    await complaintRepository.save(complaint1)
+
+    // try {
+    //     const complaintNoOrder = complaintRepository.create({
+    //         "date": new Date(),
+    //         "user": user1,
+    //         "description": "Słaba kawa",
+    //         "status": ComplaintStatus.CANCELLED
+    //     })
+
+    //     await complaintRepository.save(complaintNoOrder)
+    // } catch (error) {
+    //     console.log("Correct complaintNoOrder: Complaint without an order should not be possible to create!")
+    // }
+
+    // try {
+    //     const complaintNoUser = complaintRepository.create({
+    //         "date": new Date(),
+    //         "order": order2,
+    //         "description": "Słaba kawa"
+    //     })
+
+    //     await complaintRepository.save(complaintNoUser)
+    // } catch (error) {
+    //     console.log("Correct complaintNoUser: Complaint without an user should not be possible to create!")
+    // }
+
+    // try {
+    //     const secondComplaintForOrder1 = complaintRepository.create({
+    //         "date": new Date(),
+    //         "user": user1,
+    //         "order": order1,
+    //         "description": "Słaba kawa"
+    //     })
+
+    //     await complaintRepository.save(secondComplaintForOrder1)
+    // } catch (error) {
+    //     console.log("Correct secondComplaintForOrder1: There can be only one complaint for each order!")
+    // }
+
+    // one users can make as many complaints as they want, as long as each complaint is about a different order
+    const secondComplaintForUser1 = complaintRepository.create({
+        "date": new Date(),
+        "user": user1,
+        "order": order2,
+        "description": "Słaba kawa",
+        "status": ComplaintStatus.RECEIVED
+    })
+
+    await complaintRepository.save(secondComplaintForUser1)
 }
 
 export default populateDatabaseWithTestData;
