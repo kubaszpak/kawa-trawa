@@ -6,8 +6,7 @@ import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { PORT } from "./config";
 import populateDatabaseWithTestData from "./populate";
-import helmet from "helmet";
-import morgan from 'morgan';
+import * as helmet from "helmet";
 
 
 function handleError(err, req, res, next) {
@@ -18,6 +17,10 @@ createConnection().then(async connection => {
 
     // create express app
     const app = express();
+
+    // @ts-ignore
+    app.use(helmet());
+
     app.use(bodyParser.json());
 
     // register express routes from defined application routes
@@ -34,8 +37,6 @@ createConnection().then(async connection => {
 
     // setup express app here
     app.use(handleError);
-    app.use(helmet());
-    app.use(morgan('tiny'));
 
     // start express server
     app.listen(PORT);
