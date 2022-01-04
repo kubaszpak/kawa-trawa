@@ -6,9 +6,6 @@ import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { PORT } from "./config";
 import populateDatabaseWithTestData from "./populate";
-import { Product } from "./entity/Product";
-import { Category } from "./entity/Category";
-import { Discount } from "./entity/Discount";
 
 
 function handleError(err, req, res, next) {

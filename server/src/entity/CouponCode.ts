@@ -1,20 +1,22 @@
-// import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
 
-// @Entity('couponcodes')
-// export class CouponCode {
+@Entity('coupons')
+export class CouponCode {
 
-//     @PrimaryGeneratedColumn()
-//     id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-//     @Column()
-//     DiscountCode: string;
+    @Column()
+    discountCode: string;
 
-//     @Column()
-//     endDate: Date;
+    @Column()
+    endDate: Date;
 
-//     @Column()
-//     DiscountSum: number;
+    @Column()
+    discountSum: number;
 
-//     @Column()
-//     LowerBoundSum: number;
-// }
+    @Column({
+        default: 0
+    })
+    lowerBoundSum?: number;
+}

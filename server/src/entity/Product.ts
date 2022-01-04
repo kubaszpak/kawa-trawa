@@ -29,6 +29,8 @@ export class Product {
     @Column()
     quantity: number;
 
-    @Column()
-    visibility: boolean;
+    @Column({
+        default: true
+    })
+    visibility?: boolean;
 }
