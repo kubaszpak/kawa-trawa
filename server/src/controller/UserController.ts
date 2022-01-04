@@ -14,10 +14,6 @@ export default class UserController {
         return this.userRepository.findOne(request.params.id);
     }
 
-    async save(request: Request, response: Response, next: NextFunction) {
-        return this.userRepository.save(request.body);
-    }
-
     async remove(request: Request, response: Response, next: NextFunction) {
         const userToRemove = await this.userRepository.findOne(request.params.id);
         if (!userToRemove) throw Error('User with given id not found in the database')
