@@ -24,6 +24,8 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
         jwt.verify(token, secret);
         let { payload: { id, firstName, lastName } } = jwt.decode(token, { complete: true });
 
+        (req as any).userId = id;
+
         if (!await getRepository(User).findOne({ where: { id: id } })) {
             return res.status(401).send("Unauthorized user");
         }

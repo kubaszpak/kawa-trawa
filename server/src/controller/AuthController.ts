@@ -4,6 +4,7 @@ import { User } from "../entity/User";
 import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken"
 import { LoginDto } from "../dto/loginDto";
+import { RefreshTokenDto } from "../dto/refreshTokenDto";
 
 export default class AuthController {
 
@@ -69,6 +70,13 @@ export default class AuthController {
 
     async refresh(request: Request, response: Response, next: NextFunction) {
 
+        const user = await this.userRepository.findOne({ where: { id: (request as any).userId } });
+
+        return new RefreshTokenDto(
+            await this.generateRefreshToken(user),
+            await this.generateAccessToken(user),
+            process.env.JWT_ACCESS_EXPIRATION,
+            user);
     }
 
 }

@@ -43,7 +43,7 @@ export const Routes = [{
     method: "post",
     route: "/auth/login",
     controller: AuthController,
-    middleware: [accessTokenMiddleware],
+    middleware: [],
     action: "login"
 }, {
     method: "post",
