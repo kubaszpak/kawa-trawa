@@ -7,6 +7,7 @@
       "@types/express": "^4.17.13",
       "@types/jsonwebtoken": "^8.5.6",
       "@types/node": "^8.0.29",
+      "@types/nodemailer": "^6.4.4",
       "nodemon": "^2.0.15",
       "ts-node": "3.3.0",
       "typescript": "3.3.3333"
@@ -16,8 +17,9 @@
       "body-parser": "^1.18.1",
       "dotenv": "^10.0.0",
       "express": "^4.15.4",
-      "jsonwebtoken": "^8.5.1",
       "helmet": "^5.0.1",
+      "jsonwebtoken": "^8.5.1",
+      "nodemailer": "^6.7.2",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.10",
       "typeorm": "0.2.41"

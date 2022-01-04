@@ -7,7 +7,7 @@ import { Routes } from "./routes";
 import { PORT } from "./config";
 import populateDatabaseWithTestData from "./populate";
 import * as helmet from "helmet";
-
+import { setupEmail } from "./email/setupEmail";
 
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({ message: err.message });
@@ -17,6 +17,8 @@ createConnection().then(async connection => {
 
     // create express app
     const app = express();
+
+    setupEmail();
 
     // @ts-ignore
     app.use(helmet());
