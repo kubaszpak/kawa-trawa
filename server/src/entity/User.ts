@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from "typeorm";
 import { Address } from "./Address";
+import { Order } from "./Order";
 
 export enum AccountType {
     ADMIN = "admin",
@@ -58,4 +59,8 @@ export class User {
         default: false
     })
     banned?: boolean;
+
+    @OneToMany(type => Order, order => order.user)
+    orders: Order[];
+
 }

@@ -6,6 +6,8 @@ import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { PORT } from "./config";
 import populateDatabaseWithTestData from "./populate";
+import helmet from "helmet";
+import morgan from 'morgan';
 
 
 function handleError(err, req, res, next) {
@@ -32,12 +34,14 @@ createConnection().then(async connection => {
 
     // setup express app here
     app.use(handleError);
+    app.use(helmet());
+    app.use(morgan('tiny'));
 
     // start express server
     app.listen(PORT);
 
     // Populate database with example test data
-    // populateDatabaseWithTestData(connection);
+    //populateDatabaseWithTestData(connection);
 
     console.log(`Express server has started on port ${PORT}`);
 

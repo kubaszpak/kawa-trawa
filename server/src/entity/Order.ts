@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
+import { Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, OneToMany, ManyToOne } from "typeorm";
 import { Address } from "./Address";
 import { Product } from "./Product";
 import { User } from "./User";
@@ -11,23 +11,20 @@ export enum OrderStatus {
     RETURNED = "returned"
 }
 
-
 @Entity('orders')
 export class Order {
 
     @PrimaryGeneratedColumn()
     id: number
 
-    @JoinColumn()
-    @OneToOne(type => Address, {
+    @ManyToOne(type => Address, address => address.orders, {
         eager: true,
         cascade: true,
         nullable: false
     })
     address: Address
 
-    @JoinColumn()
-    @OneToOne(type => User, {
+    @ManyToOne(type => User, user => user.orders, {
         eager: true,
         cascade: true,
         nullable: false
@@ -39,9 +36,11 @@ export class Order {
         enum: OrderStatus,
         default: OrderStatus.PLACED
     })
-    status: OrderStatus
+    status?: OrderStatus
 
-    @ManyToMany(type => Product)
+    @ManyToMany(type => Product, {
+        eager: true
+    })
     @JoinTable()
     products: Product[]
 
