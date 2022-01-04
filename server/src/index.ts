@@ -37,7 +37,7 @@ createConnection().then(async connection => {
     app.listen(PORT);
 
     // Populate database with example test data
-    populateDatabaseWithTestData(connection);
+    //populateDatabaseWithTestData(connection);
 
     console.log(`Express server has started on port ${PORT}`);
 
