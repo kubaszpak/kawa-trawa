@@ -14,8 +14,6 @@ export const setupEmail = async () => {
         }
     };
 
-    console.log(smtpConfig);
-
     mailTransport = createTransport(smtpConfig);
     const success = await mailTransport.verify();
     if (!success) {

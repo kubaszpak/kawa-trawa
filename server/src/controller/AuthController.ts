@@ -2,9 +2,11 @@ import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
 import { User } from "../entity/User";
 import * as bcrypt from "bcrypt"
-import * as jwt from "jsonwebtoken"
 import { LoginDto } from "../dto/loginDto";
 import { RefreshTokenDto } from "../dto/refreshTokenDto";
+import { generateAccessToken, generateRefreshToken, generateRegistrationToken } from "../authentication/tokens";
+import { sendEmail } from "../email/setupEmail";
+import { confirmRegistrationEmailTemplate } from "../email/template";
 
 export default class AuthController {
 
@@ -13,24 +15,6 @@ export default class AuthController {
     private async hashPassword(password: string) {
         const salt = await bcrypt.genSalt(10);
         return bcrypt.hash(password, salt);
-    }
-
-    private async generateAccessToken(user: User) {
-        return jwt.sign(
-            await this.generatePayload(user),
-            process.env.JWT_ACCESS_SECRET,
-            { expiresIn: process.env.JWT_ACCESS_EXPIRATION });
-    }
-
-    private async generateRefreshToken(user: User) {
-        return jwt.sign(
-            await this.generatePayload(user),
-            process.env.JWT_REFRESH_SECRET,
-            { expiresIn: process.env.JWT_REFRESH_EXPIRATION });
-    }
-
-    private async generatePayload(user: User) {
-        return { email: user.email, id: user.id, firstName: user.firstName, lastName: user.lastName };
     }
 
     async register(request: Request, response: Response, next: NextFunction) {
@@ -43,6 +27,10 @@ export default class AuthController {
         }
 
         user.password = await this.hashPassword(user.password);
+
+        const registrationToken = await generateRegistrationToken(user)
+        sendEmail("Potwierdź rejestrację do 'Kawa i Trawa'", confirmRegistrationEmailTemplate, [user.email], { user, registrationToken })
+        user.confirmed = false;
 
         this.userRepository.save(user);
         response.status(200).send(user);
@@ -62,8 +50,8 @@ export default class AuthController {
         }
 
         return new LoginDto(
-            await this.generateRefreshToken(user),
-            await this.generateAccessToken(user),
+            await generateRefreshToken(user),
+            await generateAccessToken(user),
             process.env.JWT_ACCESS_EXPIRATION,
             user);
     }
@@ -73,8 +61,8 @@ export default class AuthController {
         const user = await this.userRepository.findOne({ where: { id: (request as any).userId } });
 
         return new RefreshTokenDto(
-            await this.generateRefreshToken(user),
-            await this.generateAccessToken(user),
+            await generateRefreshToken(user),
+            await generateAccessToken(user),
             process.env.JWT_ACCESS_EXPIRATION,
             user);
     }
