@@ -6,7 +6,7 @@
    "password": "postgres",
    "database": "postgres",
    "synchronize": true,
-   "logging": ["query", "error"],
+   "logging": false,
    "entities": [
       "src/entity/**/*.ts"
    ],

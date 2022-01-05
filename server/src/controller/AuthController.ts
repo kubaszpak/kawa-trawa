@@ -1,6 +1,6 @@
 import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
-import { User } from "../entity/User";
+import { AccountType, User } from "../entity/User";
 import * as bcrypt from "bcrypt"
 import { LoginDto } from "../dto/loginDto";
 import { RefreshTokenDto } from "../dto/refreshTokenDto";
@@ -45,14 +45,22 @@ export default class AuthController {
             return;
         }
 
-        if (!user.confirmed) {
+        /*if (!user.confirmed) {
             response.status(400).send({ error: "The account has not been confirmed." });
             return;
-        }
+        }*/
 
-        const passwordCorrect = await bcrypt.compare(request.body.password, user.password);
+        if (user.banned)
+            return response.status(403).send({ error: "User is baned" });
+
+        //populated users have unsalted passwords!
+        let passwordCorrect;
+        if (user.accountType == AccountType.CLIENT)
+            passwordCorrect = await bcrypt.compare(request.body.password, user.password);
+        else
+            passwordCorrect = request.body.password == user.password;
         if (!passwordCorrect) {
-            response.status(400).send({ error: "Invalid email or password." });
+            response.status(401).send({ error: "Invalid email or password" });
             return;
         }
 

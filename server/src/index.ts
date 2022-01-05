@@ -8,6 +8,8 @@ import { PORT } from "./config";
 import populateDatabaseWithTestData from "./populate";
 import * as helmet from "helmet";
 import { setupEmail } from "./email/setupEmail";
+import * as morgan from "morgan";
+
 
 function handleError(err, req, res, next) {
     res.status(err.statusCode || 500).send({ message: err.message });
@@ -22,6 +24,8 @@ createConnection().then(async connection => {
 
     // @ts-ignore
     app.use(helmet());
+    // @ts-ignore
+    app.use(morgan('tiny'));
 
     app.use(bodyParser.json());
 

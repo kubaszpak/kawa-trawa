@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken"
-import { getRepository } from "typeorm"; import { User } from "../entity/User";
+import { getRepository } from "typeorm";
+import { AccountType, User } from "../entity/User";
 import { NextFunction, Request, Response } from "express";
 
 export function accessTokenMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -9,6 +10,31 @@ export function accessTokenMiddleware(req: Request, res: Response, next: NextFun
 export async function refreshTokenMiddleware(req: Request, res: Response, next: NextFunction) {
     return tokenMiddleware(req, res, next, process.env.JWT_REFRESH_SECRET);
 }
+
+export async function verifiedOnly(req: Request, res: Response, next: NextFunction) {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne((req as any).userId)
+    if (user.confirmed && !user.banned)
+        return next();
+    res.status(403).send("Verified only");
+}
+
+export async function unBannedOnly(req: Request, res: Response, next: NextFunction) {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne((req as any).userId)
+    if (!user.banned)
+        return next();
+    res.status(403).send("Verified only");
+}
+
+export async function empOnly(req: Request, res: Response, next: NextFunction) {
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne((req as any).userId)
+    if (user.accountType == AccountType.EMPLOYEE)
+        return next();
+    res.status(403).send("Verified only");
+}
+
 
 async function tokenMiddleware(req: Request, res: Response, next: NextFunction, secret: string) {
     const authHeader = req.headers['authorization'];
@@ -25,7 +51,7 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
 
         const user = await getRepository(User).findOne({ where: { id: id } });
 
-        if (!user || !user.confirmed) {
+        if (!user || user.banned) {
             return res.status(401).send("Unauthorized user");
         }
 

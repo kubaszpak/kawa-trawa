@@ -2,7 +2,7 @@ import AddressController from "./controller/AddressController";
 import ComplaintController from "./controller/ComplaintController";
 import UserController from "./controller/UserController";
 import AuthController from "./controller/AuthController";
-import { accessTokenMiddleware, refreshTokenMiddleware } from "./authentication/middleware";
+import { accessTokenMiddleware, refreshTokenMiddleware, verifiedOnly, empOnly, unBannedOnly } from "./authentication/middleware";
 import CategoryController from "./controller/CategoryController";
 import ProductController from "./controller/ProductController";
 import OrderController from "./controller/OrderController";
@@ -22,6 +22,12 @@ export const Routes = [{
     middleware: [accessTokenMiddleware],
     action: "one"
 }, {
+    method: "patch",
+    route: "/users/:id",
+    controller: UserController,
+    middleware: [accessTokenMiddleware],
+    action: "edit"
+}, {
     method: "delete",
     route: "/users/:id",
     controller: UserController,
@@ -39,6 +45,12 @@ export const Routes = [{
     controller: AddressController,
     middleware: [accessTokenMiddleware],
     action: "save"
+}, {
+    method: "patch",
+    route: "/addresses/:id",
+    controller: AddressController,
+    middleware: [accessTokenMiddleware],
+    action: "edit"
 }, {
     method: "post",
     route: "/auth/register",
@@ -67,31 +79,31 @@ export const Routes = [{
     method: "get",
     route: "/products",
     controller: ProductController,
-    middleware: [accessTokenMiddleware],
+    middleware: [],
     action: "all"
 }, {
     method: "get",
     route: "/products/:id",
     controller: ProductController,
-    middleware: [accessTokenMiddleware],
+    middleware: [],
     action: "one"
 }, {
     method: "post",
     route: "/products",
     controller: ProductController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "save"
 }, {
     method: "delete",
     route: "/products/:id",
     controller: ProductController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "remove"
 }, {
     method: "get",
     route: "/orders",
     controller: OrderController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "all"
 }, {
     method: "get",
@@ -103,13 +115,13 @@ export const Routes = [{
     method: "post",
     route: "/orders",
     controller: OrderController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, verifiedOnly],
     action: "save"
 }, {
     method: "delete",
     route: "/orders/:id",
     controller: OrderController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, verifiedOnly],
     action: "remove"
 }, {
     method: "get",
@@ -127,13 +139,13 @@ export const Routes = [{
     method: "post",
     route: "/categories",
     controller: CategoryController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "save"
 }, {
     method: "delete",
     route: "/categories/:id",
     controller: CategoryController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "remove"
 }, {
     method: "get",
@@ -151,19 +163,19 @@ export const Routes = [{
     method: "post",
     route: "/discounts",
     controller: DiscountController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "save"
 }, {
     method: "delete",
     route: "/discounts/:id",
     controller: DiscountController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "remove"
 }, {
     method: "get",
     route: "/complaints",
     controller: ComplaintController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "all"
 }, {
     method: "get",
@@ -175,36 +187,36 @@ export const Routes = [{
     method: "post",
     route: "/complaints",
     controller: ComplaintController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, verifiedOnly],
     action: "save"
 }, {
     method: "delete",
     route: "/complaints/:id",
     controller: ComplaintController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, unBannedOnly],
     action: "remove"
 }, {
     method: "get",
     route: "/coupons",
     controller: CouponController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "all"
 }, {
     method: "get",
     route: "/coupons/:id",
     controller: CouponController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, verifiedOnly],
     action: "one"
 }, {
     method: "post",
     route: "/coupons",
     controller: CouponController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "save"
 }, {
     method: "delete",
     route: "/coupons/:id",
     controller: CouponController,
-    middleware: [accessTokenMiddleware],
+    middleware: [accessTokenMiddleware, empOnly],
     action: "remove"
 }];

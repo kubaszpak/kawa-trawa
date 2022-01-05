@@ -41,6 +41,30 @@ async function populateDatabaseWithTestData(connection: Connection) {
 
     await userRepository.save(user1)
 
+    // Admin user
+    let adminUser = userRepository.create({
+        "firstName": "admin",
+        "lastName": "admin",
+        "email": "admin@email.com",
+        "phoneNumber": "1234563789",
+        "password": "admin",
+        "accountType": AccountType.ADMIN
+    })
+
+    await userRepository.save(adminUser)
+
+    // Employee user
+    let employee = userRepository.create({
+        "firstName": "emp",
+        "lastName": "emp",
+        "email": "emp@email.com",
+        "phoneNumber": "1234563789",
+        "password": "emp",
+        "accountType": AccountType.EMPLOYEE
+    })
+
+    await userRepository.save(employee)
+
     // cascade is true, so there is no need to save the address explicitly
     // User with no address
     const user2 = userRepository.create({
