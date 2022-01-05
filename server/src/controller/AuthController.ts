@@ -4,9 +4,9 @@ import { AccountType, User } from "../entity/User";
 import * as bcrypt from "bcrypt"
 import { LoginDto } from "../dto/loginDto";
 import { RefreshTokenDto } from "../dto/refreshTokenDto";
-import { generateAccessToken, generateRefreshToken, generateRegistrationToken } from "../authentication/tokens";
+import { generateAccessToken, generateRefreshToken, generateRegistrationToken, generateResetToken } from "../authentication/tokens";
 import { sendEmail } from "../email/setupEmail";
-import { confirmRegistrationEmailTemplate } from "../email/template";
+import { confirmRegistrationEmailTemplate, resetPasswordEmailTemplate } from "../email/template";
 import * as jwt from "jsonwebtoken"
 
 export default class AuthController {
@@ -102,6 +102,23 @@ export default class AuthController {
         } catch (err) {
             return response.json("Registration request has expired.");
         }
+    }
+
+    async resetPasswordRequest(request: Request, response: Response, next: NextFunction) {
+
+        const user = await getRepository(User).findOne({ where: { email: request.body.email } });
+        if (!user) return response.status(200).json("Reset email has been sent");
+
+        const token = generateResetToken(user)
+
+        sendEmail("Potwierdź zmianę hasła do 'Kawa i Trawa'", resetPasswordEmailTemplate, [user.email], { user, token })
+        if (!user) return response.status(200).json("Reset email has been sent");
+    }
+
+    async resetPassword(request: Request, response: Response, next: NextFunction) {
+
+        /*const user = 
+        const user = jwt.verify(token, process.env.JWT_REGISTRATION_SECRET);*/
     }
 
 }

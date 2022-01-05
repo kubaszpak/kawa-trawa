@@ -24,7 +24,21 @@ class ConfirmRegistrationEmailTemplate extends EmailTemplate {
     }
 }
 
+class ResetPasswordEmailTemplate extends EmailTemplate {
+    render(data: any): { text: string, html: string } {
+
+        const { user: { firstName, lastName }, resetToken } = data;
+        const confirmUrl = `localhost:3000/auth/confirmRegistration/${resetToken}`;
+
+        return {
+            text: `Hello ${firstName} ${lastName}!\n\nTo confirm your password reset click on the link below.\n${confirmUrl}\nIgnore this message if you haven't initiated password reset.`,
+            html: `<p>Hello<b> ${firstName} ${lastName}!</b></p><p>To confirm your password reset click on the link below.</p><p><a href=\"${confirmUrl}\">Confirm registration!</a></p><p>Ignore this message if you haven't initiated password reset.</p>`
+        };
+    }
+}
 
 export const confirmRegistrationEmailTemplate = new ConfirmRegistrationEmailTemplate();
 
 export const registerEmailTemplate = new RegisterEmailTemplate();
+
+export const resetPasswordEmailTemplate = new ResetPasswordEmailTemplate();

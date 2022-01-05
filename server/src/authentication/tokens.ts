@@ -29,3 +29,10 @@ export async function generateRegistrationToken(user: User) {
         process.env.JWT_REGISTRATION_SECRET,
         { expiresIn: process.env.JWT_REGISTRATION_EXPIRATION });
 }
+
+export async function generateResetToken(user: User) {
+    return jwt.sign(
+        await generatePayload(user),
+        user.password,
+        { expiresIn: process.env.JWT_REGISTRATION_EXPIRATION });
+}

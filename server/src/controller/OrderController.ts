@@ -2,11 +2,14 @@ import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
 import { Order, OrderStatus } from "../entity/Order";
 import { User, AccountType } from "../entity/User";
+import { Product } from "../entity/Product";
+import { Category } from "../entity/Category";
 
 export default class OrderController {
 
     private orderRepository = getRepository(Order);
     private userRepository = getRepository(User);
+    private productRepository = getRepository(Product);
 
     async all(request: Request, response: Response, next: NextFunction) {
         return this.orderRepository.find();
@@ -27,12 +30,49 @@ export default class OrderController {
             address: request.body.address,
             user,
             status: OrderStatus.PLACED,
-            date: Date.now(),
+            date: new Date(),
             totalPrice: 0,
-            products: []
+            products: [...request.body.products]
         }
-        //dla każdego produktu, znaleźć go, zmniejszyć quantity, znaleźć discount, znaleźć cenę
-        const totalPrice = 56;
+
+        const products = {}
+
+        request.body.products.map((product: Product) => {
+            if (!products[product.id])
+                products[product.id] = 0
+            products[product.id] += 1
+        })
+
+        console.log("Cart: ", products)
+
+        let discount = await this.productRepository.find({ relations: ["discounts"] });
+
+        let totalPrice = 0;
+        request.body.products.map((product: Product) => {
+
+            let productPrice = product.price
+            console.log(product)
+            if (product.discount) {
+                console.log("Product discount")
+                totalPrice += productPrice * (100 - product.discount.discountPercentage) / 100
+            }
+            else {
+                let bestDiscountPercentage = 0
+                if (product.categories) {
+                    product.categories.map((category: Category) => {
+                        if (category.discount && category.discount.discountPercentage > bestDiscountPercentage) {
+                            bestDiscountPercentage = category.discount.discountPercentage
+                        }
+                        
+                    })
+                    totalPrice += productPrice * (100 - bestDiscountPercentage) / 100
+                } else {
+                    totalPrice += productPrice
+                }
+                
+            }
+        });
+
         order.totalPrice = totalPrice
         if (user.balance < totalPrice)
             response.status(400).send("Insufficient funds");

@@ -71,6 +71,18 @@ export const Routes = [{
     action: "confirmRegistration"
 }, {
     method: "post",
+    route: "/auth/resetPasswordRequest",
+    controller: AuthController,
+    middleware: [],
+    action: "resetPasswordRequest"
+}, {
+    method: "get",
+    route: "/auth/resetPassword/:token",
+    controller: AuthController,
+    middleware: [],
+    action: "resetPassword"
+}, {
+    method: "post",
     route: "/auth/refresh",
     controller: AuthController,
     middleware: [refreshTokenMiddleware],
@@ -151,13 +163,13 @@ export const Routes = [{
     method: "get",
     route: "/discounts",
     controller: DiscountController,
-    middleware: [accessTokenMiddleware],
+    middleware: [],
     action: "all"
 }, {
     method: "get",
     route: "/discounts/:id",
     controller: DiscountController,
-    middleware: [accessTokenMiddleware],
+    middleware: [],
     action: "one"
 }, {
     method: "post",
