@@ -39,14 +39,20 @@ export default class AuthController {
 
     async login(request: Request, response: Response, next: NextFunction) {
         const user = await this.userRepository.findOne({ where: { email: request.body.email } });
+
         if (!user) {
-            response.status(400).send({ error: "Invalid email or password" });
+            response.status(400).send({ error: "Invalid email or password." });
+            return;
+        }
+
+        if (!user.confirmed) {
+            response.status(400).send({ error: "The account has not been confirmed." });
             return;
         }
 
         const passwordCorrect = await bcrypt.compare(request.body.password, user.password);
         if (!passwordCorrect) {
-            response.status(400).send({ error: "Invalid email or password" });
+            response.status(400).send({ error: "Invalid email or password." });
             return;
         }
 

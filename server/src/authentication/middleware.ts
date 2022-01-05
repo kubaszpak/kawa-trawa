@@ -10,7 +10,6 @@ export async function refreshTokenMiddleware(req: Request, res: Response, next: 
     return tokenMiddleware(req, res, next, process.env.JWT_REFRESH_SECRET);
 }
 
-
 async function tokenMiddleware(req: Request, res: Response, next: NextFunction, secret: string) {
     const authHeader = req.headers['authorization'];
 
@@ -24,14 +23,13 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
         jwt.verify(token, secret);
         let { payload: { id, firstName, lastName } } = jwt.decode(token, { complete: true });
 
-        (req as any).userId = id;
-
         const user = await getRepository(User).findOne({ where: { id: id } });
 
         if (!user || !user.confirmed) {
             return res.status(401).send("Unauthorized user");
         }
 
+        (req as any).userId = id;
         console.log(`Recognized user ${firstName} ${lastName}`);
         return next();
     } catch (err) {
