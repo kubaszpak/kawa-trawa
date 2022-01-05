@@ -26,7 +26,9 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
 
         (req as any).userId = id;
 
-        if (!await getRepository(User).findOne({ where: { id: id } })) {
+        const user = await getRepository(User).findOne({ where: { id: id } });
+
+        if (!user || !user.confirmed) {
             return res.status(401).send("Unauthorized user");
         }
 

@@ -5,6 +5,10 @@ async function generatePayload(user: User) {
     return { email: user.email, id: user.id, firstName: user.firstName, lastName: user.lastName };
 }
 
+async function getRegistrationTokenPayload(user: User) {
+    return { email: user.email, firstName: user.firstName, lastName: user.lastName };
+}
+
 export async function generateAccessToken(user: User) {
     return jwt.sign(
         await generatePayload(user),
@@ -21,7 +25,7 @@ export async function generateRefreshToken(user: User) {
 
 export async function generateRegistrationToken(user: User) {
     return jwt.sign(
-        await generatePayload(user),
+        await getRegistrationTokenPayload(user),
         process.env.JWT_REGISTRATION_SECRET,
         { expiresIn: process.env.JWT_REGISTRATION_EXPIRATION });
 }

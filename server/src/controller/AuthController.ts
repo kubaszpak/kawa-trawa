@@ -7,6 +7,7 @@ import { RefreshTokenDto } from "../dto/refreshTokenDto";
 import { generateAccessToken, generateRefreshToken, generateRegistrationToken } from "../authentication/tokens";
 import { sendEmail } from "../email/setupEmail";
 import { confirmRegistrationEmailTemplate } from "../email/template";
+import * as jwt from "jsonwebtoken"
 
 export default class AuthController {
 
@@ -57,7 +58,6 @@ export default class AuthController {
     }
 
     async refresh(request: Request, response: Response, next: NextFunction) {
-
         const user = await this.userRepository.findOne({ where: { id: (request as any).userId } });
 
         return new RefreshTokenDto(
@@ -65,6 +65,29 @@ export default class AuthController {
             await generateAccessToken(user),
             process.env.JWT_ACCESS_EXPIRATION,
             user);
+    }
+
+    async confirmRegistration(request: Request, response: Response, next: NextFunction) {
+        const token = String(request.query.token);
+
+        try {
+            jwt.verify(token, process.env.JWT_REGISTRATION_SECRET);
+            let { payload: { email } } = jwt.decode(token, { complete: true });
+
+            const user = await getRepository(User).findOne({ where: { email: email } });
+
+            if (!user) {
+                return response.json("Registration request has expired.");
+            }
+
+            await this.userRepository.update({ id: user.id }, { confirmed: true });
+
+            console.log(`Confirmed user registration: ${user.firstName} ${user.lastName}`);
+            response.json("Successfully confirmed the registration!");
+            return next();
+        } catch (err) {
+            return response.json("Registration request has expired.");
+        }
     }
 
 }
