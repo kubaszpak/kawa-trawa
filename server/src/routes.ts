@@ -52,6 +52,12 @@ export const Routes = [{
     middleware: [],
     action: "login"
 }, {
+    method: "get",
+    route: "/auth/confirmRegistration",
+    controller: AuthController,
+    middleware: [],
+    action: "confirmRegistration"
+}, {
     method: "post",
     route: "/auth/refresh",
     controller: AuthController,
