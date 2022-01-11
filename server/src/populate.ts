@@ -224,7 +224,10 @@ async function populateDatabaseWithTestData(connection: Connection) {
     const order1 = orderRepository.create({
         "address": address1,
         "user": user1,
-        "products": [productMintTea, productGreenTea],
+        "products": {
+            1: 2,
+            2: 3
+        },
         "totalPrice": 20,
         "date": new Date()
     })
@@ -234,7 +237,9 @@ async function populateDatabaseWithTestData(connection: Connection) {
     const order2 = orderRepository.create({
         "address": address3,
         "user": user4,
-        "products": [productBlackTea, productBlackTea],
+        "products": {
+            2: 3
+        },
         "totalPrice": 40,
         "date": new Date()
     })

@@ -11,6 +11,10 @@ export enum OrderStatus {
     RETURNED = "returned"
 }
 
+interface Products {
+    [key: number]: number;
+}
+
 @Entity('orders')
 export class Order {
 
@@ -38,11 +42,8 @@ export class Order {
     })
     status?: OrderStatus
 
-    @ManyToMany(type => Product, {
-        eager: true
-    })
-    @JoinTable()
-    products: Product[]
+    @Column({ type: "json" })
+    products: Products
 
     @Column()
     totalPrice: number
