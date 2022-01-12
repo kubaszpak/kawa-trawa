@@ -36,6 +36,9 @@ export default function NavBar() {
                 <Link mx={2} href="#">
                     <Typography color="white">Kontakt</Typography>
                 </Link>
+                <Link mx={2} href="#">
+                    <Typography color="orange">Logowanie</Typography>
+                </Link>
                 <IconButton aria-label="cart" sx={{ ml: 4 }} href="#">
                     <ShoppingCartIcon sx={{ color: 'white' }} />
                 </IconButton>
