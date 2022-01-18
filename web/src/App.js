@@ -14,8 +14,8 @@ function App() {
           do życia <br /> w jednym miejscu
           <br /> w internecie ...</Typography>
         <Button sx={{ mt: 3 }} variant="contained" color="secondary">Kup</Button>
-        <Login />
-        <Register/>
+        {/* <Login /> */}
+        {/* <Register/> */}
       </header>
     </div>
   );

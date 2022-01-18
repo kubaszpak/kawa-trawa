@@ -1,9 +1,32 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { Box, IconButton, Link, Typography } from '@mui/material'
+import { Box, IconButton, Link, Typography, Modal } from '@mui/material'
 import React from 'react'
+import {useState} from 'react'
 import logoImg from "../static/images/Logo.png"
+import Login from "./Login"
+
 
 export default function NavBar() {
+    
+    const [isLoginCompVisible, setIsLoginCompVisible] = useState(false);
+
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      };
+
+
+    const openLoginComp = () => {
+        console.log("open modal")
+        setIsLoginCompVisible(true);
+        };
+    
+    const closeLoginComp = () => setIsLoginCompVisible(false);
+
+
     return (
         <div style={{
             display: 'flex',
@@ -37,12 +60,19 @@ export default function NavBar() {
                     <Typography color="white">Kontakt</Typography>
                 </Link>
                 <Link mx={2} href="#">
-                    <Typography color="orange">Logowanie</Typography>
+                    <Typography color="orange" onClick={openLoginComp}>Logowanie</Typography>
                 </Link>
                 <IconButton aria-label="cart" sx={{ ml: 4 }} href="#">
                     <ShoppingCartIcon sx={{ color: 'white' }} />
                 </IconButton>
             </Box>
+
+            <Modal open={isLoginCompVisible} onClose={closeLoginComp}>
+                <Box sx={style}>
+                    <Login/>
+                </Box>
+            </Modal>
+
         </div>
     )
 }

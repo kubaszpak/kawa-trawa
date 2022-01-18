@@ -38,7 +38,9 @@ export default function Register() {
 
                     <TextField style = {tfStyle} id="outlined-basic" label="E-mail" variant="outlined"  required/>
 
-                    
+                    <TextField style = {tfStyle} id="outlined-basic" label="Hasło" variant="outlined" type = "password"  required/>
+
+                    <TextField style = {tfStyle} id="outlined-basic" label="Potwierdź hasło" variant="outlined" type = "password"  required/>
                     
                     <FormControlLabel
                         control={<Checkbox name="checkedA" />}
