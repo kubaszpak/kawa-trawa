@@ -1,30 +1,35 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { Box, IconButton, Link, Typography, Modal } from '@mui/material'
 import React from 'react'
-import {useState} from 'react'
+import { useState } from 'react'
 import logoImg from "../static/images/Logo.png"
 import Login from "./Login"
 
 
 export default function NavBar() {
-    
-    const [isLoginCompVisible, setIsLoginCompVisible] = useState(false);
 
+    const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+
+
+    //Register is child component of Login, if the registration component is closed, the login component also should not be visible 
+    const callbackModal = () => {
+        closeLoginModal()
+     }
 
     const style = {
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-      };
+    };
 
 
-    const openLoginComp = () => {
-        console.log("open modal")
-        setIsLoginCompVisible(true);
-        };
-    
-    const closeLoginComp = () => setIsLoginCompVisible(false);
+    const openLoginModal = () => {
+        // console.log("open login modal")
+        setIsLoginModalVisible(true);
+    };
+
+    const closeLoginModal = () => setIsLoginModalVisible(false);
 
 
     return (
@@ -60,16 +65,16 @@ export default function NavBar() {
                     <Typography color="white">Kontakt</Typography>
                 </Link>
                 <Link mx={2} href="#">
-                    <Typography color="orange" onClick={openLoginComp}>Logowanie</Typography>
+                    <Typography color="orange" onClick={openLoginModal}>Logowanie</Typography>
                 </Link>
                 <IconButton aria-label="cart" sx={{ ml: 4 }} href="#">
                     <ShoppingCartIcon sx={{ color: 'white' }} />
                 </IconButton>
             </Box>
 
-            <Modal open={isLoginCompVisible} onClose={closeLoginComp}>
+            <Modal open={isLoginModalVisible} onClose={closeLoginModal}>
                 <Box sx={style}>
-                    <Login/>
+                    <Login callback = {callbackModal} />
                 </Box>
             </Modal>
 

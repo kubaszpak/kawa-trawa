@@ -1,8 +1,7 @@
 import { Typography, Button } from '@mui/material';
 import './App.css';
 import NavBar from './components/NavBar';
-import Login from './components/Login';
-import Register from './components/Register';
+
 
 function App() {
   return (
@@ -14,8 +13,6 @@ function App() {
           do życia <br /> w jednym miejscu
           <br /> w internecie ...</Typography>
         <Button sx={{ mt: 3 }} variant="contained" color="secondary">Kup</Button>
-        {/* <Login /> */}
-        {/* <Register/> */}
       </header>
     </div>
   );

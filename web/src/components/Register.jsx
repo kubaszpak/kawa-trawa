@@ -6,12 +6,12 @@ import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 
 export default function Register() {
     const paperStyle = { padding: 20, width: 280, margin: "0 auto" }
-    const headerStyle = { margin: '15px' }
+    // const headerStyle = { margin: '15px' }
     const avatarStyle = {
         backgroundColor: '#9c6644',
         margin: '15px'
     }
-    const marginTop = { marginTop: 5 }
+    // const marginTop = { marginTop: 5 }
 
     const tfStyle = {
         margin: '5px'
