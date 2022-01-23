@@ -9,6 +9,7 @@ import populateDatabaseWithTestData from "./populate";
 import * as helmet from "helmet";
 import { setupEmail } from "./email/setupEmail";
 import * as morgan from "morgan";
+var cors = require("cors");
 
 
 function handleError(err, req, res, next) {
@@ -21,6 +22,8 @@ createConnection().then(async connection => {
     const app = express();
 
     setupEmail();
+
+    app.use(cors())
 
     // @ts-ignore
     app.use(helmet());

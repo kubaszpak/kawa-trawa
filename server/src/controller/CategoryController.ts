@@ -3,13 +3,46 @@ import { NextFunction, Request, Response } from "express";
 import { Category } from "../entity/Category";
 import { User, AccountType } from "../entity/User";
 
+function findParent(category: Category, categories: any[]): boolean {
+    for (let potentialParent of categories) {
+        if (potentialParent.children && findParent(category, potentialParent.children)) {
+            return true
+        }
+        if (category.parent && potentialParent.id === category.parent.id) {
+            // && (!potentialParent.children || potentialParent.children.filter(e => e.id === category.id).length === 0)) {
+            if (!potentialParent.children) {
+                potentialParent.children = [];
+            }
+            potentialParent.children.push(category);
+            return true
+        }
+    }
+    return false
+}
+
 export default class CategoryController {
 
     private categoryRepository = getRepository(Category);
     private userRepository = getRepository(User);
 
     async all(request: Request, response: Response, next: NextFunction) {
-        return this.categoryRepository.find();
+        let sorted_categories = []
+        let categories = await this.categoryRepository.find({ relations: ["parent"] });
+        for (var i = categories.length - 1; i >= 0; i--) {
+            if (categories[i].parent === null) {
+                sorted_categories.push(categories[i])
+                categories.splice(i, 1)
+            }
+        }
+
+        while (categories && categories.length > 0) {
+            for (var i = categories.length - 1; i >= 0; i--) {
+                if (findParent(categories[i], sorted_categories)) {
+                    categories.splice(i, 1);
+                }
+            }
+        }
+        return sorted_categories;
     }
 
     async one(request: Request, response: Response, next: NextFunction) {

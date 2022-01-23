@@ -139,7 +139,7 @@ export const Routes = [{
     method: "get",
     route: "/categories",
     controller: CategoryController,
-    middleware: [accessTokenMiddleware],
+    middleware: [],
     action: "all"
 }, {
     method: "get",
