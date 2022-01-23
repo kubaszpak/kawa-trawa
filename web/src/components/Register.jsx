@@ -19,6 +19,7 @@ export default function Register({ showAlert, closeSignUp }) {
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [isRegulationsAccepted, setIsRegulationsAccepted] = useState(false);
 
     const paperStyle = { padding: 20, width: 280, margin: "0 auto" }
     // const headerStyle = { margin: '15px' }
@@ -75,6 +76,11 @@ export default function Register({ showAlert, closeSignUp }) {
 
         if (!passwordValidator.test(registerData.password)) {
             setError("Hasło musi posiadać co najmniej 8 znaków, w tym co najmniej jedną małą oraz dużą literę i cyfrę. Znak specjalny znacznie zwiększy siłę hasła. Rozważ jego dodanie.")
+            return
+        }
+
+        if(!isRegulationsAccepted){
+            setError("Nie zaakceptowano regulaminu strony")
             return
         }
 
@@ -137,7 +143,7 @@ export default function Register({ showAlert, closeSignUp }) {
                     <TextField style={tfStyle} id="outlined-basic" label="Potwierdź hasło" variant="outlined" type="password" onChange={e => setRegisterData({ ...registerData, repeatedPassword: e.target.value })} required />
 
                     <FormControlLabel
-                        control={<Checkbox name="checkedA" />}
+                        control={<Checkbox name="checkedA" value = {isRegulationsAccepted} onClick={() => setIsRegulationsAccepted(!isRegulationsAccepted)} />}
                         label="Przeczytałem/am oraz akceptuję regulamin strony."
                     />
                     <Button style={buttonStyle} onClick={register} variant="outlined">Zarejestruj</Button>
