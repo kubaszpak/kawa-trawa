@@ -20,10 +20,9 @@ createConnection().then(async connection => {
 
     // create express app
     const app = express();
+    app.use(cors());
 
     setupEmail();
-
-    app.use(cors())
 
     // @ts-ignore
     app.use(helmet());

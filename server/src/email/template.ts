@@ -15,7 +15,7 @@ class ConfirmRegistrationEmailTemplate extends EmailTemplate {
     render(data: any): { text: string, html: string } {
 
         const { user: { firstName, lastName }, registrationToken } = data;
-        const confirmUrl = `localhost:3000/auth/confirmRegistration?token=${registrationToken}`;
+        const confirmUrl = process.env.SERVER_HOST  + `/auth/confirmRegistration?token=${registrationToken}`;
 
         return {
             text: `Hello ${firstName} ${lastName}!\n\nTo confirm your registration click on the link below.\n${confirmUrl}`,
@@ -28,7 +28,7 @@ class ResetPasswordEmailTemplate extends EmailTemplate {
     render(data: any): { text: string, html: string } {
 
         const { user: { firstName, lastName }, resetToken } = data;
-        const confirmUrl = `localhost:3000/auth/confirmRegistration/${resetToken}`;
+        const confirmUrl = process.env.SERVER_HOST  + `/auth/confirmRegistration/${resetToken}`;
 
         return {
             text: `Hello ${firstName} ${lastName}!\n\nTo confirm your password reset click on the link below.\n${confirmUrl}\nIgnore this message if you haven't initiated password reset.`,

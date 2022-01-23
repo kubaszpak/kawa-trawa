@@ -1,5 +1,5 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { Box, IconButton, Link, Typography, Modal, Popover } from '@mui/material'
+import { Box, IconButton, Link, Typography, Modal, Popover, Snackbar, Alert } from '@mui/material'
 import React, { useState, useRef, useEffect } from 'react'
 import logoImg from "../static/images/Logo.png"
 import Categories from './Categories'
@@ -22,10 +22,12 @@ export default function NavBar() {
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
     const [categories, setCategories] = useState([]);
+    const [message, setMessage] = useState(null);
+    const classes = useStyles();
 
     useEffect(() => {
         axios.get("http://localhost:5000/categories")
-            .then(response => {
+        .then(response => {
                 setCategories(response.data)
             })
     }, []);
@@ -38,12 +40,15 @@ export default function NavBar() {
         setPopoverOpened(false);
     }
 
-    //Register is child component of Login, if the registration component is closed, the login component also should not be visible 
-    const callbackModal = () => {
-        closeLoginModal()
+    //Register is child component of Login, if the registration component is closed, the login component also should not be visible
+    const callbackCloseLoginModal = () => {
+        setIsLoginModalVisible(false)
     }
 
-    const classes = useStyles();
+    const showAlert = message => {
+        console.log(message)
+        setMessage(message)
+    }
 
     const style = {
         position: 'absolute',
@@ -53,11 +58,16 @@ export default function NavBar() {
     };
 
     const openLoginModal = () => {
-        // console.log("open login modal")
         setIsLoginModalVisible(true);
     };
 
-    const closeLoginModal = () => setIsLoginModalVisible(false);
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setMessage(null);
+    };
 
     return (
         <div style={{
@@ -125,12 +135,17 @@ export default function NavBar() {
                 </IconButton>
             </Box>
 
-            <Modal open={isLoginModalVisible} onClose={closeLoginModal}>
+            <Modal open={isLoginModalVisible} onClose={callbackCloseLoginModal}>
                 <Box sx={style}>
-                    <Login callback={callbackModal} />
+                    <Login showAlert={showAlert} closeLogin={callbackCloseLoginModal} />
                 </Box>
             </Modal>
 
-        </div >
+            <Snackbar open={message} onClose={handleCloseAlert} autoHideDuration={6000}>
+                <Alert onClose={handleCloseAlert} severity="success" sx={{ width: '100%' }}>
+                    {message}
+                </Alert>
+            </Snackbar>
+        </div>
     )
 }

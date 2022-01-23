@@ -1,13 +1,70 @@
-import { Box, Grid, Paper, Avatar, TextField, FormControlLabel, Switch, Button, Link, Modal } from '@mui/material'
+import { Box, Grid, Paper, Avatar, TextField, FormControlLabel, Switch, Button, Link, Modal, Typography } from '@mui/material'
 import LoginIcon from '@mui/icons-material/Login';
 import React from 'react'
 import { useState } from 'react'
 import Register from "./Register"
+import axios from 'axios';
+// import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie'
+import { REACT_APP_LOGIN_ENDPOINT } from '../config';
 
-export default function Login({callback}) {
+export default function Login({ showAlert, closeLogin }) {
 
+    const [loginValue, setLoginValue] = useState("");
+    const [passwordValue, setPasswordValue] = useState("");
     const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
 
+    const [error, setError] = useState("");
+
+
+    let mailValidator = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+    const login = () => {
+
+        if (!mailValidator.test(loginValue)) {
+            setError("Wprowadzono niepoprawny adres e-mail")
+            return
+        }
+        // console.log(REACT_APP_LOGIN_ENDPOINT)
+
+        const body = {
+            email: loginValue,
+            password: passwordValue
+        }
+
+        axios({
+            method: 'post',
+            url: REACT_APP_LOGIN_ENDPOINT,
+            data: body
+        })
+            .then(response => { //200
+                // console.log("response: ", response);
+                // console.log("refreshToken = ", response.data.refreshToken)
+                // console.log("refreshToken expires = ", response.data.expiresIn)
+                // console.log("accessToken = ", response.data.accessToken)
+                // console.log("accountType = ", response.data.user.accountType)           
+
+                // console.log("converted 1h to = ",parseInt(response.data.expiresIn))
+
+                //token expiration given in hours
+                var now = new Date();
+                var time = now.getTime();
+                time += parseInt(response.data.expiresIn) * 3600 * 1000;
+                now.setTime(time);
+
+                Cookies.set('refreshToken', response.data.refreshToken)
+                Cookies.set('accessToken', response.data.accessToken, { expires: now })
+                Cookies.set('accountType', response.data.user.accountType)
+
+                setError('')
+
+            })
+            .catch(error => {
+                console.log("error", error.response.data.error);
+                setError("Nieprawidłowy login lub hasło")
+            });
+
+    }
 
     const style = {
         position: 'absolute',
@@ -18,21 +75,18 @@ export default function Login({callback}) {
 
 
     const openSignUpModal = () => {
-        // console.log("open signup modal")
         setIsSignUpModalVisible(true);
     };
 
     const closeSignUpModal = () => {
         setIsSignUpModalVisible(false)
-        callback()
+        closeLogin()
     };
-
 
     const paperStyle = {
         padding: 20,
         width: 280,
         margin: "20px auto"
-
     }
 
     const avatarStyle = {
@@ -67,11 +121,12 @@ export default function Login({callback}) {
                     <Grid align='center'>
                         <Avatar style={avatarStyle}><LoginIcon /></Avatar>
 
-                        <TextField style={tfStyle} id="outlined-basic" label="Login" variant="outlined" required />
+                        <Typography color="red">{error}</Typography>
+                        <TextField style={tfStyle} id="outlined-basic" label="Login (e-mail)" variant="outlined" onChange={e => setLoginValue(e.target.value)} required />
 
-                        <TextField style={tfStyle} id="outlined-basic" label="Hasło" variant="outlined" type="password" required />
+                        <TextField style={tfStyle} id="outlined-basic" label="Hasło" variant="outlined" type="password" onChange={e => setPasswordValue(e.target.value)} required />
 
-                        <Button style={buttonStyle} variant="outlined">Zaloguj</Button>
+                        <Button style={buttonStyle} onClick={login} variant="outlined">Zaloguj</Button>
                         <FormControlLabel style={marginStyle} value="rememberme" control={<Switch color="primary" />} label="Pamiętaj mnie" labelPlacement="end" />
 
                         <p margin="2px 0"></p>
@@ -88,7 +143,7 @@ export default function Login({callback}) {
 
             <Modal open={isSignUpModalVisible} onClose={closeSignUpModal}>
                 <Box sx={style}>
-                    <Register/>
+                    <Register showAlert = {showAlert} closeSignUp = {closeSignUpModal}/>
                 </Box>
             </Modal>
         </>
