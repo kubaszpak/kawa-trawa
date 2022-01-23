@@ -6,6 +6,7 @@ import Categories from './Categories'
 import Login from "./Login"
 import axios from "axios"
 import { makeStyles } from "@mui/styles"
+import { REACT_APP_CATEGORIES_ENDPOINT } from '../config'
 
 const useStyles = makeStyles(theme => ({
     popover: {
@@ -22,12 +23,18 @@ export default function NavBar() {
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
     const [categories, setCategories] = useState([]);
-    const [message, setMessage] = useState(null);
+
+
+    const [alert, setAlert] = useState({
+        messageType: 'success',
+        message: ''
+    });
+
     const classes = useStyles();
 
     useEffect(() => {
-        axios.get("http://localhost:5000/categories")
-        .then(response => {
+        axios.get(REACT_APP_CATEGORIES_ENDPOINT)
+            .then(response => {
                 setCategories(response.data)
             })
     }, []);
@@ -45,9 +52,25 @@ export default function NavBar() {
         setIsLoginModalVisible(false)
     }
 
-    const showAlert = message => {
-        console.log(message)
-        setMessage(message)
+    const showAlert = (messagetype, msg) => {
+
+        console.log('alert: ', messagetype, msg)
+
+        setAlert({
+            messageType: messagetype, 
+            message: msg
+        })
+    }
+
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setAlert({
+            messageType: 'success' ,
+            message: ''
+        })
     }
 
     const style = {
@@ -61,13 +84,7 @@ export default function NavBar() {
         setIsLoginModalVisible(true);
     };
 
-    const handleCloseAlert = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setMessage(null);
-    };
+  
 
     return (
         <div style={{
@@ -141,9 +158,9 @@ export default function NavBar() {
                 </Box>
             </Modal>
 
-            <Snackbar open={message} onClose={handleCloseAlert} autoHideDuration={6000}>
-                <Alert onClose={handleCloseAlert} severity="success" sx={{ width: '100%' }}>
-                    {message}
+            <Snackbar open={alert.message !== ''} onClose={handleCloseAlert} autoHideDuration={6000}>
+                <Alert onClose={handleCloseAlert} severity={alert.messageType} sx={{ width: '100%' }}>
+                    {alert.message}
                 </Alert>
             </Snackbar>
         </div>
