@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
-import { Grid, Typography, Paper, Avatar, TextField, Button, Checkbox, FormControlLabel, Alert } from '@mui/material';
+import { Grid, Typography, Paper, Avatar, TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import axios from 'axios';
 import { REACT_APP_REGISTER_ENDPOINT } from '../config';
 
 
 
-export default function Register({showAlert, closeSignUp}) {
+export default function Register({ showAlert, closeSignUp }) {
     const [registerData, setRegisterData] = useState({
         firstName: '',
         surname: '',
@@ -41,7 +41,7 @@ export default function Register({showAlert, closeSignUp}) {
     let mailValidator = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
     let phoneNumberValidator = /^\d{9}$/
     // let passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
-    let passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\"()\[\]-]{8,25}$/
+    let passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?"()[\]-]{8,25}$/
 
     const register = () => {
         console.log(registerData)
@@ -68,7 +68,7 @@ export default function Register({showAlert, closeSignUp}) {
             return
         }
 
-        if (registerData.password.localeCompare(registerData.repeatedPassword) != 0) {
+        if (registerData.password.localeCompare(registerData.repeatedPassword) !== 0) {
             setError("Wprowadzono różne hasła")
             return
         }
@@ -97,7 +97,7 @@ export default function Register({showAlert, closeSignUp}) {
                 // error = response.data;
                 setError('')
                 setSuccess('Sprawdź swój adres ' + registerData.mail + ' w celu potwierdzenia zarejestrowanego konta.')
-                
+
                 showAlert('Sprawdź swój adres ' + registerData.mail + ' w celu potwierdzenia zarejestrowanego konta.')
                 closeSignUp()
 
@@ -117,10 +117,10 @@ export default function Register({showAlert, closeSignUp}) {
                         <AppRegistrationIcon />
                     </Avatar>
                 </Grid>
-                
+
                 <form>
 
-                    
+
                     <Typography color="green">{success}</Typography>
                     <Typography color="red">{error}</Typography>
 
