@@ -4,9 +4,11 @@ import React from 'react'
 import { useState } from 'react'
 import Register from "./Register"
 import axios from 'axios';
-import Cookies from 'universal-cookie';
+// import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie'
+import { REACT_APP_LOGIN_ENDPOINT } from '../config';
 
-export default function Login({ callback }) {
+export default function Login({ showAlert, closeLogin }) {
 
     const [loginValue, setLoginValue] = useState("");
     const [passwordValue, setPasswordValue] = useState("");
@@ -14,18 +16,16 @@ export default function Login({ callback }) {
 
     const [error, setError] = useState("");
 
-    const cookies = new Cookies();
 
     let mailValidator = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
     const login = () => {
 
-        if ( !mailValidator.test(loginValue) ) {
-            setError("śmieszny mail, a teraz popraw")
+        if (!mailValidator.test(loginValue)) {
+            setError("Wprowadzono niepoprawny adres e-mail")
             return
         }
-
-        // console.log(process.env.REACT_APP_LOGIN_ENDPOINT)
+        // console.log(REACT_APP_LOGIN_ENDPOINT)
 
         const body = {
             email: loginValue,
@@ -34,38 +34,36 @@ export default function Login({ callback }) {
 
         axios({
             method: 'post',
-            url: process.env.REACT_APP_LOGIN_ENDPOINT,
+            url: REACT_APP_LOGIN_ENDPOINT,
             data: body
         })
             .then(response => { //200
-                console.log("response: ", response);
+                // console.log("response: ", response);
+                // console.log("refreshToken = ", response.data.refreshToken)
+                // console.log("refreshToken expires = ", response.data.expiresIn)
+                // console.log("accessToken = ", response.data.accessToken)
+                // console.log("accountType = ", response.data.user.accountType)           
 
+                // console.log("converted 1h to = ",parseInt(response.data.expiresIn))
 
-                cookies.set('myCat', 'Pacman', { path: '/' });
-                console.log(cookies.get('myCat')); // Pacman
+                //token expiration given in hours
+                var now = new Date();
+                var time = now.getTime();
+                time += parseInt(response.data.expiresIn) * 3600 * 1000;
+                now.setTime(time);
 
-                // error = response.data;
+                Cookies.set('refreshToken', response.data.refreshToken)
+                Cookies.set('accessToken', response.data.accessToken, { expires: now })
+                Cookies.set('accountType', response.data.user.accountType)
+
                 setError('')
 
             })
             .catch(error => {
                 console.log("error", error.response.data.error);
-                setError(error.response.data.error)
+                setError("Nieprawidłowy login lub hasło")
             });
 
-
-
-
-        // console.log(this.refs.login);
-        // console.log(this.refs.password);
-
-
-        // fetch(process.env.BE_ADDRESS + "/auth/login", { method: 'post' })
-        // 	.then((response) => response.json())
-        // 	.then((parsedPosts) => {
-        // 		setPosts(parsedPosts);
-        // 	});
-        //     console.log("posts loaded ",posts.map((post) => post.id));
     }
 
     const style = {
@@ -77,21 +75,18 @@ export default function Login({ callback }) {
 
 
     const openSignUpModal = () => {
-        // console.log("open signup modal")
         setIsSignUpModalVisible(true);
     };
 
     const closeSignUpModal = () => {
         setIsSignUpModalVisible(false)
-        callback()
+        closeLogin()
     };
-
 
     const paperStyle = {
         padding: 20,
         width: 280,
         margin: "20px auto"
-
     }
 
     const avatarStyle = {
@@ -148,7 +143,7 @@ export default function Login({ callback }) {
 
             <Modal open={isSignUpModalVisible} onClose={closeSignUpModal}>
                 <Box sx={style}>
-                    <Register />
+                    <Register showAlert = {showAlert} closeSignUp = {closeSignUpModal}/>
                 </Box>
             </Modal>
         </>

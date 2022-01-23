@@ -1,5 +1,5 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { Box, IconButton, Link, Typography, Modal } from '@mui/material'
+import { Box, IconButton, Link, Typography, Modal, Snackbar, Alert } from '@mui/material'
 import React from 'react'
 import { useState } from 'react'
 import logoImg from "../static/images/Logo.png"
@@ -9,12 +9,17 @@ import Login from "./Login"
 export default function NavBar() {
 
     const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-
+    const [message, setMessage] = useState(null);
 
     //Register is child component of Login, if the registration component is closed, the login component also should not be visible 
-    const callbackModal = () => {
-        closeLoginModal()
-     }
+    const callbackCloseLoginModal = () => {
+        setIsLoginModalVisible(false)
+    }
+
+    const showAlert = message => {
+        console.log(message)
+        setMessage(message)
+    }
 
     const style = {
         position: 'absolute',
@@ -25,12 +30,16 @@ export default function NavBar() {
 
 
     const openLoginModal = () => {
-        // console.log("open login modal")
         setIsLoginModalVisible(true);
     };
 
-    const closeLoginModal = () => setIsLoginModalVisible(false);
-
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setMessage(null);
+      };
 
     return (
         <div style={{
@@ -72,12 +81,17 @@ export default function NavBar() {
                 </IconButton>
             </Box>
 
-            <Modal open={isLoginModalVisible} onClose={closeLoginModal}>
+            <Modal open={isLoginModalVisible} onClose={callbackCloseLoginModal}>
                 <Box sx={style}>
-                    <Login callback = {callbackModal} />
+                    <Login showAlert={showAlert} closeLogin={callbackCloseLoginModal} />
                 </Box>
             </Modal>
 
+            <Snackbar open={message} onClose={handleCloseAlert} autoHideDuration={6000}>
+                <Alert onClose={handleCloseAlert} severity="success" sx={{ width: '100%' }}>
+                    {message}
+                </Alert>
+            </Snackbar>
         </div>
     )
 }
