@@ -7,6 +7,7 @@ import Login from "./Login"
 import axios from "axios"
 import { makeStyles } from "@mui/styles"
 import { REACT_APP_CATEGORIES_ENDPOINT } from '../config'
+import Cookies from 'js-cookie'
 
 const useStyles = makeStyles(theme => ({
     popover: {
@@ -69,6 +70,11 @@ export default function NavBar() {
 
     const logOutUser = () => {
         console.log("byebye")
+
+        Cookies.remove('refreshToken')
+        Cookies.remove('accessToken')
+        Cookies.remove('accountType')
+
         setIsUserLoggedIn(false);
     }
 
@@ -155,7 +161,7 @@ export default function NavBar() {
                     <Typography color="white">Kontakt</Typography>
                 </Link>
 
-                {isUserLoggedIn ?
+                {(isUserLoggedIn || Cookies.get('accessToken') != null)?
                     <Link mx={2} href="#">
                         <Typography color="orange" onClick={logOutUser}>Wyloguj mnie</Typography>
                     </Link>
