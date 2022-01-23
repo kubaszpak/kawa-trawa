@@ -1,20 +1,25 @@
-import { Typography, Button } from '@mui/material';
 import './App.css';
 import NavBar from './components/NavBar';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from './components/HomePage';
+import PageNotFound from './components/PageNotFound';
+import CategoryPage from './components/CategoryPage';
+
 
 
 function App() {
   return (
     <div className="App">
       <NavBar />
-      <header className="App-header">
-        <Typography variant="h1" fontWeight="bold">Kawa i trawa</Typography>
-        <Typography varaint="h1">Kupuj dwie niezbędne rzeczy
-          do życia <br /> w jednym miejscu
-          <br /> w internecie ...</Typography>
-        <Button sx={{ mt: 3 }} variant="contained" color="secondary">Kup</Button>
-      </header>
-    </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          {/* <Route path='/categories' element={<Categories />} /> */}
+          <Route path="/categories/:categoryId" element={<CategoryPage />} />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </div >
   );
 }
 

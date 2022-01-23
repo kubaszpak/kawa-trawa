@@ -1,20 +1,49 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { Box, IconButton, Link, Typography, Modal } from '@mui/material'
-import React from 'react'
-import { useState } from 'react'
+import { Box, IconButton, Link, Typography, Modal, Popover } from '@mui/material'
+import React, { useState, useRef, useEffect } from 'react'
 import logoImg from "../static/images/Logo.png"
+import Categories from './Categories'
 import Login from "./Login"
+import axios from "axios"
+import { makeStyles } from "@mui/styles"
 
+const useStyles = makeStyles(theme => ({
+    popover: {
+        pointerEvents: "none"
+    },
+    popoverContent: {
+        pointerEvents: "auto"
+    }
+}));
 
 export default function NavBar() {
 
     const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
+    const [popoverOpened, setPopoverOpened] = useState(false);
+    const popoverAnchor = useRef(null);
+    const [categories, setCategories] = useState([]);
 
+    useEffect(() => {
+        axios.get("http://localhost:5000/categories")
+            .then(response => {
+                setCategories(response.data)
+            })
+    }, []);
+
+    const handleOpenPopover = () => {
+        setPopoverOpened(true);
+    }
+
+    const handleClosePopover = () => {
+        setPopoverOpened(false);
+    }
 
     //Register is child component of Login, if the registration component is closed, the login component also should not be visible 
     const callbackModal = () => {
         closeLoginModal()
-     }
+    }
+
+    const classes = useStyles();
 
     const style = {
         position: 'absolute',
@@ -23,14 +52,12 @@ export default function NavBar() {
         transform: 'translate(-50%, -50%)',
     };
 
-
     const openLoginModal = () => {
         // console.log("open login modal")
         setIsLoginModalVisible(true);
     };
 
     const closeLoginModal = () => setIsLoginModalVisible(false);
-
 
     return (
         <div style={{
@@ -58,9 +85,35 @@ export default function NavBar() {
                 <Link mx={2} href="#">
                     <Typography color="white">Strona domowa</Typography>
                 </Link>
-                <Link mx={2} href="#">
+
+                <Link mx={2} href="#"
+                    ref={popoverAnchor}
+                    aria-owns="mouse-over-popover"
+                    aria-haspopup="true"
+                    onMouseEnter={handleOpenPopover}
+                    onMouseLeave={handleClosePopover}>
                     <Typography color="white">Kategorie</Typography>
                 </Link>
+                <Popover
+                    id="mouse-over-popover"
+                    className={classes.popover}
+                    classes={{
+                        paper: classes.popoverContent
+                    }}
+                    open={popoverOpened}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                    }}
+                    anchorEl={popoverAnchor.current}
+                    PaperProps={{ onMouseEnter: handleOpenPopover, onMouseLeave: handleClosePopover }}
+                >
+                    <Categories categories={categories} />
+                </Popover>
                 <Link mx={2} href="#">
                     <Typography color="white">Kontakt</Typography>
                 </Link>
@@ -74,10 +127,10 @@ export default function NavBar() {
 
             <Modal open={isLoginModalVisible} onClose={closeLoginModal}>
                 <Box sx={style}>
-                    <Login callback = {callbackModal} />
+                    <Login callback={callbackModal} />
                 </Box>
             </Modal>
 
-        </div>
+        </div >
     )
 }
