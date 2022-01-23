@@ -23,6 +23,7 @@ export default function NavBar() {
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
     const [categories, setCategories] = useState([]);
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
 
     const [alert, setAlert] = useState({
@@ -57,9 +58,18 @@ export default function NavBar() {
         console.log('alert: ', messagetype, msg)
 
         setAlert({
-            messageType: messagetype, 
+            messageType: messagetype,
             message: msg
         })
+    }
+
+    const loginUser = () => {
+        setIsUserLoggedIn(true);
+    }
+
+    const logOutUser = () => {
+        console.log("byebye")
+        setIsUserLoggedIn(false);
     }
 
     const handleCloseAlert = (event, reason) => {
@@ -68,7 +78,7 @@ export default function NavBar() {
         }
 
         setAlert({
-            messageType: 'success' ,
+            messageType: 'success',
             message: ''
         })
     }
@@ -84,7 +94,7 @@ export default function NavBar() {
         setIsLoginModalVisible(true);
     };
 
-  
+
 
     return (
         <div style={{
@@ -144,9 +154,20 @@ export default function NavBar() {
                 <Link mx={2} href="#">
                     <Typography color="white">Kontakt</Typography>
                 </Link>
-                <Link mx={2} href="#">
-                    <Typography color="orange" onClick={openLoginModal}>Logowanie</Typography>
-                </Link>
+
+                {isUserLoggedIn ?
+                    <Link mx={2} href="#">
+                        <Typography color="orange" onClick={logOutUser}>Wyloguj mnie</Typography>
+                    </Link>
+                    :
+                    <Link mx={2} href="#">
+                        <Typography color="orange" onClick={openLoginModal}>Logowanie</Typography>
+                    </Link>
+                }
+
+
+
+
                 <IconButton aria-label="cart" sx={{ ml: 4 }} href="#">
                     <ShoppingCartIcon sx={{ color: 'white' }} />
                 </IconButton>
@@ -154,7 +175,7 @@ export default function NavBar() {
 
             <Modal open={isLoginModalVisible} onClose={callbackCloseLoginModal}>
                 <Box sx={style}>
-                    <Login showAlert={showAlert} closeLogin={callbackCloseLoginModal} />
+                    <Login showAlert={showAlert} closeLogin={callbackCloseLoginModal} loginUser={loginUser} />
                 </Box>
             </Modal>
 

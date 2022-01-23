@@ -98,7 +98,7 @@ export default function Register({ showAlert, closeSignUp }) {
                 setError('')
                 setSuccess('Sprawdź swój adres ' + registerData.mail + ' w celu potwierdzenia zarejestrowanego konta.')
 
-                showAlert('info', 'Sprawdź swój adres ' + registerData.mail + ' w celu potwierdzenia zarejestrowanego konta.')
+                showAlert('success', 'Możesz się już zalogować. Sprawdź swój adres ' + registerData.mail + ' w celu potwierdzenia zarejestrowanego konta.')
                 closeSignUp()
 
             })

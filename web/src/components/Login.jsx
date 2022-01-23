@@ -8,7 +8,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 import { REACT_APP_LOGIN_ENDPOINT } from '../config';
 
-export default function Login({ showAlert, closeLogin }) {
+export default function Login({ showAlert, closeLogin, loginUser }) {
 
     const [loginValue, setLoginValue] = useState("");
     const [passwordValue, setPasswordValue] = useState("");
@@ -62,10 +62,10 @@ export default function Login({ showAlert, closeLogin }) {
                     showAlert('info', 'Zalogowano pomyślnie. Aby rozpocząć zakupy zatwierdź konto przez link aktywacyjny na twoim e-mailu!')
                 }
                 else {
-
                     showAlert('success', 'Zalogowano pomyślnie')
                 }
-                
+
+                loginUser()
                 closeLogin()
 
             })
