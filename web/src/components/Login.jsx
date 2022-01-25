@@ -38,7 +38,7 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
             data: body
         })
             .then(response => { //200
-                // console.log("response: ", response);
+                console.log("response: ", response);
                 // console.log("refreshToken = ", response.data.refreshToken)
                 // console.log("refreshToken expires = ", response.data.expiresIn)
                 // console.log("accessToken = ", response.data.accessToken)
@@ -51,12 +51,15 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
                 var time = now.getTime();
                 time += parseInt(response.data.expiresIn) * 3600 * 1000;
                 now.setTime(time);
-
-                Cookies.set('refreshToken', response.data.refreshToken)
-                Cookies.set('accessToken', response.data.accessToken, { expires: now })
-                Cookies.set('accountType', response.data.user.accountType)
+                
 
                 setError('')
+
+                if (response.data.user.banned) {
+                    showAlert('error', 'To konto zostało zablokowane.')
+                    closeLogin()
+                    return
+                }
 
                 if (!response.data.user.confirmed) {
                     showAlert('info', 'Zalogowano pomyślnie. Aby rozpocząć zakupy zatwierdź konto przez link aktywacyjny na twoim e-mailu!')
@@ -64,6 +67,10 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
                 else {
                     showAlert('success', 'Zalogowano pomyślnie')
                 }
+
+                Cookies.set('refreshToken', response.data.refreshToken)
+                Cookies.set('accessToken', response.data.accessToken, { expires: now })
+                Cookies.set('accountType', response.data.user.accountType)
 
                 loginUser()
                 closeLogin()
