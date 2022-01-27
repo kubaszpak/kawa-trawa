@@ -15,7 +15,8 @@ class ConfirmRegistrationEmailTemplate extends EmailTemplate {
     render(data: any): { text: string, html: string } {
 
         const { user: { firstName, lastName }, registrationToken } = data;
-        const confirmUrl = process.env.SERVER_HOST  + `/auth/confirmRegistration?token=${registrationToken}`;
+        //const confirmUrl = process.env.SERVER_HOST  + `/auth/confirmRegistration?token=${registrationToken}`;
+        const confirmUrl = `http://localhost:5000/auth/confirmRegistration?token=${registrationToken}`;
 
         return {
             text: `Hello ${firstName} ${lastName}!\n\nTo confirm your registration click on the link below.\n${confirmUrl}`,

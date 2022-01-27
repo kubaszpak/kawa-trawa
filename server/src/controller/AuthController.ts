@@ -97,7 +97,7 @@ export default class AuthController {
             await this.userRepository.update({ id: user.id }, { confirmed: true });
 
             console.log(`Confirmed user registration: ${user.firstName} ${user.lastName}`);
-            response.json("Successfully confirmed the registration!");
+            response.redirect("http://localhost:3000/RegisterConfirmed");
             return next();
         } catch (err) {
             return response.json("Registration request has expired.");

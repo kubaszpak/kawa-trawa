@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from './components/HomePage';
 import PageNotFound from './components/PageNotFound';
 import CategoryPage from './components/CategoryPage';
+import RegisterConfirmed from './components/RegisterConfirmed';
 
 
 
@@ -16,6 +17,7 @@ function App() {
           <Route path='/' element={<HomePage />} />
           {/* <Route path='/categories' element={<Categories />} /> */}
           <Route path="/categories/:categoryId" element={<CategoryPage />} />
+          <Route path="/RegisterConfirmed" element={<RegisterConfirmed />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
