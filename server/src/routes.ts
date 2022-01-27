@@ -145,7 +145,7 @@ export const Routes = [{
     method: "get",
     route: "/categories/:id",
     controller: CategoryController,
-    middleware: [accessTokenMiddleware],
+    middleware: [],
     action: "one"
 }, {
     method: "post",
