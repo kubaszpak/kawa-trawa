@@ -5,6 +5,7 @@ import HomePage from './components/HomePage';
 import PageNotFound from './components/PageNotFound';
 import CategoryPage from './components/CategoryPage';
 import RegisterConfirmed from './components/RegisterConfirmed';
+import ProductPage from './components/ProductPage';
 
 
 
@@ -18,6 +19,7 @@ function App() {
           {/* <Route path='/categories' element={<Categories />} /> */}
           <Route path="/categories/:categoryId" element={<CategoryPage />} />
           <Route path="/RegisterConfirmed" element={<RegisterConfirmed />} />
+          <Route path="/products/:productId" element={<ProductPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
