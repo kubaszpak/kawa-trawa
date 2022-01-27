@@ -1,5 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { ProductsAPI } from '../api/ProductsApi';
+import Grid from '@mui/material/Grid';
+import ProductCard from './ProductCard';
 
 const ProductsPage = () => {
     const [products, setProducts] = useState([]);
@@ -20,12 +22,26 @@ const ProductsPage = () => {
 
     return <>
         <h1>Products page</h1>
-        {products.map((product, index) =>
-            <div key={index} >
-                <p>name: {product.name}</p>
-                <p>description: {product.description}</p>
-            </div>
-        )}
+        <Grid container rowSpacing={1} columnSpacing={1}>
+            {products.map((product, index) =>
+                <>
+                    <Grid item xs={12} sm={6} md={4} xl={3} key={index} >
+                        <ProductCard key={index} product={product} />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4} xl={3} key={index} >
+                        <ProductCard key={index} product={product} />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4} xl={3} key={index} >
+                        <ProductCard key={index} product={product} />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4} xl={3} key={index} >
+                        <ProductCard key={index} product={product} />
+                    </Grid>
+
+                </>
+            )}
+        </Grid>
+
     </>;
 }
 
