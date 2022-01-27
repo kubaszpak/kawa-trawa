@@ -16,6 +16,16 @@ const ProductsPage = () => {
         setProducts(fetchedProducts);
     }, []);
 
+    const sortProducts = (property, ascending = true) => {
+        let newProducts = products;
+        if (ascending) {
+            newProducts.sort((a, b) => a[property] - b[property]);
+        } else {
+            newProducts.sort((a, b) => b[property] - a[property]);
+        }
+        setProducts(newProducts);
+    }
+
     useEffect(() => {
         updateShop();
     }, [updateShop]);
