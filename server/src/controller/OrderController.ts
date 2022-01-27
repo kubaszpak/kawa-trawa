@@ -45,37 +45,20 @@ export default class OrderController {
 
         console.log("Cart: ", products)
 
-        let discount = await this.productRepository.find({ relations: ["discounts"] });
-
         let totalPrice = 0;
-        request.body.products.map((product: Product) => {
+
+        request.body.products.map(async (product: Product) => {
 
             let productPrice = product.price
-            console.log(product)
-            if (product.discount) {
-                console.log("Product discount")
-                totalPrice += productPrice * (100 - product.discount.discountPercentage) / 100
-            }
-            else {
-                let bestDiscountPercentage = 0
-                if (product.categories) {
-                    product.categories.map((category: Category) => {
-                        if (category.discount && category.discount.discountPercentage > bestDiscountPercentage) {
-                            bestDiscountPercentage = category.discount.discountPercentage
-                        }
-                        
-                    })
-                    totalPrice += productPrice * (100 - bestDiscountPercentage) / 100
-                } else {
-                    totalPrice += productPrice
-                }
-                
-            }
+            totalPrice += productPrice
+            await this.productRepository.update(product.id, {quantity: product.quantity - 1})
+            
         });
 
         order.totalPrice = totalPrice
         if (user.balance < totalPrice)
             response.status(400).send("Insufficient funds");
+        user.balance -= totalPrice
         await this.userRepository.update(user.id, { balance: user.balance - totalPrice });
         return this.orderRepository.save(order);
     }
