@@ -107,12 +107,12 @@ export default class AuthController {
     async resetPasswordRequest(request: Request, response: Response, next: NextFunction) {
 
         const user = await getRepository(User).findOne({ where: { email: request.body.email } });
-        if (!user) return response.status(200).json("Reset email has been sent");
+        if (!user) return response.status(200).json("Reset email can not be send");
 
         const token = generateResetToken(user)
 
         sendEmail("Potwierdź zmianę hasła do 'Kawa i Trawa'", resetPasswordEmailTemplate, [user.email], { user, token })
-        if (!user) return response.status(200).json("Reset email has been sent");
+        return response.status(200).json("Reset email has been sent");
     }
 
     async resetPassword(request: Request, response: Response, next: NextFunction) {
