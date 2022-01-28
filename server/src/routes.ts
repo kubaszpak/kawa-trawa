@@ -2,7 +2,7 @@ import AddressController from "./controller/AddressController";
 import ComplaintController from "./controller/ComplaintController";
 import UserController from "./controller/UserController";
 import AuthController from "./controller/AuthController";
-import { accessTokenMiddleware, refreshTokenMiddleware, verifiedOnly, empOnly, unBannedOnly } from "./authentication/middleware";
+import { accessTokenMiddleware, refreshTokenMiddleware, verifiedOnly, empOnly, unBannedOnly, unBannedUserOrEmp } from "./authentication/middleware";
 import CategoryController from "./controller/CategoryController";
 import ProductController from "./controller/ProductController";
 import OrderController from "./controller/OrderController";
@@ -115,7 +115,7 @@ export const Routes = [{
     method: "get",
     route: "/orders",
     controller: OrderController,
-    middleware: [accessTokenMiddleware, empOnly],
+    middleware: [accessTokenMiddleware, unBannedUserOrEmp],
     action: "all"
 }, {
     method: "get",
@@ -133,7 +133,7 @@ export const Routes = [{
     method: "delete",
     route: "/orders/:id",
     controller: OrderController,
-    middleware: [accessTokenMiddleware, verifiedOnly],
+    middleware: [accessTokenMiddleware, unBannedUserOrEmp],
     action: "remove"
 }, {
     method: "get",

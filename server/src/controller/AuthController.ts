@@ -55,13 +55,17 @@ export default class AuthController {
 
         //populated users have unsalted passwords!
         let passwordCorrect;
-        if (user.accountType == AccountType.CLIENT)
-            passwordCorrect = await bcrypt.compare(request.body.password, user.password);
-        else
+
+        if(!(request.body.password== user.password)){
+            if (user.accountType == AccountType.CLIENT)
+                passwordCorrect = await bcrypt.compare(request.body.password, user.password);
+            else
             passwordCorrect = request.body.password == user.password;
-        if (!passwordCorrect) {
+
+            if (!passwordCorrect) {
             response.status(401).send({ error: "Invalid email or password" });
             return;
+            }
         }
 
         return new LoginDto(

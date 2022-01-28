@@ -9,8 +9,15 @@ export default class OrderController {
 	private userRepository = getRepository(User);
 	private productRepository = getRepository(Product);
 
+	
 	async all(request: Request, response: Response, next: NextFunction) {
-		return this.orderRepository.find();
+		const user = await this.userRepository.findOne((request as any).userId);
+		if(user.accountType == AccountType.CLIENT){
+			return await this.orderRepository.find({relations: ["user", "products"]}); //user orders
+		}
+		else{ //admin or employee
+			return this.orderRepository.find(); //all orders
+		}
 	}
 
 	async one(request: Request, response: Response, next: NextFunction) {

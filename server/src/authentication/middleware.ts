@@ -30,8 +30,23 @@ export async function unBannedOnly(req: Request, res: Response, next: NextFuncti
 export async function empOnly(req: Request, res: Response, next: NextFunction) {
     const userRepository = getRepository(User);
     const user = await userRepository.findOne((req as any).userId)
-    if (user.accountType == AccountType.EMPLOYEE)
+    if (user.accountType == AccountType.EMPLOYEE || user.accountType == AccountType.ADMIN)
         return next();
+    res.status(403).send("Verified only");
+}
+
+export async function unBannedUserOrEmp(req: Request, res: Response, next: NextFunction) { 
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne((req as any).userId)
+    // res.status(403).send(user.email + " conf = " + user.confirmed + " banned =" + user.banned);
+    if (user.accountType == AccountType.EMPLOYEE || user.accountType == AccountType.ADMIN)
+        return next();
+    else if (user.confirmed && !user.banned){
+        //client
+        
+        return next();
+    } 
+    
     res.status(403).send("Verified only");
 }
 
