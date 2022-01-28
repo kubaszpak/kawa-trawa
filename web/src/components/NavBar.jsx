@@ -9,7 +9,7 @@ import {
     Snackbar,
     Alert,
 } from "@mui/material";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import logoImg from "../static/images/Logo.png";
 import Categories from "./Categories";
 import Login from "./Login";
