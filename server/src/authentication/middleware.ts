@@ -14,39 +14,42 @@ export async function refreshTokenMiddleware(req: Request, res: Response, next: 
 export async function verifiedOnly(req: Request, res: Response, next: NextFunction) {
     const userRepository = getRepository(User);
     const user = await userRepository.findOne((req as any).userId)
-    if (user.confirmed && !user.banned)
+    if (user.confirmed && !user.banned) {
         return next();
+    }
     res.status(403).send("Verified only");
 }
 
 export async function unBannedOnly(req: Request, res: Response, next: NextFunction) {
     const userRepository = getRepository(User);
     const user = await userRepository.findOne((req as any).userId)
-    if (!user.banned)
+    if (!user.banned) {
         return next();
+    }
     res.status(403).send("Verified only");
 }
 
 export async function empOnly(req: Request, res: Response, next: NextFunction) {
     const userRepository = getRepository(User);
     const user = await userRepository.findOne((req as any).userId)
-    if (user.accountType == AccountType.EMPLOYEE || user.accountType == AccountType.ADMIN)
+    if (user.accountType == AccountType.EMPLOYEE || user.accountType == AccountType.ADMIN) {
         return next();
+    }
     res.status(403).send("Verified only");
 }
 
-export async function unBannedUserOrEmp(req: Request, res: Response, next: NextFunction) { 
+export async function unBannedUserOrEmp(req: Request, res: Response, next: NextFunction) {
     const userRepository = getRepository(User);
     const user = await userRepository.findOne((req as any).userId)
     // res.status(403).send(user.email + " conf = " + user.confirmed + " banned =" + user.banned);
     if (user.accountType == AccountType.EMPLOYEE || user.accountType == AccountType.ADMIN)
         return next();
-    else if (user.confirmed && !user.banned){
+    else if (user.confirmed && !user.banned) {
         //client
-        
+
         return next();
-    } 
-    
+    }
+
     res.status(403).send("Verified only");
 }
 
@@ -55,12 +58,15 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
     const authHeader = req.headers['authorization'];
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).send("Access Denied");
+        res.status(401).send("Access Denied");
+        return;
     }
 
     const token = authHeader.slice(7, authHeader.length);
 
     try {
+        console.log(token);
+
         jwt.verify(token, secret);
         let { payload: { id, firstName, lastName } } = jwt.decode(token, { complete: true });
 
@@ -68,14 +74,14 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
 
         if (!user || user.banned) {
             res.status(401).send("Unauthorized user");
-            return next();
+            return;
         }
 
         (req as any).userId = id;
         console.log(`Recognized user ${firstName} ${lastName}`);
-        return next();
+        next();
     } catch (err) {
         res.status(400).send("Invalid Token");
-        return next()
+        return;
     }
 }

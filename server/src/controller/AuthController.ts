@@ -42,7 +42,7 @@ export default class AuthController {
 
         if (!user) {
             response.status(400).send({ error: "Invalid email or password." });
-            return next();
+            return;
         }
 
         /*if (!user.confirmed) {
@@ -50,27 +50,29 @@ export default class AuthController {
             return;
         }*/
 
-        if (user.banned)
-            return response.status(403).send({ error: "User is baned" });
+        if (user.banned) {
+            response.status(403).send({ error: "User is baned" });
+            return;
+        }
 
-        
+
 
         //populated users have unsalted passwords!
         let passwordCorrect;
 
-        if(!(request.body.password== user.password)){
+        if (!(request.body.password == user.password)) {
             if (user.accountType == AccountType.CLIENT)
                 passwordCorrect = await bcrypt.compare(request.body.password, user.password);
             else
-            passwordCorrect = request.body.password == user.password;
+                passwordCorrect = request.body.password == user.password;
 
             if (!passwordCorrect) {
-            response.status(401).send({ error: "Invalid email or password" });
-            return;
+                response.status(401).send({ error: "Invalid email or password" });
+                return;
             }
         }
 
-        const token = await generateRefreshToken(user);
+        const token = await generateAccessToken(user);
 
         response.cookie("accessToken", token);
 
@@ -181,7 +183,7 @@ export default class AuthController {
         try {
             jwt.verify(token, user.password);
             const password = await this.hashPassword(request.body.password);
-            await getRepository(User).update(user.id, {password})
+            await getRepository(User).update(user.id, { password })
             return next();
 
         } catch (err) {
