@@ -83,6 +83,12 @@ export const Routes = [{
     action: "resetPassword"
 }, {
     method: "post",
+    route: "/auth/resetPasswordApply",
+    controller: AuthController,
+    middleware: [],
+    action: "resetPasswordApply"
+}, {
+    method: "post",
     route: "/auth/refresh",
     controller: AuthController,
     middleware: [refreshTokenMiddleware],

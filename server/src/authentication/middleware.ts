@@ -52,13 +52,15 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
         const user = await getRepository(User).findOne({ where: { id: id } });
 
         if (!user || user.banned) {
-            return res.status(401).send("Unauthorized user");
+            res.status(401).send("Unauthorized user");
+            return next();
         }
 
         (req as any).userId = id;
         console.log(`Recognized user ${firstName} ${lastName}`);
         return next();
     } catch (err) {
-        return res.status(400).send("Invalid Token");
+        res.status(400).send("Invalid Token");
+        return next()
     }
 }
