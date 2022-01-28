@@ -103,9 +103,9 @@ export default function NavBar() {
     }, [isUserLoggedIn]);
 
 
-    const isEmployee = () => {
+    const isEmployee = useMemo(() => {
         return accountType === accountTypes.EMPLOYEE;
-    }
+    }, [accountType]);
 
     const logOutUser = () => {
         console.log("byebye");

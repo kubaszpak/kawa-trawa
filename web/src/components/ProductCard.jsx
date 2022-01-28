@@ -51,7 +51,6 @@ const ProductCard = ({ product, onDelete }) => {
 
     const isEmployee = useMemo(() => {
         return accountType === accountTypes.EMPLOYEE;
-
     }, [accountType]);
 
 
