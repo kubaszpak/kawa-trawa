@@ -12,8 +12,8 @@ import ProductsPage from './components/ProductsPage';
 function App() {
   return (
     <div className="App">
-      <NavBar />
       <BrowserRouter>
+        <NavBar />
         <Routes>
           <Route path='/' element={<HomePage />} />
           {/* <Route path='/categories' element={<Categories />} /> */}

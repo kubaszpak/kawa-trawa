@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ProductsAPI } from "../api/ProductsApi";
+import { ProductsApi } from "../api/ProductsApi";
 
 import ProductsList from "./ProductsList";
 
@@ -7,7 +7,7 @@ const ProductsPage = () => {
     const [products, setProducts] = useState([]);
 
     const fetchProducts = async () => {
-        const { data } = await ProductsAPI.getProducts();
+        const { data } = await ProductsApi.getProducts();
         return [...data];
     };
 
