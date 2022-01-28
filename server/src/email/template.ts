@@ -28,12 +28,14 @@ class ConfirmRegistrationEmailTemplate extends EmailTemplate {
 class ResetPasswordEmailTemplate extends EmailTemplate {
     render(data: any): { text: string, html: string } {
 
-        const { user: { firstName, lastName }, resetToken } = data;
-        const confirmUrl = process.env.SERVER_HOST  + `/auth/confirmRegistration/${resetToken}`;
+        const { user: { firstName, lastName }} = data;
+        const resetToken = data.token;
+        //const confirmUrl = process.env.SERVER_HOST  + `/auth/confirmRegistration/${resetToken}`;
+        const confirmUrl = `http://localhost:5000/auth/resetPassword?token=${resetToken}`;
 
         return {
             text: `Hello ${firstName} ${lastName}!\n\nTo confirm your password reset click on the link below.\n${confirmUrl}\nIgnore this message if you haven't initiated password reset.`,
-            html: `<p>Hello<b> ${firstName} ${lastName}!</b></p><p>To confirm your password reset click on the link below.</p><p><a href=\"${confirmUrl}\">Confirm registration!</a></p><p>Ignore this message if you haven't initiated password reset.</p>`
+            html: `<p>Hello<b> ${firstName} ${lastName}!</b></p><p>To confirm your password reset click on the link below.</p><p><a href=\"${confirmUrl}\">Reset Password!</a></p><p>Ignore this message if you haven't initiated password reset.</p>`
         };
     }
 }

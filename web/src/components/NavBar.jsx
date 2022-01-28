@@ -1,29 +1,37 @@
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { Box, IconButton, Link, Typography, Modal, Popover, Snackbar, Alert } from '@mui/material'
-import React, { useState, useRef, useEffect } from 'react'
-import logoImg from "../static/images/Logo.png"
-import Categories from './Categories'
-import Login from "./Login"
-import axios from "axios"
-import { makeStyles } from "@mui/styles"
-import { REACT_APP_CATEGORIES_ENDPOINT } from '../config'
-import Cookies from 'js-cookie'
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import {
+    Box,
+    IconButton,
+    Link,
+    Typography,
+    Modal,
+    Popover,
+    Snackbar,
+    Alert,
+} from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import logoImg from "../static/images/Logo.png";
+import Categories from "./Categories";
+import Login from "./Login";
+import axios from "axios";
+import { makeStyles } from "@mui/styles";
+import { REACT_APP_CATEGORIES_ENDPOINT } from "../config";
+import Cookies from "js-cookie";
 import decode from "jwt-decode";
-import accountTypes from '../utils/accountTypes'
+import accountTypes from "../utils/accountTypes";
 import { useNavigate } from "react-router-dom";
-import ProductEditor from './ProductEditor'
+import ProductEditor from "./ProductEditor";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
     popover: {
-        pointerEvents: "none"
+        pointerEvents: "none",
     },
     popoverContent: {
-        pointerEvents: "auto"
-    }
+        pointerEvents: "auto",
+    },
 }));
 
 export default function NavBar() {
-
     const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
@@ -34,45 +42,55 @@ export default function NavBar() {
     const navigate = useNavigate();
 
     const [alert, setAlert] = useState({
-        messageType: 'success',
-        message: ''
+        messageType: "success",
+        message: "",
     });
 
     const classes = useStyles();
 
     useEffect(() => {
-        axios.get(REACT_APP_CATEGORIES_ENDPOINT)
-            .then(response => {
-                setCategories(response.data)
-            })
+        axios.get(REACT_APP_CATEGORIES_ENDPOINT).then((response) => {
+            setCategories(response.data);
+        });
     }, []);
+
+
 
     const handleOpenPopover = () => {
         setPopoverOpened(true);
-    }
+    };
 
     const handleClosePopover = () => {
         setPopoverOpened(false);
-    }
+    };
 
     //Register is child component of Login, if the registration component is closed, the login component also should not be visible
     const callbackCloseLoginModal = () => {
-        setIsLoginModalVisible(false)
-    }
+        setIsLoginModalVisible(false);
+    };
 
     const showAlert = (messagetype, msg) => {
-
-        console.log('alert: ', messagetype, msg)
+        console.log("alert: ", messagetype, msg);
 
         setAlert({
             messageType: messagetype,
-            message: msg
-        })
-    }
+            message: msg,
+        });
+    };
 
     const loginUser = () => {
         setIsUserLoggedIn(true);
-    }
+    };
+
+    useEffect(() => {
+        const accessToken = Cookies.get("accessToken");
+        if (!accessToken) {
+            setAccountType(null);
+            return;
+        }
+        const { accountType } = decode(accessToken);
+        setAccountType(accountType);
+    }, [isUserLoggedIn]);
 
     useEffect(() => {
         const accessToken = Cookies.get("accessToken");
@@ -90,31 +108,31 @@ export default function NavBar() {
     }
 
     const logOutUser = () => {
-        console.log("byebye")
+        console.log("byebye");
 
-        Cookies.remove('refreshToken')
-        Cookies.remove('accessToken')
-        Cookies.remove('accountType')
+        Cookies.remove("refreshToken");
+        Cookies.remove("accessToken");
+        Cookies.remove("accountType");
 
         setIsUserLoggedIn(false);
-    }
+    };
 
     const handleCloseAlert = (event, reason) => {
-        if (reason === 'clickaway') {
+        if (reason === "clickaway") {
             return;
         }
 
         setAlert({
-            messageType: 'success',
-            message: ''
-        })
-    }
+            messageType: "success",
+            message: "",
+        });
+    };
 
     const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
     };
 
     const openLoginModal = () => {
@@ -123,60 +141,82 @@ export default function NavBar() {
 
     const addNewProduct = () => {
         setProductEditorOpen(true);
-    }
+    };
 
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            margin: "0 auto",
-            maxWidth: "1200px",
-            padding: "50px 0"
-        }}>
-            <a href="/" style={{
+        <div
+            style={{
                 display: "flex",
-                alignItems: "center"
-            }}>
-                <img src={logoImg} alt="Logo" style={{
-                    width: "140px",
-                    height: "auto",
-                    objectFit: "contain"
-                }} /></a>
-            <Box sx={{
-                width: '100%',
-                justifyContent: 'right',
-                display: 'flex',
-                alignItems: 'center'
-            }}>
-                <Link mx={2} href="#">
+                justifyContent: "center",
+                margin: "0 auto",
+                maxWidth: "1200px",
+                padding: "50px 0",
+            }}
+        >
+            <a
+                href="/"
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                }}
+            >
+                <img
+                    src={logoImg}
+                    alt="Logo"
+                    style={{
+                        width: "140px",
+                        height: "auto",
+                        objectFit: "contain",
+                    }}
+                />
+            </a>
+            <Box
+                sx={{
+                    width: "100%",
+                    justifyContent: "right",
+                    display: "flex",
+                    alignItems: "center",
+                }}
+            >
+                <Link mx={2} href="/#">
                     <Typography color="white">Strona domowa</Typography>
                 </Link>
 
-                <Link mx={2} href="#"
+                <Link mx={2} href="/products">
+                    <Typography color="white">Produkty</Typography>
+                </Link>
+
+                <Link
+                    mx={2}
+                    href="#"
                     ref={popoverAnchor}
                     aria-owns="mouse-over-popover"
                     aria-haspopup="true"
                     onMouseEnter={handleOpenPopover}
-                    onMouseLeave={handleClosePopover}>
+                    onMouseLeave={handleClosePopover}
+                >
                     <Typography color="white">Kategorie</Typography>
                 </Link>
                 <Popover
                     id="mouse-over-popover"
                     className={classes.popover}
                     classes={{
-                        paper: classes.popoverContent
+                        paper: classes.popoverContent,
                     }}
                     open={popoverOpened}
                     anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'left',
+                        vertical: "bottom",
+                        horizontal: "left",
                     }}
                     transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
+                        vertical: "top",
+                        horizontal: "left",
                     }}
                     anchorEl={popoverAnchor.current}
-                    PaperProps={{ onMouseEnter: handleOpenPopover, onMouseLeave: handleClosePopover }}
+                    PaperProps={{
+                        onMouseEnter: handleOpenPopover,
+                        onMouseLeave: handleClosePopover,
+                    }}
                 >
                     <Categories categories={categories} />
                 </Popover>
@@ -184,39 +224,58 @@ export default function NavBar() {
                     <Typography color="white">Kontakt</Typography>
                 </Link>
 
-                {isEmployee() &&
-                    <Link mx={2} href="#">
-                        <Typography color="white" onClick={addNewProduct}>Dodaj produkt</Typography>
+                {isEmployee &&
+                    <Typography sx={{ cursor: "pointer" }} color="white" onClick={addNewProduct}>Dodaj produkt</Typography>
+                }
+
+                {(isUserLoggedIn || Cookies.get('accessToken') != null) &&
+                    <Link mx={2} href="\#">
+                        <Typography color="white">Zamówienia</Typography>
                     </Link>
                 }
 
-                {(isUserLoggedIn || Cookies.get('accessToken') != null) ?
+                {isUserLoggedIn || Cookies.get("accessToken") != null ? (
                     <Link mx={2} href="#">
-                        <Typography color="orange" onClick={logOutUser}>Wyloguj mnie</Typography>
+                        <Typography color="orange" onClick={logOutUser}>
+                            Wyloguj mnie
+                        </Typography>
                     </Link>
-                    :
-                    <Link mx={2} href="#">
-                        <Typography color="orange" onClick={openLoginModal}>Logowanie</Typography>
+                ) : (
+                    <Link mx={2} href="\#">
+                        <Typography color="orange" onClick={openLoginModal}>
+                            Logowanie
+                        </Typography>
                     </Link>
-                }
-
-
-
-
-
-                <IconButton aria-label="cart" sx={{ ml: 4 }} href="#">
-                    <ShoppingCartIcon sx={{ color: 'white' }} />
+                )}
+                <IconButton
+                    aria-label="cart"
+                    sx={{ ml: 4 }}
+                    onClick={() => navigate("cart")}
+                >
+                    <ShoppingCartIcon sx={{ color: "white" }} />
                 </IconButton>
             </Box>
 
             <Modal open={isLoginModalVisible} onClose={callbackCloseLoginModal}>
                 <Box sx={style}>
-                    <Login showAlert={showAlert} closeLogin={callbackCloseLoginModal} loginUser={loginUser} />
+                    <Login
+                        showAlert={showAlert}
+                        closeLogin={callbackCloseLoginModal}
+                        loginUser={loginUser}
+                    />
                 </Box>
             </Modal>
 
-            <Snackbar open={alert.message !== ''} onClose={handleCloseAlert} autoHideDuration={6000}>
-                <Alert onClose={handleCloseAlert} severity={alert.messageType} sx={{ width: '100%' }}>
+            <Snackbar
+                open={alert.message !== ""}
+                onClose={handleCloseAlert}
+                autoHideDuration={6000}
+            >
+                <Alert
+                    onClose={handleCloseAlert}
+                    severity={alert.messageType}
+                    sx={{ width: "100%" }}
+                >
                     {alert.message}
                 </Alert>
             </Snackbar>
@@ -228,7 +287,6 @@ export default function NavBar() {
                 setOpen={setProductEditorOpen}
                 onSubmit={() => { }}
             />
-
         </div >
-    )
+    );
 }

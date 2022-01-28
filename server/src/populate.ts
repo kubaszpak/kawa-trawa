@@ -99,7 +99,8 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "phoneNumber": "1234563789",
         "password": "dummy",
         "address": address2,
-        "confirmed": true,
+        "banned": false,
+        "confirmed": true
     })
 
     await userRepository.save(user3)

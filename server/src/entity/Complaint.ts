@@ -21,7 +21,7 @@ export class Complaint {
     })
     order: Order;
 
-    @ManyToOne(type => User, {
+    @ManyToOne(type => User, user => user.complaints, {
         eager: true,
         nullable: false
     })
