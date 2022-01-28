@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ProductsApi } from "../api/ProductsApi";
 import {
     Button,
@@ -118,9 +118,7 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 
                 <Select
                     fullWidth
-                    value={price}
                     style={tfStyle}
-
                     value={category}
                     label="Kategoria"
                     onChange={e => setCategory(e.target.value)}
