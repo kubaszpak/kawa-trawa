@@ -1,6 +1,6 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import { Box, IconButton, Link, Typography, Modal, Popover, Snackbar, Alert } from '@mui/material'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import logoImg from "../static/images/Logo.png"
 import Categories from './Categories'
 import Login from "./Login"
@@ -10,7 +10,6 @@ import { REACT_APP_CATEGORIES_ENDPOINT } from '../config'
 import Cookies from 'js-cookie'
 import decode from "jwt-decode";
 import accountTypes from '../utils/accountTypes'
-import { useNavigate } from "react-router-dom";
 import ProductEditor from './ProductEditor'
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +30,6 @@ export default function NavBar() {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [accountType, setAccountType] = useState(null);
     const [productEditorOpen, setProductEditorOpen] = useState(false);
-    const navigate = useNavigate();
 
     const [alert, setAlert] = useState({
         messageType: 'success',
@@ -85,9 +83,14 @@ export default function NavBar() {
     }, [isUserLoggedIn]);
 
 
-    const isEmployee = () => {
+    // const isEmployee = () => {
+    //     return accountType === accountTypes.EMPLOYEE;
+    // }
+
+    const isEmployee = useMemo(() => {
         return accountType === accountTypes.EMPLOYEE;
-    }
+    }, [accountType]);
+
 
     const logOutUser = () => {
         console.log("byebye")
@@ -148,8 +151,12 @@ export default function NavBar() {
                 display: 'flex',
                 alignItems: 'center'
             }}>
-                <Link mx={2} href="#">
+                <Link mx={2} href="/#">
                     <Typography color="white">Strona domowa</Typography>
+                </Link>
+
+                <Link mx={2} href="/products">
+                    <Typography color="white">Produkty</Typography>
                 </Link>
 
                 <Link mx={2} href="#"
@@ -184,7 +191,7 @@ export default function NavBar() {
                     <Typography color="white">Kontakt</Typography>
                 </Link>
 
-                {isEmployee() &&
+                {isEmployee &&
                     <Link mx={2} href="#">
                         <Typography color="white" onClick={addNewProduct}>Dodaj produkt</Typography>
                     </Link>

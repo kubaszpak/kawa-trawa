@@ -25,6 +25,7 @@ const ProductsList = ({ products }) => {
                 ascending = false;
                 property = "price"
                 break;
+            default:
         }
 
         let newProducts = [...products];
