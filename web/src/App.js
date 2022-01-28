@@ -9,6 +9,7 @@ import ProductPage from './components/ProductPage';
 import ProductsPage from './components/ProductsPage';
 import { useEffect, useState } from 'react';
 import Cart from './components/Cart';
+import PasswordResetApply from './components/PasswordResetApply';
 
 const cartFromLocalStorage = () => {
   return JSON.parse(localStorage.getItem("cart") || "{}");
@@ -42,6 +43,7 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage />} />
           {/* <Route path='/categories' element={<Categories />} /> */}
+          <Route path="/PasswordResetApply" element={<PasswordResetApply />} />
           <Route path="/categories/:categoryId" element={<CategoryPage />} />
           <Route path="/RegisterConfirmed" element={<RegisterConfirmed />} />
           <Route path="/products/:productId" element={<ProductPage addProductToCart={addProductToCart} />} />

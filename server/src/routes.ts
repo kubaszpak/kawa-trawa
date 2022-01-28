@@ -77,10 +77,16 @@ export const Routes = [{
     action: "resetPasswordRequest"
 }, {
     method: "get",
-    route: "/auth/resetPassword/:token",
+    route: "/auth/resetPassword",
     controller: AuthController,
     middleware: [],
     action: "resetPassword"
+}, {
+    method: "post",
+    route: "/auth/resetPasswordApply",
+    controller: AuthController,
+    middleware: [],
+    action: "resetPasswordApply"
 }, {
     method: "post",
     route: "/auth/refresh",

@@ -3,6 +3,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import React from 'react'
 import { useState } from 'react'
 import Register from "./Register"
+import PasswordReset from "./PasswordReset"
 import axios from 'axios';
 // import Cookies from 'universal-cookie';
 import Cookies from 'js-cookie'
@@ -13,6 +14,7 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
     const [loginValue, setLoginValue] = useState("");
     const [passwordValue, setPasswordValue] = useState("");
     const [isSignUpModalVisible, setIsSignUpModalVisible] = useState(false);
+    const [isPasswordResetModalVisible, setIsPasswordResetModalVisible] = useState(false);
 
     const [error, setError] = useState("");
 
@@ -95,8 +97,18 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
         setIsSignUpModalVisible(true);
     };
 
+    const openPasswordResetModal = () => {
+        setIsPasswordResetModalVisible(true);
+    };
+    
+
     const closeSignUpModal = () => {
         setIsSignUpModalVisible(false)
+        closeLogin()
+    };
+
+    const closePasswordResetModal = () => {
+        setIsPasswordResetModalVisible(false)
         closeLogin()
     };
 
@@ -149,7 +161,7 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
                         <p margin="2px 0"></p>
 
                         <div style={{ display: "flex" }}>
-                            <Link style={linkStyle} href="#">Nie pamiętam hasła</Link>
+                            <Link style={linkStyle} onClick={openPasswordResetModal} href="#">Nie pamiętam hasła</Link>
                         </div>
 
 
@@ -161,6 +173,12 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
             <Modal open={isSignUpModalVisible} onClose={closeSignUpModal}>
                 <Box sx={style}>
                     <Register showAlert={showAlert} closeSignUp={closeSignUpModal} />
+                </Box>
+            </Modal>
+
+            <Modal open={isPasswordResetModalVisible} onClose={closePasswordResetModal}>
+                <Box sx={style}>
+                    <PasswordReset showAlert={showAlert} closePasswordReset={closePasswordResetModal} />
                 </Box>
             </Modal>
         </>
