@@ -42,7 +42,7 @@ export default class AuthController {
 
         if (!user) {
             response.status(400).send({ error: "Invalid email or password." });
-            return;
+            return next();
         }
 
         /*if (!user.confirmed) {
@@ -52,6 +52,8 @@ export default class AuthController {
 
         if (user.banned)
             return response.status(403).send({ error: "User is baned" });
+
+        
 
         //populated users have unsalted passwords!
         let passwordCorrect;
@@ -68,9 +70,13 @@ export default class AuthController {
             }
         }
 
+        const token = await generateRefreshToken(user);
+
+        response.cookie("accessToken", token);
+
         return new LoginDto(
             await generateRefreshToken(user),
-            await generateAccessToken(user),
+            token,
             process.env.JWT_ACCESS_EXPIRATION,
             user);
     }
@@ -111,18 +117,77 @@ export default class AuthController {
     async resetPasswordRequest(request: Request, response: Response, next: NextFunction) {
 
         const user = await getRepository(User).findOne({ where: { email: request.body.email } });
-        if (!user) return response.status(200).json("Reset email has been sent");
+        if (user) {
+            const token = await generateResetToken(user)
 
-        const token = generateResetToken(user)
-
-        sendEmail("Potwierdź zmianę hasła do 'Kawa i Trawa'", resetPasswordEmailTemplate, [user.email], { user, token })
-        if (!user) return response.status(200).json("Reset email has been sent");
+            sendEmail("Potwierdź zmianę hasła do 'Kawa i Trawa'", resetPasswordEmailTemplate, [user.email], { user, token })
+        }
+        response.status(200).json("Reset email has been sent");
+        return next();
     }
 
     async resetPassword(request: Request, response: Response, next: NextFunction) {
 
-        /*const user = 
-        const user = jwt.verify(token, process.env.JWT_REGISTRATION_SECRET);*/
+        const token: string = request.query.token as string;
+
+        try {
+            let { payload: { id } } = jwt.decode(token, { complete: true });
+
+            (request as any).userId = id;
+
+        } catch (err) {
+            response.status(400).send("Invalid Token structure");
+            return next()
+        }
+
+        const user = await getRepository(User).findOne((request as any).userId)
+        if (!user || user.banned || !user.confirmed) {
+            response.status(404).json("Can not change password");
+            return next();
+        }
+
+        try {
+            jwt.verify(token, user.password);
+            response.cookie("resetToken", token)
+            response.redirect("http://localhost:3000/PasswordResetApply");
+            return next();
+
+        } catch (err) {
+            response.status(400).send("Invalid Token");
+            return next()
+        }
+    }
+
+    async resetPasswordApply(request: Request, response: Response, next: NextFunction) {
+
+        const token: string = request.headers['authorization']
+
+        try {
+            let { payload: { id } } = jwt.decode(token, { complete: true });
+
+            (request as any).userId = id;
+
+        } catch (err) {
+            response.status(400).send("Invalid Token structure");
+            return next()
+        }
+
+        const user = await getRepository(User).findOne((request as any).userId)
+        if (!user || user.banned || !user.confirmed) {
+            response.status(404).json("Can not change password");
+            return next();
+        }
+
+        try {
+            jwt.verify(token, user.password);
+            const password = await this.hashPassword(request.body.password);
+            await getRepository(User).update(user.id, {password})
+            return next();
+
+        } catch (err) {
+            response.status(400).send("Invalid Token");
+            return next()
+        }
     }
 
 }

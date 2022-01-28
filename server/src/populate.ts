@@ -194,7 +194,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "categories": [grassCategory],
         "name": "Mint tee 30 teabags",
         "description": "Mentol zawarty w liściach tej rośliny zwiększa produkcję soków żołądkowych oraz ogranicza wydzielanie żółci, tym samym skutecznie a zarazem naturalnie łagodząc wzdęcia, kolki czy skurcze.",
-        "pathToImage": "images/grass/mintTee.png",
+        "pathToImage": "https://image.freepik.com/free-psd/plastic-bag-foil-pouch-bag-packaging-package-branding-identity_1150-41196.jpg",
         "price": 9,
         "quantity": 100,
         "visibility": true
@@ -206,7 +206,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "categories": [grassCategory, subCoffeeCategory1],
         "name": "Green tee 100g",
         "description": "Napój przyrządzany wyłącznie z liści herbaty chińskiej (Camellia sinensis), które poddane zostały w czasie przetwarzania jedynie minimalnej oksydacji.",
-        "pathToImage": "images/grass/greenTee.png",
+        "pathToImage": "https://image.freepik.com/free-psd/paper-coffee-bags-mockup_58466-11166.jpg",
         "price": 6,
         "quantity": 50,
         "visibility": true
@@ -219,13 +219,17 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "categories": [grassCategory],
         "name": "Black tee 100g",
         "description": "Zawiera dużo teiny, przez co działa pobudzająco. Ma działanie antybakteryjne w układzie pokarmowym i wzmaga wydzielanie soków trawiennych. Zmniejsza ciśnienie krwi, przez co również wystąpienie chorób serca.",
-        "pathToImage": "images/grass/blackTee.png",
+        "pathToImage": "https://image.freepik.com/free-psd/plastic-bag-foil-pouch-bag-packaging-package-branding-identity_1150-41201.jpg",
         "price": 7,
         "quantity": 50,
         "visibility": true
     })
 
     await productRepository.save(productBlackTea)
+
+
+
+
 
     const order1 = orderRepository.create({
         "address": address1,

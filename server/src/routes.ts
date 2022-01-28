@@ -77,10 +77,16 @@ export const Routes = [{
     action: "resetPasswordRequest"
 }, {
     method: "get",
-    route: "/auth/resetPassword/:token",
+    route: "/auth/resetPassword",
     controller: AuthController,
     middleware: [],
     action: "resetPassword"
+}, {
+    method: "post",
+    route: "/auth/resetPasswordApply",
+    controller: AuthController,
+    middleware: [],
+    action: "resetPasswordApply"
 }, {
     method: "post",
     route: "/auth/refresh",
@@ -105,7 +111,15 @@ export const Routes = [{
     controller: ProductController,
     middleware: [accessTokenMiddleware, empOnly],
     action: "save"
-}, {
+},
+{
+    method: "patch",
+    route: "/products/:id",
+    controller: ProductController,
+    middleware: [accessTokenMiddleware, empOnly],
+    action: "update"
+},
+{
     method: "delete",
     route: "/products/:id",
     controller: ProductController,

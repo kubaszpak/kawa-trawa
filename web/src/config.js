@@ -4,3 +4,5 @@ export const REACT_APP_CATEGORIES_ENDPOINT = process.env.REACT_APP_BE_ADDRESS + 
 export const REACT_APP_PRODUCTS_ENDPOINT = process.env.REACT_APP_BE_ADDRESS + "/products"
 export const REACT_APP_ORDERS_ENDPOINT = process.env.REACT_APP_BE_ADDRESS + "/orders"
 export const REACT_APP_POST_COMPLAINT_ENDPOINT = process.env.REACT_APP_BE_ADDRESS + "/complaints"
+export const REACT_APP_PASSWORD_RESET_ENDPOINT = process.env.REACT_APP_BE_ADDRESS + "/auth/resetPasswordRequest"
+export const REACT_APP_PASSWORD_RESET_APPLY_ENDPOINT = process.env.REACT_APP_BE_ADDRESS + '/auth/resetPasswordApply'
