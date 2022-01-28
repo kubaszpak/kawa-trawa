@@ -94,7 +94,9 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "email": "email3@email.com",
         "phoneNumber": "1234563789",
         "password": "dummy",
-        "address": address2
+        "address": address2,
+        "banned": false,
+        "confirmed": true
     })
 
     await userRepository.save(user3)
