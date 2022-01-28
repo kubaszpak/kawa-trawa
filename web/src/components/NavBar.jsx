@@ -229,19 +229,19 @@ export default function NavBar() {
                 }
 
                 {(isUserLoggedIn || Cookies.get('accessToken') != null) &&
-                    <Link mx={2} href="\#">
+                    <Link mx={2} href="/#">
                         <Typography color="white">Zamówienia</Typography>
                     </Link>
                 }
 
                 {isUserLoggedIn || Cookies.get("accessToken") != null ? (
-                    <Link mx={2} href="#">
+                    <Link mx={2} href="/#">
                         <Typography color="orange" onClick={logOutUser}>
                             Wyloguj mnie
                         </Typography>
                     </Link>
                 ) : (
-                    <Link mx={2} href="\#">
+                    <Link mx={2} href="/#">
                         <Typography color="orange" onClick={openLoginModal}>
                             Logowanie
                         </Typography>
@@ -287,6 +287,6 @@ export default function NavBar() {
                 setOpen={setProductEditorOpen}
                 onSubmit={() => { }}
             />
-        </div >
+        </div>
     );
 }
