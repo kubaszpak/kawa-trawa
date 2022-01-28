@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from "typeorm";
 import { Address } from "./Address";
+import { Complaint } from "./Complaint";
 import { Order } from "./Order";
 
 export enum AccountType {
@@ -62,5 +63,8 @@ export class User {
 
     @OneToMany(type => Order, order => order.user)
     orders: Order[];
+
+    @OneToMany(type => Complaint, complaint => complaint.user)
+    complaints: Complaint[];
 
 }
