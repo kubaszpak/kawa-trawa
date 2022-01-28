@@ -2,7 +2,7 @@ import { User } from "../entity/User";
 import * as jwt from "jsonwebtoken"
 
 async function generatePayload(user: User) {
-    return { email: user.email, id: user.id, firstName: user.firstName, lastName: user.lastName };
+    return { email: user.email, id: user.id, firstName: user.firstName, lastName: user.lastName, accountType: user.accountType };
 }
 
 async function getRegistrationTokenPayload(user: User) {

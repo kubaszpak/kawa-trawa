@@ -15,8 +15,25 @@ export default class ProductController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
+
+        const product = request.body;
+
+        if (!product.name) {
+            response.status(400).send("Product name not provided");
+            return;
+        }
+
         return this.productRepository.save(request.body);
     }
+
+    async update(request: Request, response: Response, next: NextFunction) {
+
+        // .save Also supports partial updating since all undefined properties are skipped.
+        const product = await this.productRepository.findOne(request.params.id);
+        this.productRepository.merge(product, request.body);
+        return this.productRepository.save(product);
+    }
+
 
     async remove(request: Request, response: Response, next: NextFunction) {
         const productToRemove = await this.productRepository.findOne(request.params.id);
