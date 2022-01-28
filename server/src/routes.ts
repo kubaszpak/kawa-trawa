@@ -111,7 +111,15 @@ export const Routes = [{
     controller: ProductController,
     middleware: [accessTokenMiddleware, empOnly],
     action: "save"
-}, {
+},
+{
+    method: "patch",
+    route: "/products/:id",
+    controller: ProductController,
+    middleware: [accessTokenMiddleware, empOnly],
+    action: "update"
+},
+{
     method: "delete",
     route: "/products/:id",
     controller: ProductController,

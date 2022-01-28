@@ -13,8 +13,8 @@ import PasswordResetApply from './components/PasswordResetApply';
 function App() {
   return (
     <div className="App">
-      <NavBar />
       <BrowserRouter>
+        <NavBar />
         <Routes>
           <Route path='/' element={<HomePage />} />
           {/* <Route path='/categories' element={<Categories />} /> */}

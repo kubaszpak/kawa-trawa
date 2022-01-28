@@ -8,6 +8,10 @@ import axios from "axios"
 import { makeStyles } from "@mui/styles"
 import { REACT_APP_CATEGORIES_ENDPOINT } from '../config'
 import Cookies from 'js-cookie'
+import decode from "jwt-decode";
+import accountTypes from '../utils/accountTypes'
+import { useNavigate } from "react-router-dom";
+import ProductEditor from './ProductEditor'
 
 const useStyles = makeStyles(theme => ({
     popover: {
@@ -24,8 +28,10 @@ export default function NavBar() {
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
     const [categories, setCategories] = useState([]);
-    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
-
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+    const [accountType, setAccountType] = useState(null);
+    const [productEditorOpen, setProductEditorOpen] = useState(false);
+    const navigate = useNavigate();
 
     const [alert, setAlert] = useState({
         messageType: 'success',
@@ -68,6 +74,21 @@ export default function NavBar() {
         setIsUserLoggedIn(true);
     }
 
+    useEffect(() => {
+        const accessToken = Cookies.get("accessToken");
+        if (!accessToken) {
+            setAccountType(null);
+            return;
+        }
+        const { accountType } = decode(accessToken);
+        setAccountType(accountType);
+    }, [isUserLoggedIn]);
+
+
+    const isEmployee = () => {
+        return accountType === accountTypes.EMPLOYEE;
+    }
+
     const logOutUser = () => {
         console.log("byebye")
 
@@ -100,7 +121,9 @@ export default function NavBar() {
         setIsLoginModalVisible(true);
     };
 
-
+    const addNewProduct = () => {
+        setProductEditorOpen(true);
+    }
 
     return (
         <div style={{
@@ -161,7 +184,13 @@ export default function NavBar() {
                     <Typography color="white">Kontakt</Typography>
                 </Link>
 
-                {(isUserLoggedIn || Cookies.get('accessToken') != null)?
+                {isEmployee() &&
+                    <Link mx={2} href="#">
+                        <Typography color="white" onClick={addNewProduct}>Dodaj produkt</Typography>
+                    </Link>
+                }
+
+                {(isUserLoggedIn || Cookies.get('accessToken') != null) ?
                     <Link mx={2} href="#">
                         <Typography color="orange" onClick={logOutUser}>Wyloguj mnie</Typography>
                     </Link>
@@ -170,6 +199,7 @@ export default function NavBar() {
                         <Typography color="orange" onClick={openLoginModal}>Logowanie</Typography>
                     </Link>
                 }
+
 
 
 
@@ -190,6 +220,15 @@ export default function NavBar() {
                     {alert.message}
                 </Alert>
             </Snackbar>
-        </div>
+
+            <ProductEditor
+                product={{}}
+                mode={"ADD"}
+                open={productEditorOpen}
+                setOpen={setProductEditorOpen}
+                onSubmit={() => { }}
+            />
+
+        </div >
     )
 }
