@@ -3,7 +3,7 @@ import { ProductsApi } from "../api/ProductsApi";
 
 import ProductsList from "./ProductsList";
 
-const ProductsPage = () => {
+const ProductsPage = ({ addProductToCart }) => {
     const [products, setProducts] = useState([]);
 
     const fetchProducts = async () => {
@@ -20,7 +20,7 @@ const ProductsPage = () => {
         updateShop();
     }, [updateShop]);
 
-    return <ProductsList products={products} setProducts={setProducts} onDelete={updateShop} />
+    return <ProductsList addProductToCart={addProductToCart} products={products} setProducts={setProducts} onDelete={updateShop} />
 };
 
 export default ProductsPage;

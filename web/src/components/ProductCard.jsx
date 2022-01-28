@@ -16,7 +16,7 @@ import ProductEditor from "./ProductEditor";
 
 
 
-const ProductCard = ({ product, onDelete }) => {
+const ProductCard = ({ product, onDelete, addProductToCart }) => {
     const navigate = useNavigate();
     const classes = useStyles();
     const [accountType, setAccountType] = useState(null);
@@ -79,7 +79,7 @@ const ProductCard = ({ product, onDelete }) => {
                     </Box>
                 </CardContent>
                 <CardActions>
-                    <Button size="small" variant="contained" color="secondary">Dodaj do koszyka</Button>
+                    <Button size="small" variant="contained" color="secondary" onClick={() => addProductToCart(product.id)}>Dodaj do koszyka</Button>
                     <Button size="small" variant="contained" color="secondary" onClick={showDetails}>Szczegóły</Button>
 
                     {isEmployee &&

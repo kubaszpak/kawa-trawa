@@ -45,10 +45,10 @@ function App() {
           <Route path='/' element={<HomePage />} />
           {/* <Route path='/categories' element={<Categories />} /> */}
           <Route path="/PasswordResetApply" element={<PasswordResetApply />} />
-          <Route path="/categories/:categoryId" element={<CategoryPage />} />
+          <Route path="/categories/:categoryId" element={<CategoryPage addProductToCart={addProductToCart} />} />
           <Route path="/RegisterConfirmed" element={<RegisterConfirmed />} />
           <Route path="/products/:productId" element={<ProductPage addProductToCart={addProductToCart} />} />
-          <Route path="/products/" element={<ProductsPage />} />
+          <Route path="/products/" element={<ProductsPage addProductToCart={addProductToCart} />} />
           <Route path="/orders/" element={<OrdersPage />} />
           <Route path="/cart" element={<Cart cartContent={cart} />} />
           <Route path="*" element={<PageNotFound />} />

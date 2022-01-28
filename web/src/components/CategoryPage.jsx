@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { CategoriesApi } from "../api/CategoriesApi";
 import ProductsList from "./ProductsList";
 
-export default function CategoryPage() {
+export default function CategoryPage({ addProductToCart }) {
 	let params = useParams();
 	const [category, setCategory] = useState(null);
 
@@ -21,5 +21,5 @@ export default function CategoryPage() {
 		updateCategory();
 	}, [updateCategory]);
 
-	return <ProductsList products={category?.products || []} onDelete={updateCategory} />
+	return <ProductsList addProductToCart={addProductToCart} products={category?.products || []} onDelete={updateCategory} />
 }
