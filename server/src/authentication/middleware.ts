@@ -45,8 +45,6 @@ export async function unBannedUserOrEmp(req: Request, res: Response, next: NextF
     if (user.accountType == AccountType.EMPLOYEE || user.accountType == AccountType.ADMIN)
         return next();
     else if (user.confirmed && !user.banned) {
-        //client
-
         return next();
     }
 
@@ -65,8 +63,6 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
     const token = authHeader.slice(7, authHeader.length);
 
     try {
-        console.log(token);
-
         jwt.verify(token, secret);
         let { payload: { id, firstName, lastName } } = jwt.decode(token, { complete: true });
 
@@ -79,7 +75,7 @@ async function tokenMiddleware(req: Request, res: Response, next: NextFunction, 
 
         (req as any).userId = id;
         console.log(`Recognized user ${firstName} ${lastName}`);
-        next();
+        return next();
     } catch (err) {
         res.status(400).send("Invalid Token");
         return;
