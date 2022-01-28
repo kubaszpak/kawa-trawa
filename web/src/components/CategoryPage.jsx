@@ -21,5 +21,5 @@ export default function CategoryPage() {
 		updateCategory();
 	}, [updateCategory]);
 
-	return <ProductsList products={category?.products || []} />
+	return <ProductsList products={category?.products || []} onDelete={updateCategory} />
 }

@@ -6,7 +6,7 @@ import { Typography, Select, MenuItem, Paper, Box, FilledInput } from "@mui/mate
 import { makeStyles } from '@mui/styles';
 import { filterProducts, queryFilter } from "../utils/filters";
 
-const ProductsList = ({ products }) => {
+const ProductsList = ({ products, onDelete }) => {
     const [sortMode, setSortMode] = useState("price-asc");
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -50,6 +50,7 @@ const ProductsList = ({ products }) => {
         return sortProducts(newProducts);
     }, [products, searchQuery, sortMode]);
 
+
     return (
         <>
             <Box className={classes.grid} >
@@ -89,7 +90,7 @@ const ProductsList = ({ products }) => {
                 <Grid container rowSpacing={2} columnSpacing={2} >
                     {displayedProducts.map((product, index) => (
                         <Grid item xs={12} sm={6} md={4} xl={3} key={index}>
-                            <ProductCard key={index} product={product} />
+                            <ProductCard key={index} product={product} onDelete={onDelete} />
                         </Grid>
                     ))}
                 </Grid>

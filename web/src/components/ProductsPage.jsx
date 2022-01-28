@@ -20,7 +20,7 @@ const ProductsPage = () => {
         updateShop();
     }, [updateShop]);
 
-    return <ProductsList products={products} setProducts={setProducts} />
+    return <ProductsList products={products} setProducts={setProducts} onDelete={updateShop} />
 };
 
 export default ProductsPage;

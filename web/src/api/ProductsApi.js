@@ -13,4 +13,8 @@ export class ProductsApi {
         return API.patch(`/products/${product.id}`, product, authHeader());
     }
 
+    static async deleteProduct(product) {
+        return API.delete(`/products/${product.id}`, authHeader());
+    }
+
 }

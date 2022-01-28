@@ -9,7 +9,7 @@ import {
     Snackbar,
     Alert,
 } from "@mui/material";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import logoImg from "../static/images/Logo.png";
 import Categories from "./Categories";
 import Login from "./Login";
@@ -32,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NavBar() {
-
-
-    let navigate = useNavigate();
     const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
@@ -42,6 +39,7 @@ export default function NavBar() {
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
     const [accountType, setAccountType] = useState(null);
     const [productEditorOpen, setProductEditorOpen] = useState(false);
+    const navigate = useNavigate();
 
     const [alert, setAlert] = useState({
         messageType: "success",
@@ -56,7 +54,7 @@ export default function NavBar() {
         });
     }, []);
 
-  
+
 
     const handleOpenPopover = () => {
         setPopoverOpened(true);
@@ -94,9 +92,20 @@ export default function NavBar() {
         setAccountType(accountType);
     }, [isUserLoggedIn]);
 
-    const isEmployee = () => {
+    useEffect(() => {
+        const accessToken = Cookies.get("accessToken");
+        if (!accessToken) {
+            setAccountType(null);
+            return;
+        }
+        const { accountType } = decode(accessToken);
+        setAccountType(accountType);
+    }, [isUserLoggedIn]);
+
+
+    const isEmployee = useMemo(() => {
         return accountType === accountTypes.EMPLOYEE;
-    };
+    }, [accountType]);
 
     const logOutUser = () => {
         console.log("byebye");
@@ -169,8 +178,12 @@ export default function NavBar() {
                     alignItems: "center",
                 }}
             >
-                <Link mx={2} href="#">
+                <Link mx={2} href="/#">
                     <Typography color="white">Strona domowa</Typography>
+                </Link>
+
+                <Link mx={2} href="/products">
+                    <Typography color="white">Produkty</Typography>
                 </Link>
 
                 <Link
@@ -210,31 +223,25 @@ export default function NavBar() {
                 <Link mx={2} href="#">
                     <Typography color="white">Kontakt</Typography>
                 </Link>
-                
-                {(isUserLoggedIn || Cookies.get('accessToken') != null)?
-                    <Link mx={2} href="#">
-                        <Typography color="white">Zamówienia</Typography>
-                    </Link>
-                    :
-                    ""
+
+                {isEmployee &&
+                    <Typography sx={{ cursor: "pointer" }} color="white" onClick={addNewProduct}>Dodaj produkt</Typography>
                 }
 
-                {isEmployee() && (
-                    <Link mx={2} href="#">
-                        <Typography color="white" onClick={addNewProduct}>
-                            Dodaj produkt
-                        </Typography>
+                {(isUserLoggedIn || Cookies.get('accessToken') != null) &&
+                    <Link mx={2} href="/#">
+                        <Typography color="white">Zamówienia</Typography>
                     </Link>
-                )}
+                }
 
                 {isUserLoggedIn || Cookies.get("accessToken") != null ? (
-                    <Link mx={2} href="#">
+                    <Link mx={2} href="/#">
                         <Typography color="orange" onClick={logOutUser}>
                             Wyloguj mnie
                         </Typography>
                     </Link>
                 ) : (
-                    <Link mx={2} href="#">
+                    <Link mx={2} href="/#">
                         <Typography color="orange" onClick={openLoginModal}>
                             Logowanie
                         </Typography>
