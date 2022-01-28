@@ -36,7 +36,8 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "email": "email1@email.com",
         "phoneNumber": "1234563789",
         "password": "dummy",
-        "address": address1
+        "address": address1,
+        "confirmed": true,
     })
 
     await userRepository.save(user1)
@@ -48,7 +49,8 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "email": "admin@email.com",
         "phoneNumber": "1234563789",
         "password": "admin",
-        "accountType": AccountType.ADMIN
+        "accountType": AccountType.ADMIN,
+        "confirmed": true,
     })
 
     await userRepository.save(adminUser)
@@ -60,7 +62,8 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "email": "emp@email.com",
         "phoneNumber": "1234563789",
         "password": "emp",
-        "accountType": AccountType.EMPLOYEE
+        "accountType": AccountType.EMPLOYEE,
+        "confirmed": true,
     })
 
     await userRepository.save(employee)
@@ -73,6 +76,7 @@ async function populateDatabaseWithTestData(connection: Connection) {
         "email": "email2@email.com",
         "phoneNumber": "1234563789",
         "password": "dummy",
+        "confirmed": true,
     })
 
     await userRepository.save(user2)
