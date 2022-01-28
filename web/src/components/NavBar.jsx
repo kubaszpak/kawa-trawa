@@ -20,12 +20,14 @@ const useStyles = makeStyles(theme => ({
 
 export default function NavBar() {
 
+
     const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
     const [categories, setCategories] = useState([]);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
+  
 
     const [alert, setAlert] = useState({
         messageType: 'success',
@@ -41,6 +43,8 @@ export default function NavBar() {
             })
     }, []);
 
+  
+
     const handleOpenPopover = () => {
         setPopoverOpened(true);
     }
@@ -49,10 +53,7 @@ export default function NavBar() {
         setPopoverOpened(false);
     }
 
-    //Register is child component of Login, if the registration component is closed, the login component also should not be visible
-    const callbackCloseLoginModal = () => {
-        setIsLoginModalVisible(false)
-    }
+  
 
     const showAlert = (messagetype, msg) => {
 
@@ -99,6 +100,11 @@ export default function NavBar() {
     const openLoginModal = () => {
         setIsLoginModalVisible(true);
     };
+
+      //Register is child component of Login, if the registration component is closed, the login component also should not be visible
+      const callbackCloseLoginModal = () => {
+        setIsLoginModalVisible(false)
+    }
 
 
 
@@ -160,6 +166,14 @@ export default function NavBar() {
                 <Link mx={2} href="#">
                     <Typography color="white">Kontakt</Typography>
                 </Link>
+                
+                {(isUserLoggedIn || Cookies.get('accessToken') != null)?
+                    <Link mx={2} href="#">
+                        <Typography color="white">Zamówienia</Typography>
+                    </Link>
+                    :
+                    ""
+                }
 
                 {(isUserLoggedIn || Cookies.get('accessToken') != null)?
                     <Link mx={2} href="#">
@@ -170,6 +184,7 @@ export default function NavBar() {
                         <Typography color="orange" onClick={openLoginModal}>Logowanie</Typography>
                     </Link>
                 }
+
 
 
 
