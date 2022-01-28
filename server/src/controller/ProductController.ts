@@ -1,10 +1,13 @@
 import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
 import { Product } from "../entity/Product";
+import { Category } from "../entity/Category";
 
 export default class ProductController {
 
     private productRepository = getRepository(Product);
+    private categoryRepository = getRepository(Category);
+
 
     async all(request: Request, response: Response, next: NextFunction) {
         return this.productRepository.find();
@@ -16,14 +19,22 @@ export default class ProductController {
 
     async save(request: Request, response: Response, next: NextFunction) {
 
-        const product = request.body;
+        const productData = request.body;
 
-        if (!product.name) {
+        if (!productData.name) {
             response.status(400).send("Product name not provided");
             return;
         }
 
-        return this.productRepository.save(request.body);
+        const product = await this.productRepository.save(request.body);
+
+        for (let id of productData.categories) {
+            const category = await this.categoryRepository.findOne(id);
+            category.products.push(product);
+            await this.categoryRepository.save(category)
+        }
+
+        return product;
     }
 
     async update(request: Request, response: Response, next: NextFunction) {
@@ -31,7 +42,15 @@ export default class ProductController {
         // .save Also supports partial updating since all undefined properties are skipped.
         const product = await this.productRepository.findOne(request.params.id);
         this.productRepository.merge(product, request.body);
-        return this.productRepository.save(product);
+        await this.productRepository.save(product);
+
+        for (let id of request.body.categories) {
+            const category = await this.categoryRepository.findOne(id);
+            category.products.push(product);
+            await this.categoryRepository.save(category)
+        }
+
+        return product;
     }
 
 

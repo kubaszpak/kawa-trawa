@@ -53,7 +53,7 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
     };
 
     const getPayload = fields => {
-        let payload = { name, description, quantity, price, pathToImage, category };
+        let payload = { name, description, quantity, price, pathToImage, categories: [category] };
 
         if (product?.id) {
             payload.id = product.id;
