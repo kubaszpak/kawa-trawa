@@ -8,6 +8,7 @@ import axios from "axios"
 import { makeStyles } from "@mui/styles"
 import { REACT_APP_CATEGORIES_ENDPOINT } from '../config'
 import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     popover: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function NavBar() {
-
+    let navigate = useNavigate()
     const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
     const [popoverOpened, setPopoverOpened] = useState(false);
     const popoverAnchor = useRef(null);
@@ -170,11 +171,7 @@ export default function NavBar() {
                         <Typography color="orange" onClick={openLoginModal}>Logowanie</Typography>
                     </Link>
                 }
-
-
-
-
-                <IconButton aria-label="cart" sx={{ ml: 4 }} href="#">
+                <IconButton aria-label="cart" sx={{ ml: 4 }} onClick={() => navigate("cart")}>
                     <ShoppingCartIcon sx={{ color: 'white' }} />
                 </IconButton>
             </Box>
