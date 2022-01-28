@@ -123,9 +123,10 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
                     label="Kategoria"
                     onChange={e => setCategory(e.target.value)}
                 >
-                    <MenuItem value={1}>Kawa</MenuItem>
-                    <MenuItem value={2}>Trawa</MenuItem>
-
+                    <MenuItem value={2}>Coffee</MenuItem>
+                    <MenuItem value={3}>Sub Coffee 1</MenuItem>
+                    <MenuItem value={4}>Sub Coffee 2</MenuItem>
+                    <MenuItem value={1}>Grass</MenuItem>
                 </Select>
 
             </DialogContent>
