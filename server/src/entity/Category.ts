@@ -1,34 +1,45 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToMany, ManyToOne, JoinTable, OneToMany } from "typeorm";
+import {
+	Column,
+	Entity,
+	PrimaryGeneratedColumn,
+	OneToOne,
+	JoinColumn,
+	ManyToMany,
+	ManyToOne,
+	JoinTable,
+	OneToMany,
+} from "typeorm";
 import { Product } from "./Product";
 import { Discount } from "./Discount";
 
-@Entity('categories')
+@Entity("categories")
 export class Category {
+	@PrimaryGeneratedColumn()
+	id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+	@ManyToMany((type) => Product, (product) => product.categories, {
+		eager: true,
+	})
+	@JoinTable({
+		name: "category_products"
+	})
+	products: Product[];
 
-    @ManyToMany(type => Product, product => product.categories, {
-        eager: true
-    })
-    @JoinTable()
-    products: Product[]
+	@ManyToOne((type) => Category, (category) => category.children)
+	parent: Category;
 
-    @ManyToOne(type => Category, category => category.children)
-    parent: Category;
+	@ManyToOne((type) => Discount, (discount) => discount.categories)
+	discount: Discount;
 
-    @ManyToOne(type => Discount, discount => discount.categories)
-    discount: Discount;
+	@OneToMany((type) => Category, (category) => category.parent)
+	children: Category[];
 
-    @OneToMany(type => Category, category => category.parent)
-    children: Category[];
+	@Column()
+	name: string;
 
-    @Column()
-    name: string;
+	@Column()
+	description: string;
 
-    @Column()
-    description: string;
-
-    @Column()
-    pathToImage: string;
+	@Column()
+	pathToImage: string;
 }

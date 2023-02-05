@@ -34,7 +34,7 @@ const ProductCard = ({ product, onDelete, addProductToCart }) => {
 
     useEffect(() => {
         onDelete();
-    }, [productEditorOpen]);
+    }, [productEditorOpen, onDelete]);
 
     const showDetails = () => {
         navigate(`/products/${product.id}`);
