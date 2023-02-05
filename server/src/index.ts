@@ -5,7 +5,6 @@ import * as bodyParser from "body-parser";
 import { Request, Response } from "express";
 import { Routes } from "./routes";
 import { PORT } from "./config";
-import populateDatabaseWithTestData from "./populate";
 import * as helmet from "helmet";
 import { setupEmail } from "./email/setupEmail";
 import * as morgan from "morgan";
