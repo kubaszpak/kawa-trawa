@@ -1,36 +1,41 @@
-import { Entity, PrimaryGeneratedColumn, ManyToOne, ManyToMany, Column } from "typeorm";
+import {
+	Entity,
+	PrimaryGeneratedColumn,
+	ManyToOne,
+	ManyToMany,
+	Column,
+} from "typeorm";
 import { Category } from "./Category";
 import { Discount } from "./Discount";
 
-@Entity('products')
+@Entity("products")
 export class Product {
+	@PrimaryGeneratedColumn()
+	id: number;
 
-    @PrimaryGeneratedColumn()
-    id: number;
+	@ManyToMany((type) => Category, (category) => category.products)
+	categories: Category[];
 
-    @ManyToMany(type => Category, category => category.products)
-    categories: Category[];
+	@ManyToOne((type) => Discount, (discount) => discount.products)
+	discount: Discount;
 
-    @ManyToOne(type => Discount, discount => discount.products)
-    discount: Discount;
+	@Column()
+	name: string;
 
-    @Column()
-    name: string;
+	@Column()
+	description: string;
 
-    @Column()
-    description: string;
+	@Column()
+	pathToImage: string;
 
-    @Column()
-    pathToImage: string;
+	@Column()
+	price: number;
 
-    @Column()
-    price: number;
+	@Column()
+	quantity: number;
 
-    @Column()
-    quantity: number;
-
-    @Column({
-        default: true
-    })
-    visibility?: boolean;
+	@Column({
+		default: true,
+	})
+	visibility?: boolean;
 }
