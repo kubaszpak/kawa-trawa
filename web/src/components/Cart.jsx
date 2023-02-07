@@ -13,11 +13,13 @@ export default function Cart({ cartContent }) {
 			axios
 				.get(`${REACT_APP_PRODUCTS_ENDPOINT}/${key}`)
 				.then((response) => {
-					if (!response.data)
+					if (!response.data) {
 						// TODO wyświetlić komunikat o zmienionym stanie wybranego produktu i usunąć go z localStorage
 						throw new Error(
 							"Coś poszło nie tak, produkt z koszyka już nie istnieje!"
 						);
+					}
+					console.log(response.data);
 					setProducts((prev) => [...prev, response.data]);
 				})
 				.catch((error) => console.error(error));
@@ -35,6 +37,9 @@ export default function Cart({ cartContent }) {
 						sx={{ backgroundColor: "white", borderRadius: "10px" }}
 					>
 						{products.map((product, index) => {
+							if (product.categories) {
+								console.log(product.categories);
+							}
 							return (
 								<Grid item xs={12} mb={5} key={index}>
 									<Typography variant="h4" fontWeight="bold">

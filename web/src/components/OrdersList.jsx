@@ -10,7 +10,6 @@ const OrdersList = ({ orders, setOrders }) => {
 
     return (
         <>
-
             <Box className={classes.productGrid}>
                 <Grid container rowSpacing={2} columnSpacing={2} >
                     {orders.map((order, index) => (
