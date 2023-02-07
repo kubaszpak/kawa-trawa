@@ -1,5 +1,5 @@
-import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
+import { AppDataSource } from "../app-data-source";
 import { Category } from "../entity/Category";
 import { User, AccountType } from "../entity/User";
 
@@ -39,13 +39,15 @@ function findCategory(categories: any[], id: number): any {
 }
 
 export default class CategoryController {
-	private categoryRepository = getRepository(Category);
-	private userRepository = getRepository(User);
+	private categoryRepository = AppDataSource.getRepository(Category);
+	private userRepository = AppDataSource.getRepository(User);
 
 	async getAllCategories() {
 		let sorted_categories = [];
 		let categories = await this.categoryRepository.find({
-			relations: ["parent"],
+			relations: {
+				parent: true,
+			},
 		});
 		for (var i = categories.length - 1; i >= 0; i--) {
 			if (categories[i].parent === null) {
@@ -74,7 +76,9 @@ export default class CategoryController {
 	}
 
 	async save(request: Request, response: Response, next: NextFunction) {
-		const user = await this.userRepository.findOne((request as any).userId);
+		const user = await this.userRepository.findOne({
+			where: { id: (request as any).userId },
+		});
 		if (
 			user.accountType == AccountType.EMPLOYEE ||
 			user.accountType == AccountType.ADMIN
@@ -85,14 +89,20 @@ export default class CategoryController {
 	}
 
 	async remove(request: Request, response: Response, next: NextFunction) {
-		const user = await this.userRepository.findOne((request as any).userId);
+		const user = await this.userRepository.findOne({
+			where: {
+				id: (request as any).userId,
+			},
+		});
 		if (
 			user.accountType == AccountType.EMPLOYEE ||
 			user.accountType == AccountType.ADMIN
 		) {
-			const categoryToRemove = await this.categoryRepository.findOne(
-				request.params.id
-			);
+			const categoryToRemove = await this.categoryRepository.findOne({
+				where: {
+					id: parseInt(request.params.id),
+				},
+			});
 			if (!categoryToRemove)
 				throw Error("Category with given id not found in the database");
 			return this.categoryRepository.remove(categoryToRemove);

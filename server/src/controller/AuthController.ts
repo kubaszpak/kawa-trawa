@@ -1,6 +1,5 @@
-import { getRepository } from "typeorm";
 import { NextFunction, Request, Response } from "express";
-import { AccountType, User } from "../entity/User";
+import { User } from "../entity/User";
 import * as bcrypt from "bcrypt";
 import { LoginDto } from "../dto/loginDto";
 import { RefreshTokenDto } from "../dto/refreshTokenDto";
@@ -16,9 +15,10 @@ import {
 	resetPasswordEmailTemplate,
 } from "../email/template";
 import * as jwt from "jsonwebtoken";
+import { AppDataSource } from "../app-data-source";
 
 export default class AuthController {
-	private userRepository = getRepository(User);
+	private userRepository = AppDataSource.getRepository(User);
 
 	private async hashPassword(password: string) {
 		const salt = await bcrypt.genSalt(10);
@@ -119,11 +119,11 @@ export default class AuthController {
 
 		try {
 			jwt.verify(token, process.env.JWT_REGISTRATION_SECRET);
-			let {
-				payload: { email },
-			} = jwt.decode(token, { complete: true });
+			let { email } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as {
+				email: string;
+			};
 
-			const user = await getRepository(User).findOne({
+			const user = await AppDataSource.getRepository(User).findOne({
 				where: { email: email },
 			});
 
@@ -148,7 +148,7 @@ export default class AuthController {
 		response: Response,
 		next: NextFunction
 	) {
-		const user = await getRepository(User).findOne({
+		const user = await AppDataSource.getRepository(User).findOne({
 			where: { email: request.body.email },
 		});
 		if (user) {
@@ -173,9 +173,9 @@ export default class AuthController {
 		const token: string = request.query.token as string;
 
 		try {
-			let {
-				payload: { id },
-			} = jwt.decode(token, { complete: true });
+			let { id } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as {
+				id: string;
+			};
 
 			(request as any).userId = id;
 		} catch (err) {
@@ -183,7 +183,9 @@ export default class AuthController {
 			return next();
 		}
 
-		const user = await getRepository(User).findOne((request as any).userId);
+		const user = await AppDataSource.getRepository(User).findOne({
+			where: { id: (request as any).userId },
+		});
 		if (!user || user.banned || !user.confirmed) {
 			response.status(404).json("Can not change password");
 			return next();
@@ -208,9 +210,9 @@ export default class AuthController {
 		const token: string = request.headers["authorization"];
 
 		try {
-			let {
-				payload: { id },
-			} = jwt.decode(token, { complete: true });
+			let { id } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as {
+				id: string;
+			};
 
 			(request as any).userId = id;
 		} catch (err) {
@@ -218,7 +220,9 @@ export default class AuthController {
 			return next();
 		}
 
-		const user = await getRepository(User).findOne((request as any).userId);
+		const user = await AppDataSource.getRepository(User).findOne({
+			where: { id: (request as any).userId },
+		});
 		if (!user || user.banned || !user.confirmed) {
 			response.status(404).json("Can not change password");
 			return next();
@@ -227,7 +231,7 @@ export default class AuthController {
 		try {
 			jwt.verify(token, user.password);
 			const password = await this.hashPassword(request.body.password);
-			await getRepository(User).update(user.id, { password });
+			await AppDataSource.getRepository(User).update(user.id, { password });
 			return next();
 		} catch (err) {
 			response.status(400).send("Invalid Token");
