@@ -21,14 +21,16 @@ export class Category {
 		eager: true,
 	})
 	@JoinTable({
-		name: "category_products"
+		name: "category_products",
 	})
 	products: Product[];
 
 	@ManyToOne((type) => Category, (category) => category.children)
 	parent: Category;
 
-	@ManyToOne((type) => Discount, (discount) => discount.categories)
+	@ManyToOne((type) => Discount, (discount) => discount.categories, {
+		eager: true,
+	})
 	discount: Discount;
 
 	@OneToMany((type) => Category, (category) => category.parent)

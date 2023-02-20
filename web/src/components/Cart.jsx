@@ -2,70 +2,118 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { REACT_APP_PRODUCTS_ENDPOINT } from "../config";
-import { Box, Button, Grid, Skeleton, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Container,
+	Grid,
+	Skeleton,
+	Typography,
+} from "@mui/material";
+import partition from "../utils/partition";
 
 export default function Cart({ cartContent }) {
 	const [products, setProducts] = useState([]);
-	const [loaded, setLoaded] = useState(false);
 
 	useEffect(() => {
-		for (const key of Object.keys(cartContent)) {
-			axios
-				.get(`${REACT_APP_PRODUCTS_ENDPOINT}/${key}`)
-				.then((response) => {
-					if (!response.data) {
-						// TODO wyświetlić komunikat o zmienionym stanie wybranego produktu i usunąć go z localStorage
-						throw new Error(
-							"Coś poszło nie tak, produkt z koszyka już nie istnieje!"
-						);
-					}
-					console.log(response.data);
-					setProducts((prev) => [...prev, response.data]);
-				})
-				.catch((error) => console.error(error));
-		}
-		setLoaded(true);
-	}, [cartContent]);
+		Promise.all(
+			Object.keys(cartContent).map((key) =>
+				axios
+					.get(`${REACT_APP_PRODUCTS_ENDPOINT}/${key}/${cartContent[key]}`)
+					.catch((error) => error)
+			)
+		).then((fetchedResponses) => {
+			const [filteredResponses, failedResponses] = partition(
+				fetchedResponses,
+				(response) => response.name !== "Error"
+			);
+			console.error(failedResponses);
+			setProducts(filteredResponses.map((r) => r.data));
+		});
+	}, [cartContent, setProducts]);
 
 	return (
-		<div>
-			{loaded ? (
-				<Box py={5} px={15}>
+		<Box>
+			{products.length > 0 ? (
+				<Container maxWidth="xl">
 					<Grid
 						container
-						spacing={2}
+						direction="column"
+						py={5}
+						justifyContent="center"
+						alignItems="center"
+						padding="2rem"
 						sx={{ backgroundColor: "white", borderRadius: "10px" }}
 					>
 						{products.map((product, index) => {
-							if (product.categories) {
-								console.log(product.categories);
-							}
 							return (
-								<Grid item xs={12} mb={5} key={index}>
-									<Typography variant="h4" fontWeight="bold">
-										Produkt: {product.name}
-									</Typography>
-									<Typography>Ilość: {cartContent[product.id]}</Typography>
-									<Typography>
-										Cena: {cartContent[product.id]} x {product.price} ={" "}
-										{product.price * cartContent[product.id]}zł
-									</Typography>
+								<Grid
+									item
+									container
+									xs={12}
+									key={index}
+									alignItems="center"
+									marginY="1rem"
+								>
+									<Grid item xs={12} sm={4}>
+										<img
+											src={product.pathToImage}
+											alt={product.name}
+											style={{
+												objectFit: "contain",
+												height: "100%",
+												width: "100%",
+											}}
+										/>
+									</Grid>
+									<Grid item xs={12} sm={8}>
+										<Typography variant="h4" fontWeight="bold">
+											{product.name}
+										</Typography>
+										<Typography>Ilość: {cartContent[product.id]}</Typography>
+										<Typography>
+											Cena: {cartContent[product.id]} x {product.price} ={" "}
+											{product.price * cartContent[product.id]}zł
+										</Typography>
+										{product.bestDiscount && (
+											<Typography color="red">
+												Po promocji {product.bestDiscount}%:{" "}
+												{(product.price *
+													cartContent[product.id] *
+													(100 - product.bestDiscount)) /
+													100}
+												zł
+											</Typography>
+										)}
+									</Grid>
 								</Grid>
 							);
 						})}
-						<Grid item xs={12} mb={5}>
-							Cena całkowita:{" "}
+					</Grid>
+					<Box py={5}>
+						<Typography variant="h3" fontWeight="bold" color="white">
+							Kwota całkowita:{" "}
 							{products.reduce(
-								(sum, product) => sum + cartContent[product.id] * product.price,
+								(sum, product) =>
+									sum +
+									(product.price *
+										cartContent[product.id] *
+										(100 - product.bestDiscount)) /
+										100,
 								0
 							)}
 							zł
-						</Grid>
-						<Grid item xs={12} mb={5}>
-							<Button variant="contained">Potwierdź</Button>
-						</Grid>
-					</Grid>
-				</Box>
+						</Typography>
+						<Button
+							sx={{ marginTop: "16px" }}
+							variant="contained"
+							size="large"
+							s
+						>
+							Potwierdź
+						</Button>
+					</Box>
+				</Container>
 			) : (
 				Object.keys(cartContent).map((_, index) => {
 					return (
@@ -80,6 +128,6 @@ export default function Cart({ cartContent }) {
 					);
 				})
 			)}
-		</div>
+		</Box>
 	);
 }

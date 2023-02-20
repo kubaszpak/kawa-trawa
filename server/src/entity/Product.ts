@@ -16,7 +16,9 @@ export class Product {
 	@ManyToMany((type) => Category, (category) => category.products)
 	categories: Category[];
 
-	@ManyToOne((type) => Discount, (discount) => discount.products)
+	@ManyToOne((type) => Discount, (discount) => discount.products, {
+		eager: true,
+	})
 	discount: Discount;
 
 	@Column()

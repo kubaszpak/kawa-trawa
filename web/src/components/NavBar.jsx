@@ -1,4 +1,6 @@
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import MenuIcon from "@mui/icons-material/Menu";
+import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import {
 	Box,
 	IconButton,
@@ -8,7 +10,12 @@ import {
 	Popover,
 	Snackbar,
 	Alert,
-	Container,
+	Hidden,
+	List,
+	ListItemText,
+	SwipeableDrawer,
+	ListItemButton,
+	Divider,
 } from "@mui/material";
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import logoImg from "../static/images/Logo.png";
@@ -22,6 +29,10 @@ import decode from "jwt-decode";
 import accountTypes from "../utils/accountTypes";
 import { useNavigate } from "react-router-dom";
 import ProductEditor from "./ProductEditor";
+
+const iOS =
+	typeof navigator !== "undefined" &&
+	/iPad|iPhone|iPod/.test(navigator.userAgent);
 
 const useStyles = makeStyles((theme) => ({
 	popover: {
@@ -40,6 +51,7 @@ export default function NavBar() {
 	const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 	const [accountType, setAccountType] = useState(null);
 	const [productEditorOpen, setProductEditorOpen] = useState(false);
+	const [drawerOpen, setDrawerOpen] = useState(false);
 	const navigate = useNavigate();
 
 	const [alert, setAlert] = useState({
@@ -143,11 +155,10 @@ export default function NavBar() {
 
 	return (
 		<div
+			className="navbar-wrapper"
 			style={{
 				display: "flex",
-				justifyContent: "center",
-				margin: "0 auto",
-				maxWidth: "1200px",
+				justifyContent: "space-between",
 				padding: "50px 0",
 			}}
 		>
@@ -156,109 +167,163 @@ export default function NavBar() {
 				style={{
 					display: "flex",
 					alignItems: "center",
+					padding: "1rem",
 				}}
 			>
 				<img
 					src={logoImg}
 					alt="Logo"
 					style={{
-						width: "140px",
 						height: "auto",
+						maxHeight: "60px",
 						objectFit: "contain",
 					}}
 				/>
 			</a>
-			<Box
+			<Hidden mdDown>
+				<Box
+					sx={{
+						flex: 4,
+						justifyContent: "right",
+						display: "flex",
+						alignItems: "center",
+					}}
+				>
+					<Link mx={2} href="/#">
+						<Typography color="white">Strona domowa</Typography>
+					</Link>
+
+					<Link mx={2} href="/products">
+						<Typography color="white">Produkty</Typography>
+					</Link>
+
+					<Link
+						mx={2}
+						href="#"
+						ref={popoverAnchor}
+						aria-owns="mouse-over-popover"
+						aria-haspopup="true"
+						onMouseEnter={handleOpenPopover}
+						onMouseLeave={handleClosePopover}
+					>
+						<Typography color="white">Kategorie</Typography>
+					</Link>
+
+					{isEmployee && (
+						<Typography
+							sx={{ cursor: "pointer" }}
+							color="white"
+							onClick={addNewProduct}
+						>
+							Dodaj produkt
+						</Typography>
+					)}
+
+					{(isUserLoggedIn || Cookies.get("accessToken") != null) && (
+						<Link mx={2} href="/orders">
+							<Typography color="white">Zamówienia</Typography>
+						</Link>
+					)}
+
+					{isUserLoggedIn || Cookies.get("accessToken") != null ? (
+						<Box mx={2} sx={{ cursor: "pointer" }}>
+							<Typography color="orange" onClick={logOutUser}>
+								Wyloguj mnie
+							</Typography>
+						</Box>
+					) : (
+						<Box mx={2} sx={{ cursor: "pointer" }}>
+							<Typography color="orange" onClick={openLoginModal}>
+								Logowanie
+							</Typography>
+						</Box>
+					)}
+					<IconButton
+						aria-label="cart"
+						sx={{ ml: 4 }}
+						onClick={() => navigate("cart")}
+					>
+						<ShoppingCartIcon sx={{ color: "white" }} />
+					</IconButton>
+				</Box>
+			</Hidden>
+			<Hidden mdUp>
+				<IconButton onClick={() => setDrawerOpen(true)}>
+					<MenuIcon sx={{ color: "white" }} fontSize="large" />
+				</IconButton>
+			</Hidden>
+			<SwipeableDrawer
+				disableBackdropTransition={!iOS}
+				disableDiscovery={iOS}
+				anchor="right"
+				open={drawerOpen}
+				onClose={() => setDrawerOpen(false)}
+				onOpen={() => setDrawerOpen(true)}
 				sx={{
-					width: "100%",
-					justifyContent: "right",
-					display: "flex",
-					alignItems: "center",
+					"& .MuiDrawer-paper": { boxSizing: "border-box", width: "240px" },
 				}}
 			>
-				<Link mx={2} href="/#">
-					<Typography color="white">Strona domowa</Typography>
-				</Link>
-
-				<Link mx={2} href="/products">
-					<Typography color="white">Produkty</Typography>
-				</Link>
-
-				<Link
-					mx={2}
-					href="#"
-					ref={popoverAnchor}
-					aria-owns="mouse-over-popover"
-					aria-haspopup="true"
-					onMouseEnter={handleOpenPopover}
-					onMouseLeave={handleClosePopover}
-				>
-					<Typography color="white">Kategorie</Typography>
-				</Link>
-				<Popover
-					id="mouse-over-popover"
-					className={classes.popover}
-					classes={{
-						paper: classes.popoverContent,
-					}}
-					open={popoverOpened}
-					anchorOrigin={{
-						vertical: "bottom",
-						horizontal: "left",
-					}}
-					transformOrigin={{
-						vertical: "top",
-						horizontal: "left",
-					}}
-					anchorEl={popoverAnchor.current}
-					PaperProps={{
-						onMouseEnter: handleOpenPopover,
-						onMouseLeave: handleClosePopover,
-					}}
-				>
-					<Categories categories={categories} />
-				</Popover>
-				<Link mx={2} href="#">
-					<Typography color="white">Kontakt</Typography>
-				</Link>
-
-				{isEmployee && (
-					<Typography
-						sx={{ cursor: "pointer" }}
-						color="white"
-						onClick={addNewProduct}
-					>
-						Dodaj produkt
-					</Typography>
-				)}
-
-				{(isUserLoggedIn || Cookies.get("accessToken") != null) && (
-					<Link mx={2} href="/orders">
-						<Typography color="white">Zamówienia</Typography>
-					</Link>
-				)}
-
-				{isUserLoggedIn || Cookies.get("accessToken") != null ? (
-					<Link mx={2} href="/#">
-						<Typography color="orange" onClick={logOutUser}>
-							Wyloguj mnie
-						</Typography>
-					</Link>
-				) : (
-					<Box mx={2} sx={{ cursor: "pointer" }}>
-						<Typography color="orange" onClick={openLoginModal}>
-							Logowanie
-						</Typography>
-					</Box>
-				)}
-				<IconButton
-					aria-label="cart"
-					sx={{ ml: 4 }}
-					onClick={() => navigate("cart")}
-				>
-					<ShoppingCartIcon sx={{ color: "white" }} />
+				<IconButton sx={{ py: "1rem" }} onClick={() => setDrawerOpen(false)}>
+					<MenuOpenIcon fontSize="large" />
 				</IconButton>
-			</Box>
+				<List disablePadding>
+					<ListItemButton component="a" href="/">
+						<ListItemText primary="Strona domowa" />
+					</ListItemButton>
+					<ListItemButton component="a" href="/products">
+						<ListItemText primary="Produkty" />
+					</ListItemButton>
+					<Categories
+						categories={categories}
+						closeDrawer={() => setDrawerOpen(false)}
+					/>
+					<Divider />
+					{isEmployee && (
+						<ListItemButton onClick={addNewProduct}>
+							Dodaj produkt
+						</ListItemButton>
+					)}
+
+					{(isUserLoggedIn || Cookies.get("accessToken") != null) && (
+						<ListItemButton component="a" href="/orders">
+							<ListItemText primary="Zamówienia" />
+						</ListItemButton>
+					)}
+
+					{isUserLoggedIn || Cookies.get("accessToken") != null ? (
+						<ListItemButton color="orange" onClick={logOutUser}>
+							<ListItemText primary="Wyloguj mnie" />
+						</ListItemButton>
+					) : (
+						<ListItemButton color="orange" onClick={openLoginModal}>
+							<ListItemText primary="Logowanie" />
+						</ListItemButton>
+					)}
+				</List>
+			</SwipeableDrawer>
+			<Popover
+				id="mouse-over-popover"
+				className={classes.popover}
+				classes={{
+					paper: classes.popoverContent,
+				}}
+				open={popoverOpened}
+				anchorOrigin={{
+					vertical: "bottom",
+					horizontal: "left",
+				}}
+				transformOrigin={{
+					vertical: "top",
+					horizontal: "left",
+				}}
+				anchorEl={popoverAnchor.current}
+				PaperProps={{
+					onMouseEnter: handleOpenPopover,
+					onMouseLeave: handleClosePopover,
+				}}
+			>
+				<Categories categories={categories} />
+			</Popover>
 
 			<Modal open={isLoginModalVisible} onClose={callbackCloseLoginModal}>
 				<Box sx={style}>

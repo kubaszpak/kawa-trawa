@@ -15,7 +15,7 @@ export default function HomePage() {
 				<br />w internecie ...
 			</Typography>
 			<Button
-				sx={{ mt: 3 }}
+				sx={{ my: 3 }}
 				variant="contained"
 				color="secondary"
 				onClick={() => navigate("/products")}

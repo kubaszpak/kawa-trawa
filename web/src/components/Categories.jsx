@@ -10,7 +10,7 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import { Collapse } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export default function Categories({ categories }) {
+export default function Categories({ categories, closeDrawer }) {
 	const [open, setOpen] = React.useState({});
 	const navigate = useNavigate();
 
@@ -27,10 +27,8 @@ export default function Categories({ categories }) {
 	};
 
 	const redirect = (id) => {
-		navigate(`categories/${id}#?`);
-		// console.log("redirect to :", id);
-		// I do not know why without the refresh it doesn't work
-		window.location.reload(true);
+		navigate(`/categories/${id}`);
+		!!closeDrawer && closeDrawer();
 	};
 
 	return (
@@ -49,8 +47,12 @@ export default function Categories({ categories }) {
 					return (
 						<div
 							key={idx}
-							onMouseEnter={() => handleMouseEvent(category.id)}
-							onMouseLeave={() => handleMouseEvent(category.id)}
+							onMouseEnter={() => {
+								handleMouseEvent(category.id);
+							}}
+							onMouseLeave={() => {
+								handleMouseEvent(category.id);
+							}}
 						>
 							<ListItemButton onClick={() => redirect(category.id)}>
 								<ListItemIcon>

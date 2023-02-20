@@ -8,15 +8,44 @@ export default class ProductController {
 	private categoryRepository = AppDataSource.getRepository(Category);
 
 	async all(request: Request, response: Response, next: NextFunction) {
-		const sth = this.productRepository.find();
-		console.log(sth);
-		return sth;
+		return this.productRepository.find();
 	}
 
 	async one(request: Request, response: Response, next: NextFunction) {
-		return this.productRepository.findOne({
+		const product = await this.productRepository.findOne({
 			where: { id: parseInt(request.params.id) },
+			relations: {
+				categories: true,
+			},
 		});
+		if (!product) throw new Error("No item with id: " + request.params.id);
+		if (
+			request.params.quantity &&
+			parseInt(request.params.quantity) > product.quantity
+		)
+			throw new Error(
+				"The quantity of the product with id: " +
+					request.params.id +
+					" has been exceeded"
+			);
+
+		// search the categories for the discount that benefits the client the most
+		type ProductWithBestDiscount = Product & { bestDiscount: number };
+
+		(product as ProductWithBestDiscount).bestDiscount =
+			product.discount?.discountPercentage || 0;
+		!!product.categories &&
+			product.categories.forEach(async (category) => {
+				if (
+					!!category.discount &&
+					category.discount.discountPercentage >
+						(product as ProductWithBestDiscount).bestDiscount
+				) {
+					(product as ProductWithBestDiscount).bestDiscount =
+						category.discount.discountPercentage;
+				}
+			});
+		return product;
 	}
 
 	async save(request: Request, response: Response, next: NextFunction) {

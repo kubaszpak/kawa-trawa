@@ -7,14 +7,10 @@ export class Discount {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@OneToMany((type) => Category, (category) => category.discount, {
-		eager: true,
-	})
+	@OneToMany((type) => Category, (category) => category.discount)
 	categories: Category[];
 
-	@OneToMany((type) => Product, (product) => product.discount, {
-		eager: true,
-	})
+	@OneToMany((type) => Product, (product) => product.discount)
 	products: Product[];
 
 	@Column()

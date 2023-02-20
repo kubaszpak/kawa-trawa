@@ -14,8 +14,13 @@ export default class OrderController {
 			where: { id: (request as any).userId },
 		});
 		if (user.accountType == AccountType.CLIENT) {
-			return await this.orderRepository.find({ relations: ["user"] }); //user orders
-			// TODO: this is wrong, this returns all orders
+			return await this.orderRepository.find({
+				where: {
+					user: {
+						id: user.id,
+					},
+				},
+			}); //user orders
 		} else {
 			//admin or employee
 			return this.orderRepository.find(); //all orders
