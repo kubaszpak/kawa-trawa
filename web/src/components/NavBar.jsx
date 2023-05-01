@@ -8,8 +8,6 @@ import {
 	Typography,
 	Modal,
 	Popover,
-	Snackbar,
-	Alert,
 	Hidden,
 	List,
 	ListItemText,
@@ -43,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function NavBar() {
+export default function NavBar({ setAlert }) {
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [popoverOpened, setPopoverOpened] = useState(false);
 	const popoverAnchor = useRef(null);
@@ -53,11 +51,6 @@ export default function NavBar() {
 	const [productEditorOpen, setProductEditorOpen] = useState(false);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const navigate = useNavigate();
-
-	const [alert, setAlert] = useState({
-		messageType: "success",
-		message: "",
-	});
 
 	const classes = useStyles();
 
@@ -125,17 +118,6 @@ export default function NavBar() {
 		Cookies.remove("accountType");
 
 		setIsUserLoggedIn(false);
-	};
-
-	const handleCloseAlert = (event, reason) => {
-		if (reason === "clickaway") {
-			return;
-		}
-
-		setAlert({
-			messageType: "success",
-			message: "",
-		});
 	};
 
 	const style = {
@@ -283,7 +265,9 @@ export default function NavBar() {
 							Dodaj produkt
 						</ListItemButton>
 					)}
-
+					<ListItemButton component="a" href="/cart">
+						<ListItemText primary="Koszyk" />
+					</ListItemButton>
 					{(isUserLoggedIn || Cookies.get("accessToken") != null) && (
 						<ListItemButton component="a" href="/orders">
 							<ListItemText primary="Zamówienia" />
@@ -334,20 +318,6 @@ export default function NavBar() {
 					/>
 				</Box>
 			</Modal>
-
-			<Snackbar
-				open={alert.message !== ""}
-				onClose={handleCloseAlert}
-				autoHideDuration={6000}
-			>
-				<Alert
-					onClose={handleCloseAlert}
-					severity={alert.messageType}
-					sx={{ width: "100%" }}
-				>
-					{alert.message}
-				</Alert>
-			</Snackbar>
 
 			<ProductEditor
 				product={{}}

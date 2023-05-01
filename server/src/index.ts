@@ -28,9 +28,8 @@ AppDataSource.initialize()
 		// @ts-ignore
 		app.use(helmet());
 		// @ts-ignore
-		app.use(morgan("tiny"));
-
 		app.use(bodyParser.json());
+		app.use(morgan("dev"));
 
 		// register express routes from defined application routes
 		Routes.forEach((route) => {

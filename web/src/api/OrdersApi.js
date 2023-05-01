@@ -8,4 +8,8 @@ export class OrdersApi {
     static getOrders() {
         return API.get("/orders/", authHeader());
     }
+
+    static saveOrder(cart) {
+        return API.post("/orders/", cart, authHeader());
+    }
 }

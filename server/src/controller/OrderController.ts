@@ -47,44 +47,65 @@ export default class OrderController {
 	}
 
 	async save(request: Request, response: Response, next: NextFunction) {
-		const user = await this.userRepository.findOne({
+		const user = await AppDataSource.getRepository(User).findOne({
 			where: { id: (request as any).userId },
 		});
+
+		const products = request.body.products;
+
 		const order = {
 			address: request.body.address,
 			user,
 			status: OrderStatus.PLACED,
 			date: new Date(),
 			totalPrice: 0,
-			products: [...request.body.products],
+			products: products.reduce(
+				(acc, product) => ({
+					...acc,
+					[product.id]: product.quantity,
+				}),
+				{}
+			),
 		};
-
-		const products = {};
-
-		request.body.products.map((product: Product) => {
-			if (!products[product.id]) products[product.id] = 0;
-			products[product.id] += 1;
-		});
 
 		console.log("Cart: ", products);
 
 		let totalPrice = 0;
 
-		request.body.products.map(async (product: Product) => {
-			let productPrice = product.price;
-			totalPrice += productPrice;
-			await this.productRepository.update(product.id, {
-				quantity: product.quantity - 1,
-			});
+		products.map(async (product) => {
+			totalPrice += Math.floor(
+				(product.price * product.quantity * (100 - product.bestDiscount)) / 100
+			);
 		});
 
 		order.totalPrice = totalPrice;
-		if (user.balance < totalPrice)
+		if (user.balance < totalPrice) {
 			response.status(400).send("Insufficient funds");
-		user.balance -= totalPrice;
-		await this.userRepository.update(user.id, {
-			balance: user.balance - totalPrice,
+			return;
+		}
+
+		products.map(async (product) => {
+			const productFromDatabase = await this.productRepository.findOne({
+				where: { id: product.id },
+			});
+			if (productFromDatabase.quantity < product.quantity) {
+				next(
+					new Error(`Product ${product.id} not available in the given quantity`)
+				);
+				return;
+			}
 		});
+		products.map(async (product) => {
+			await this.productRepository.decrement(
+				{
+					id: product.id,
+				},
+				"quantity",
+				product.quantity
+			);
+		});
+
+		user.balance -= totalPrice;
 		return this.orderRepository.save(order);
 	}
 
