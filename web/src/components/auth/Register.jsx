@@ -28,27 +28,24 @@ export default function Register({ showAlert, closeSignUp }) {
 	const [success, setSuccess] = useState("");
 	const [isRegulationsAccepted, setIsRegulationsAccepted] = useState(false);
 
-	const paperStyle = { padding: 20, width: 280, margin: "0 auto" };
-	// const headerStyle = { margin: '15px' }
-	const avatarStyle = {
-		backgroundColor: "#9c6644",
-		margin: "15px",
-	};
-	// const marginTop = { marginTop: 5 }
-
-	const tfStyle = {
-		margin: "5px",
-	};
-
-	const buttonStyle = {
-		margin: "20px",
-		width: "230px",
+	const styles = {
+		paperStyle: { padding: 20, width: 280, margin: "0 auto" },
+		avatarStyle: {
+			backgroundColor: "#9c6644",
+			margin: "15px",
+		},
+		tfStyle: {
+			margin: "5px",
+		},
+		buttonStyle: {
+			margin: "20px",
+			width: "230px",
+		},
 	};
 
 	let nameValidator = /^[a-zA-Z ]{2,30}$/;
 	let mailValidator = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 	let phoneNumberValidator = /^\d{9}$/;
-	// let passwordValidator = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
 	let passwordValidator =
 		/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?"()[\]-]{8,25}$/;
 
@@ -112,7 +109,6 @@ export default function Register({ showAlert, closeSignUp }) {
 				//200
 				console.log("response: ", response);
 
-				// error = response.data;
 				setError("");
 				setSuccess(
 					"Sprawdź swój adres " +
@@ -137,19 +133,19 @@ export default function Register({ showAlert, closeSignUp }) {
 
 	return (
 		<Grid>
-			<Paper style={paperStyle}>
+			<Paper style={styles.paperStyle}>
 				<Grid align="center">
-					<Avatar style={avatarStyle}>
+					<Avatar style={styles.avatarStyle}>
 						<AppRegistrationIcon />
 					</Avatar>
 				</Grid>
 
-				<form>
+				<form style={{ display: "flex", flexDirection: "column" }}>
 					<Typography color="green">{success}</Typography>
 					<Typography color="red">{error}</Typography>
 
 					<TextField
-						style={tfStyle}
+						style={styles.tfStyle}
 						id="outlined-basic"
 						label="Imię"
 						variant="outlined"
@@ -160,7 +156,7 @@ export default function Register({ showAlert, closeSignUp }) {
 					/>
 
 					<TextField
-						style={tfStyle}
+						style={styles.tfStyle}
 						id="outlined-basic"
 						label="Nazwisko"
 						variant="outlined"
@@ -171,7 +167,7 @@ export default function Register({ showAlert, closeSignUp }) {
 					/>
 
 					<TextField
-						style={tfStyle}
+						style={styles.tfStyle}
 						id="outlined-basic"
 						label="E-mail"
 						variant="outlined"
@@ -182,7 +178,7 @@ export default function Register({ showAlert, closeSignUp }) {
 					/>
 
 					<TextField
-						style={tfStyle}
+						style={styles.tfStyle}
 						id="outlined-basic"
 						label="Numer telefonu"
 						variant="outlined"
@@ -193,7 +189,7 @@ export default function Register({ showAlert, closeSignUp }) {
 					/>
 
 					<TextField
-						style={tfStyle}
+						style={styles.tfStyle}
 						id="outlined-basic"
 						label="Hasło"
 						variant="outlined"
@@ -205,7 +201,7 @@ export default function Register({ showAlert, closeSignUp }) {
 					/>
 
 					<TextField
-						style={tfStyle}
+						style={styles.tfStyle}
 						id="outlined-basic"
 						label="Potwierdź hasło"
 						variant="outlined"
@@ -229,7 +225,11 @@ export default function Register({ showAlert, closeSignUp }) {
 						}
 						label="Przeczytałem/am oraz akceptuję regulamin strony."
 					/>
-					<Button style={buttonStyle} onClick={register} variant="outlined">
+					<Button
+						style={styles.buttonStyle}
+						onClick={register}
+						variant="outlined"
+					>
 						Zarejestruj
 					</Button>
 				</form>

@@ -15,15 +15,6 @@ export default function PasswordResetApply({ setAlert }) {
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
 
-	const tfStyle = {
-		margin: "5px",
-	};
-
-	const buttonStyle = {
-		margin: "20px",
-		width: "230px",
-	};
-
 	let passwordValidator =
 		/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?"()[\]-]{8,25}$/;
 
@@ -74,17 +65,24 @@ export default function PasswordResetApply({ setAlert }) {
 
 	return (
 		<>
-			<header className="App-header">Strona z resetem hasła</header>;
+			<header className="App-header">Reset hasła</header>;
 			<form
 				style={{
 					backgroundColor: "white",
+					display: "flex",
+					flexDirection: "column",
+					maxWidth: "768px",
+					marginInline: "auto",
+					padding: "2rem",
 				}}
 			>
 				<Typography color="green">{success}</Typography>
 				<Typography color="red">{error}</Typography>
 
 				<TextField
-					style={tfStyle}
+					style={{
+						margin: "5px",
+					}}
 					id="outlined-basic"
 					label="Hasło"
 					variant="outlined"
@@ -96,7 +94,9 @@ export default function PasswordResetApply({ setAlert }) {
 				/>
 
 				<TextField
-					style={tfStyle}
+					style={{
+						margin: "5px",
+					}}
 					id="outlined-basic"
 					label="Potwierdź hasło"
 					variant="outlined"
@@ -107,7 +107,14 @@ export default function PasswordResetApply({ setAlert }) {
 					required
 				/>
 
-				<Button style={buttonStyle} onClick={resetPassword} variant="outlined">
+				<Button
+					style={{
+						margin: "20px",
+						width: "230px",
+					}}
+					onClick={resetPassword}
+					variant="outlined"
+				>
 					Zresetuj hasło
 				</Button>
 			</form>

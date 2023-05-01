@@ -61,7 +61,6 @@ export default function PasswordReset({ showAlert, closeSignUp }) {
 				//200
 				console.log("response: ", response);
 
-				// error = response.data;
 				setError("");
 				setSuccess(
 					"Sprawdź swój adres " +
@@ -92,7 +91,7 @@ export default function PasswordReset({ showAlert, closeSignUp }) {
 					</Avatar>
 				</Grid>
 
-				<form>
+				<form style={{ display: "flex", flexDirection: "column" }}>
 					<Typography color="green">{success}</Typography>
 					<Typography color="red">{error}</Typography>
 

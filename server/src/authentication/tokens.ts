@@ -40,7 +40,7 @@ export async function generateRegistrationToken(user: User) {
 }
 
 export async function generateResetToken(user: User) {
-	return jwt.sign(await generatePayload(user), process.env.JWT_RESET_SECRET, {
+	return jwt.sign(await generatePayload(user), user.password, {
 		expiresIn: process.env.JWT_RESET_EXPIRATION,
 	});
 }

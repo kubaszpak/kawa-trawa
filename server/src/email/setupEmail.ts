@@ -25,7 +25,6 @@ export const sendEmail = async (
 	subject: string,
 	template: EmailTemplate,
 	recipients: string[],
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data?: any
 ) => {
 	const { text, html } = template.render(data);

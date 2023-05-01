@@ -63,7 +63,7 @@ export default class AuthController {
 			return;
 		}
 
-		// TODO: enable this when user confirmation is completed
+		// TODO: enable this when user confirmation is completed and necessary
 		/*if (!user.confirmed) {
             response.status(400).send({ error: "The account has not been confirmed." });
             return;
@@ -140,7 +140,7 @@ export default class AuthController {
 				`Confirmed user registration: ${user.firstName} ${user.lastName}`
 			);
 
-			response.redirect("http://localhost:3000/registerConfirmed");
+			response.redirect(`${process.env.FRONTEND_URL}/registerConfirmed`);
 			return next();
 		} catch (err) {
 			return response.json("Registration request has expired.");
@@ -179,7 +179,7 @@ export default class AuthController {
 		const token: string = request.query.token as string;
 
 		try {
-			let { id } = jwt.verify(token, process.env.JWT_RESET_SECRET) as {
+			let { id } = jwt.decode(token) as {
 				id: string;
 			};
 
@@ -198,8 +198,9 @@ export default class AuthController {
 		}
 
 		try {
+			jwt.verify(token, user.password);
 			response.cookie("resetToken", token);
-			response.redirect("http://localhost:3000/passwordResetApply");
+			response.redirect(`${process.env.FRONTEND_URL}/passwordResetApply`);
 			return next();
 		} catch (err) {
 			response.status(400).send("Invalid Token");
@@ -215,7 +216,7 @@ export default class AuthController {
 		const token: string = request.headers["authorization"];
 
 		try {
-			let { id } = jwt.verify(token, process.env.JWT_RESET_SECRET) as {
+			let { id } = jwt.decode(token) as {
 				id: string;
 			};
 
@@ -234,6 +235,7 @@ export default class AuthController {
 		}
 
 		try {
+			jwt.verify(token, user.password);
 			const password = await this.hashPassword(request.body.password);
 			await AppDataSource.getRepository(User).update(user.id, { password });
 			return next();

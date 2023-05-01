@@ -96,22 +96,12 @@ export default function NavBar({ setAlert }) {
 		setAccountType(accountType);
 	}, [isUserLoggedIn]);
 
-	useEffect(() => {
-		const accessToken = Cookies.get("accessToken");
-		if (!accessToken) {
-			setAccountType(null);
-			return;
-		}
-		const { accountType } = decode(accessToken);
-		setAccountType(accountType);
-	}, [isUserLoggedIn]);
-
 	const isEmployee = useMemo(() => {
 		return accountType === accountTypes.EMPLOYEE;
 	}, [accountType]);
 
 	const logOutUser = () => {
-		console.log("byebye");
+		console.log("bye");
 
 		Cookies.remove("refreshToken");
 		Cookies.remove("accessToken");
@@ -196,8 +186,9 @@ export default function NavBar({ setAlert }) {
 							sx={{ cursor: "pointer" }}
 							color="white"
 							onClick={addNewProduct}
+							mx={2}
 						>
-							Dodaj produkt
+							Dodaj
 						</Typography>
 					)}
 

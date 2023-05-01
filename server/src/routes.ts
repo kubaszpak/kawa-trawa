@@ -182,7 +182,7 @@ export const Routes = [
 		method: "delete",
 		route: "/orders/:id",
 		controller: OrderController,
-		middleware: [accessTokenMiddleware, unBannedUserOrEmp],
+		middleware: [accessTokenMiddleware, empOnly],
 		action: "remove",
 	},
 	{
@@ -266,7 +266,7 @@ export const Routes = [
 		method: "delete",
 		route: "/complaints/:id",
 		controller: ComplaintController,
-		middleware: [accessTokenMiddleware, unBannedOnly],
+		middleware: [accessTokenMiddleware, empOnly],
 		action: "remove",
 	},
 	{

@@ -46,7 +46,7 @@ export async function unBannedOnly(
 	if (!user.banned) {
 		return next();
 	}
-	res.status(403).send("Verified only");
+	res.status(403).send("Not permitted");
 }
 
 export async function empOnly(req: Request, res: Response, next: NextFunction) {
@@ -72,7 +72,6 @@ export async function unBannedUserOrEmp(
 	const user = await userRepository.findOne({
 		where: { id: (req as any).userId },
 	});
-	// res.status(403).send(user.email + " conf = " + user.confirmed + " banned =" + user.banned);
 	if (
 		user.accountType == AccountType.EMPLOYEE ||
 		user.accountType == AccountType.ADMIN

@@ -17,7 +17,6 @@ import { useState } from "react";
 import Register from "./Register";
 import PasswordReset from "./PasswordReset";
 import axios from "axios";
-// import Cookies from 'universal-cookie';
 import Cookies from "js-cookie";
 import { REACT_APP_LOGIN_ENDPOINT } from "../../config";
 
@@ -37,7 +36,6 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
 			setError("Wprowadzono niepoprawny adres e-mail");
 			return;
 		}
-		// console.log(REACT_APP_LOGIN_ENDPOINT)
 
 		const body = {
 			email: loginValue,
@@ -52,14 +50,6 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
 			.then((response) => {
 				//200
 				console.log("response: ", response);
-				// console.log("refreshToken = ", response.data.refreshToken)
-				// console.log("refreshToken expires = ", response.data.expiresIn)
-				// console.log("accessToken = ", response.data.accessToken)
-				// console.log("accountType = ", response.data.user.accountType)
-
-				// console.log("converted 1h to = ",parseInt(response.data.expiresIn))
-
-				//token expiration given in hours
 				var now = new Date();
 				var time = now.getTime();
 				time += parseInt(response.data.expiresIn) * 3600 * 1000;
@@ -120,49 +110,30 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
 		closeLogin();
 	};
 
-	const paperStyle = {
-		padding: 20,
-		width: 280,
-		margin: "20px auto",
-	};
-
-	const avatarStyle = {
-		backgroundColor: "#9c6644",
-		margin: "15px",
-	};
-
-	const marginStyle = {
-		margin: "10px",
-	};
-
-	const buttonStyle = {
-		margin: "20px",
-		width: "230px",
-	};
-
-	const tfStyle = {
-		margin: "5px",
-	};
-
-	const linkStyle = {
-		margin: "5px auto",
-		fontSize: "16px",
-		color: "#9c6644",
-		// textAlign: 'left'
-	};
-
 	return (
 		<>
 			<Grid>
-				<Paper elevation={10} style={paperStyle}>
+				<Paper
+					elevation={10}
+					style={{
+						padding: 20,
+						width: 280,
+						margin: "20px auto",
+					}}
+				>
 					<Grid align="center">
-						<Avatar style={avatarStyle}>
+						<Avatar
+							style={{
+								backgroundColor: "#9c6644",
+								margin: "15px",
+							}}
+						>
 							<LoginIcon />
 						</Avatar>
 
 						<Typography color="red">{error}</Typography>
 						<TextField
-							style={tfStyle}
+							sx={{ m: 1 }}
 							id="outlined-basic"
 							label="Login (e-mail)"
 							variant="outlined"
@@ -171,7 +142,7 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
 						/>
 
 						<TextField
-							style={tfStyle}
+							sx={{ m: 1 }}
 							id="outlined-basic"
 							label="Hasło"
 							variant="outlined"
@@ -180,26 +151,47 @@ export default function Login({ showAlert, closeLogin, loginUser }) {
 							required
 						/>
 
-						<Button style={buttonStyle} onClick={login} variant="outlined">
+						<Button
+							style={{
+								margin: "20px",
+								width: "230px",
+							}}
+							onClick={login}
+							variant="outlined"
+						>
 							Zaloguj
 						</Button>
 						<FormControlLabel
-							style={marginStyle}
+							style={{ margin: "10px" }}
 							value="rememberme"
 							control={<Switch color="primary" />}
 							label="Pamiętaj mnie"
 							labelPlacement="end"
 						/>
 
-						<p margin="2px 0"></p>
-
 						<div style={{ display: "flex" }}>
-							<Link style={linkStyle} onClick={openPasswordResetModal} href="#">
+							<Link
+								style={{
+									margin: "5px auto",
+									fontSize: "16px",
+									color: "#9c6644",
+								}}
+								onClick={openPasswordResetModal}
+								href="#"
+							>
 								Nie pamiętam hasła
 							</Link>
 						</div>
 
-						<Link style={linkStyle} onClick={openSignUpModal} href="#">
+						<Link
+							style={{
+								margin: "5px auto",
+								fontSize: "16px",
+								color: "#9c6644",
+							}}
+							onClick={openSignUpModal}
+							href="#"
+						>
 							Załóż konto
 						</Link>
 					</Grid>

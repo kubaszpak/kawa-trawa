@@ -18,30 +18,33 @@ const ProductsList = ({ products, onDelete, addProductToCart }) => {
 
 	const classes = useStyles();
 
-	const sortProducts = useCallback((products) => {
-		let ascending;
-		let property;
+	const sortProducts = useCallback(
+		(products) => {
+			let ascending;
+			let property;
 
-		switch (sortMode) {
-			case "price-asc":
-				ascending = true;
-				property = "price";
-				break;
-			case "price-desc":
-				ascending = false;
-				property = "price";
-				break;
-			default:
-		}
+			switch (sortMode) {
+				case "price-asc":
+					ascending = true;
+					property = "price";
+					break;
+				case "price-desc":
+					ascending = false;
+					property = "price";
+					break;
+				default:
+			}
 
-		let newProducts = [...products];
-		if (ascending) {
-			newProducts.sort((a, b) => a[property] - b[property]);
-		} else {
-			newProducts.sort((a, b) => b[property] - a[property]);
-		}
-		return newProducts;
-	}, [sortMode]);
+			let newProducts = [...products];
+			if (ascending) {
+				newProducts.sort((a, b) => a[property] - b[property]);
+			} else {
+				newProducts.sort((a, b) => b[property] - a[property]);
+			}
+			return newProducts;
+		},
+		[sortMode]
+	);
 
 	const handleChange = (event) => {
 		const newSortMode = event.target.value;
