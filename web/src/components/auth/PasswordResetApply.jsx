@@ -4,13 +4,14 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { REACT_APP_PASSWORD_RESET_APPLY_ENDPOINT } from "../../config";
+import { useNavigate } from "react-router-dom";
 
-export default function PasswordResetApply() {
+export default function PasswordResetApply({ setAlert }) {
 	const [changeData, setChangeData] = useState({
 		password: "",
 		repeatedPassword: "",
 	});
-
+	const navigate = useNavigate();
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
 
@@ -58,14 +59,16 @@ export default function PasswordResetApply() {
 				//200
 				console.log("response: ", response);
 
-				// error = response.data;
-				setError("");
-				setSuccess("Zmieniono hasło. Zaloguj się.");
+				navigate("/");
+				setAlert({
+					messageType: "success",
+					message: "Pomyślnie zmieniono hasło. Zaloguj się!",
+				});
 			})
 			.catch((error) => {
 				setSuccess("");
 				console.log("error", error.response.data.error);
-				setError(error.response.data.error || error.response.data);
+				setError(error.response.data?.error || error.response.data);
 			});
 	};
 

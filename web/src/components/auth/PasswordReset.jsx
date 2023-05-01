@@ -78,8 +78,8 @@ export default function PasswordReset({ showAlert, closeSignUp }) {
 			})
 			.catch((error) => {
 				setSuccess("");
-				console.log("error", error.response.data?.error);
-				setError(error.response.data?.error | error.response.data);
+				console.log("error", error.response.data);
+				setError(error.response.data?.error || error.response.data);
 			});
 	};
 

@@ -155,16 +155,18 @@ export default class AuthController {
 		const user = await AppDataSource.getRepository(User).findOne({
 			where: { email: request.body.email },
 		});
-		if (user) {
-			const token = await generateResetToken(user);
-
-			sendEmail(
-				"Potwierdź zmianę hasła do 'Kawa i Trawa'",
-				resetPasswordEmailTemplate,
-				[user.email],
-				{ user, token }
-			);
+		if (!user) {
+			response.status(404).json("User does not exist!");
+			return next();
 		}
+		const token = await generateResetToken(user);
+
+		sendEmail(
+			"Potwierdź zmianę hasła do 'Kawa i Trawa'",
+			resetPasswordEmailTemplate,
+			[user.email],
+			{ user, token }
+		);
 		response.status(200).json("Reset email has been sent");
 		return next();
 	}
@@ -177,7 +179,7 @@ export default class AuthController {
 		const token: string = request.query.token as string;
 
 		try {
-			let { id } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as {
+			let { id } = jwt.verify(token, process.env.JWT_RESET_SECRET) as {
 				id: string;
 			};
 
@@ -190,13 +192,12 @@ export default class AuthController {
 		const user = await AppDataSource.getRepository(User).findOne({
 			where: { id: (request as any).userId },
 		});
-		if (!user || user.banned || !user.confirmed) {
+		if (!user || user.banned) {
 			response.status(404).json("Can not change password");
 			return next();
 		}
 
 		try {
-			jwt.verify(token, user.password);
 			response.cookie("resetToken", token);
 			response.redirect("http://localhost:3000/passwordResetApply");
 			return next();
@@ -214,7 +215,7 @@ export default class AuthController {
 		const token: string = request.headers["authorization"];
 
 		try {
-			let { id } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as {
+			let { id } = jwt.verify(token, process.env.JWT_RESET_SECRET) as {
 				id: string;
 			};
 
@@ -227,13 +228,12 @@ export default class AuthController {
 		const user = await AppDataSource.getRepository(User).findOne({
 			where: { id: (request as any).userId },
 		});
-		if (!user || user.banned || !user.confirmed) {
+		if (!user || user.banned) {
 			response.status(404).json("Can not change password");
 			return next();
 		}
 
 		try {
-			jwt.verify(token, user.password);
 			const password = await this.hashPassword(request.body.password);
 			await AppDataSource.getRepository(User).update(user.id, { password });
 			return next();

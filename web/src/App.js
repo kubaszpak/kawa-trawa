@@ -58,7 +58,10 @@ function App() {
 				<NavBar setAlert={setAlert} />
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/passwordResetApply" element={<PasswordResetApply />} />
+					<Route
+						path="/passwordResetApply"
+						element={<PasswordResetApply setAlert={setAlert} />}
+					/>
 					<Route
 						path="/categories/:categoryId"
 						element={<CategoryPage addProductToCart={addProductToCart} />}
