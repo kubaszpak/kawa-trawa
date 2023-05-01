@@ -4,18 +4,18 @@ import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
 	const navigate = useNavigate();
+
 	return (
 		<header className="App-header">
 			<Typography variant="h1" fontWeight="bold">
 				Kawa i trawa
 			</Typography>
 			<Typography varaint="h1">
-				Kupuj dwie ukochane rzeczy
-				<br />w jednym miejscu
-				<br />w internecie ...
+				Potwierdzono rejestrację.
+				<br /> Zaloguj się aby odkryć nowy smak życia
 			</Typography>
 			<Button
-				sx={{ my: 3 }}
+				sx={{ mt: 3 }}
 				variant="contained"
 				color="secondary"
 				onClick={() => navigate("/products")}

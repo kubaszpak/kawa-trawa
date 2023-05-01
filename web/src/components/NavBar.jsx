@@ -18,7 +18,7 @@ import {
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import logoImg from "../static/images/Logo.png";
 import Categories from "./Categories";
-import Login from "./Login";
+import Login from "./auth/Login";
 import axios from "axios";
 import { makeStyles } from "@mui/styles";
 import { REACT_APP_CATEGORIES_ENDPOINT } from "../config";

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import axios from "axios";
-import { REACT_APP_PASSWORD_RESET_ENDPOINT } from "../config";
+import { REACT_APP_PASSWORD_RESET_ENDPOINT } from "../../config";
 
 export default function PasswordReset({ showAlert, closeSignUp }) {
 	const [resetData, setResetData] = useState({

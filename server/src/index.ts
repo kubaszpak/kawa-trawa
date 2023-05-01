@@ -43,7 +43,7 @@ AppDataSource.initialize()
 							res,
 							next
 						);
-						console.log(result);
+						// console.log(result);
 						res.json(result);
 					} catch (error) {
 						console.error(error);
