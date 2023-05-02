@@ -10,7 +10,7 @@ import {
 	FilledInput,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { filterProducts, queryFilter } from "../utils/filters";
+import { filterProducts, queryFilter } from "../../utils/filters";
 
 const ProductsList = ({ products, onDelete, addProductToCart }) => {
 	const [sortMode, setSortMode] = useState("price-asc");

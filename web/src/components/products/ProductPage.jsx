@@ -2,8 +2,8 @@ import { Button, Grid, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { REACT_APP_PRODUCTS_ENDPOINT } from "../config";
-import PageNotFound from "./PageNotFound";
+import { REACT_APP_PRODUCTS_ENDPOINT } from "../../config";
+import PageNotFound from "../PageNotFound";
 
 export default function ProductPage({ addProductToCart }) {
 	let params = useParams();
@@ -45,7 +45,10 @@ export default function ProductPage({ addProductToCart }) {
 					<>
 						<Grid item sx={{ flex: "1" }}>
 							<img
-								src={product?.pathToImage || "https://img.kavosdraugas.lt/9e142f51-27d7-44d5-8a67-5ee615e04dfd/470x470/kopiluwakjpg.jpg"}
+								src={
+									product?.pathToImage ||
+									"https://img.kavosdraugas.lt/9e142f51-27d7-44d5-8a67-5ee615e04dfd/470x470/kopiluwakjpg.jpg"
+								}
 								alt="product"
 							/>
 						</Grid>

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CategoriesApi } from "../api/CategoriesApi";
-import ProductsList from "./ProductsList";
+import ProductsList from "./products/ProductsList";
 
 export default function CategoryPage({ addProductToCart }) {
 	let params = useParams();

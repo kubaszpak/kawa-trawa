@@ -9,8 +9,8 @@ import {
 import ReportIcon from "@mui/icons-material/Report";
 import React from "react";
 import { useState } from "react";
-import API from "../api/ApiConnector";
-import { REACT_APP_POST_COMPLAINT_ENDPOINT } from "../config";
+import API from "../../api/ApiConnector";
+import { REACT_APP_POST_COMPLAINT_ENDPOINT } from "../../config";
 import axios from "axios";
 
 export default function ComplaintModal({ closeComplaintModal, order }) {

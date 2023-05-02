@@ -26,7 +26,7 @@ import Cookies from "js-cookie";
 import decode from "jwt-decode";
 import accountTypes from "../utils/accountTypes";
 import { useNavigate } from "react-router-dom";
-import ProductEditor from "./ProductEditor";
+import ProductEditor from "./products/ProductEditor";
 
 const iOS =
 	typeof navigator !== "undefined" &&
