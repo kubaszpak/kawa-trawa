@@ -16,7 +16,11 @@ const removeItemFromTheCart = (id) => {
 
 const steps = ["cart_summary", "address_form", "summary"];
 
-export default function Cart({ cartContent, setAlert }) {
+export default function Cart({
+	cartContent,
+	setAlert,
+	setAlertBasedOnPromiseResult,
+}) {
 	const [products, setProducts] = useState([]);
 	const [address, setAddress] = useState({
 		country: "",
@@ -39,7 +43,6 @@ export default function Cart({ cartContent, setAlert }) {
 				fetchedResponses,
 				(response) => response.name !== "Error"
 			);
-			console.error(failedResponses);
 			for (const failedResponse of failedResponses) {
 				if (
 					failedResponse.response?.data?.message.includes("has been exceeded")
@@ -72,7 +75,12 @@ export default function Cart({ cartContent, setAlert }) {
 					continue;
 				}
 			}
-			setProducts(filteredResponses.map((r) => r.data));
+
+			setProducts(
+				filteredResponses.length !== 0
+					? filteredResponses.map((r) => r.data)
+					: null
+			);
 		});
 	}, [cartContent, setProducts, setAlert]);
 
@@ -81,7 +89,9 @@ export default function Cart({ cartContent, setAlert }) {
 			<CartContentSummary
 				products={products}
 				cartContent={cartContent}
+				setAlert={setAlert}
 				next={() => setStep(steps[1])}
+				removeItemFromTheCart={removeItemFromTheCart}
 			/>
 		);
 	} else if (step === steps[1]) {
@@ -98,7 +108,7 @@ export default function Cart({ cartContent, setAlert }) {
 				products={products}
 				cartContent={cartContent}
 				address={address}
-				setAlert={setAlert}
+				setAlertBasedOnPromiseResult={setAlertBasedOnPromiseResult}
 			/>
 		);
 	}

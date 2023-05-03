@@ -15,7 +15,7 @@ import {
 	ListItemButton,
 	Divider,
 } from "@mui/material";
-import React, { useState, useRef, useEffect, useMemo } from "react";
+import React, { useState, useRef, useEffect, useMemo, useContext } from "react";
 import logoImg from "../static/images/Logo.png";
 import Categories from "./Categories";
 import Login from "./auth/Login";
@@ -27,6 +27,7 @@ import decode from "jwt-decode";
 import accountTypes from "../utils/accountTypes";
 import { useNavigate } from "react-router-dom";
 import ProductEditor from "./products/ProductEditor";
+import { LoginContext } from "../App";
 
 const iOS =
 	typeof navigator !== "undefined" &&
@@ -42,11 +43,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NavBar({ setAlert }) {
+	const { isUserLoggedIn, setIsUserLoggedIn, setUserDetails } =
+		useContext(LoginContext);
 	const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 	const [popoverOpened, setPopoverOpened] = useState(false);
 	const popoverAnchor = useRef(null);
 	const [categories, setCategories] = useState([]);
-	const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 	const [accountType, setAccountType] = useState(null);
 	const [productEditorOpen, setProductEditorOpen] = useState(false);
 	const [drawerOpen, setDrawerOpen] = useState(false);
@@ -91,12 +93,17 @@ export default function NavBar({ setAlert }) {
 		if (!accessToken) {
 			setIsUserLoggedIn(false);
 			setAccountType(null);
+			setUserDetails(null);
 			return;
 		}
 		setIsUserLoggedIn(true);
-		const { accountType } = decode(accessToken);
+		const { accountType, balance, email } = decode(accessToken);
+		setUserDetails({
+			email,
+			balance,
+		});
 		setAccountType(accountType);
-	}, [isUserLoggedIn]);
+	}, [isUserLoggedIn, setIsUserLoggedIn, setUserDetails]);
 
 	const isEmployee = useMemo(() => {
 		return accountType === accountTypes.EMPLOYEE;

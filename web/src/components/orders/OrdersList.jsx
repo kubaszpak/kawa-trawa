@@ -1,11 +1,21 @@
 import React from "react";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import OrderCard from "./OrderCard";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const OrdersList = ({ orders }) => {
 	const classes = useStyles();
+
+	if (!orders || orders.length === 0) {
+		return (
+			<Container maxWidth="lg">
+				<Typography variant="h2" fontWeight="bold" color="white">
+					Brak zamówień
+				</Typography>
+			</Container>
+		);
+	}
 
 	return (
 		<Container maxWidth="lg">

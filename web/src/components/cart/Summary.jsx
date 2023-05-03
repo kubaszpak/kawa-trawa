@@ -2,7 +2,12 @@ import { Button, Container, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { OrdersApi } from "../../api/OrdersApi";
 
-export default function Summary({ products, cartContent, address, setAlert }) {
+export default function Summary({
+	products,
+	cartContent,
+	address,
+	setAlertBasedOnPromiseResult,
+}) {
 	const navigate = useNavigate();
 
 	return (
@@ -81,7 +86,7 @@ export default function Summary({ products, cartContent, address, setAlert }) {
 							})}
 						<Typography variant="h5">
 							{address["street"]} {address["houseNumber"]}
-							{address.flatNumber && ` / ${address["flatNumber"]}`}
+							{address.flatNumber ? ` / ${address["flatNumber"]}` : ""}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} py={5}>
@@ -107,7 +112,7 @@ export default function Summary({ products, cartContent, address, setAlert }) {
 						size="large"
 						onClick={(e) => {
 							e.preventDefault();
-							OrdersApi.saveOrder({
+							const res = OrdersApi.saveOrder({
 								address: address,
 								products: products.map((product) => {
 									return {
@@ -117,10 +122,7 @@ export default function Summary({ products, cartContent, address, setAlert }) {
 								}),
 							});
 							navigate("/");
-							setAlert({
-								messageType: "success",
-								message: "Zamówienie zostało złożone!",
-							});
+							setAlertBasedOnPromiseResult(res);
 						}}
 					>
 						Złóż zamówienie
