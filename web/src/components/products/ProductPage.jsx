@@ -24,56 +24,89 @@ export default function ProductPage({ addProductToCart }) {
 	}, [params.productId]);
 
 	return (
-		<Grid
-			container
-			sx={{
-				display: "flex",
-				alignItems: "center",
-				justifyContent: "center",
-				flexDirection: "row",
-				color: "black",
-				margin: "auto 100px",
-				backgroundColor: "white",
-				borderRadius: "10px",
-				width: "auto",
-			}}
-		>
-			{pageNotFound ? (
-				<PageNotFound />
-			) : (
-				product && (
-					<>
-						<Grid item sx={{ flex: "1" }}>
-							<img
-								src={
-									product?.pathToImage ||
-									"https://img.kavosdraugas.lt/9e142f51-27d7-44d5-8a67-5ee615e04dfd/470x470/kopiluwakjpg.jpg"
-								}
-								alt="product"
-							/>
-						</Grid>
-						<Grid item p={5} sx={{ mx: "10%", mt: "50px", flex: "1" }}>
-							<Typography variant="h1" fontWeight="bold">
-								{product.name}
-							</Typography>
-							<Typography mt={3} variant="h4">
-								Cena: {product.price} zł / sztuka
-							</Typography>
-							<Typography mt={5} variant="body2">
-								{product.description}
-							</Typography>
-							<Button
-								onClick={() => addProductToCart(product.id)}
-								sx={{ marginTop: "25px", marginBottom: "75px" }}
-								variant="contained"
-								color="primary"
+		<div style={{ padding: "16px" }}>
+			<Grid
+				container
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+					flexDirection: "column",
+					backgroundColor: "white",
+					borderRadius: "10px",
+					padding: {
+						xs: 2,
+						md: 6,
+					},
+					width: "auto",
+					marginInline: "auto",
+					maxWidth: "1024px",
+				}}
+			>
+				{pageNotFound ? (
+					<PageNotFound />
+				) : (
+					product && (
+						<>
+							<Grid item>
+								<img
+									src={product?.pathToImage}
+									alt="product"
+									style={{ objectFit: "contain", maxWidth: "100%" }}
+								/>
+							</Grid>
+							<Grid
+								item
+								sx={{
+									p: {
+										xs: 1,
+										md: 5,
+									},
+								}}
 							>
-								Do koszyka
-							</Button>
-						</Grid>
-					</>
-				)
-			)}
-		</Grid>
+								<Typography
+									sx={{
+										fontSize: {
+											xs: "2rem",
+											md: "3rem",
+										},
+									}}
+									variant="h1"
+									fontWeight="bold"
+								>
+									{product.name}
+								</Typography>
+								<Typography
+									mt={3}
+									variant="h4"
+									sx={{
+										fontSize: {
+											xs: "1rem",
+											md: "2rem",
+										},
+									}}
+								>
+									Cena: {product.price} zł / sztuka
+								</Typography>
+								<Typography mt={5} variant="body2">
+									{product.description}
+								</Typography>
+								<Typography color="red" variant="body2">
+									Pozostało {product.quantity} sztuk!
+								</Typography>
+								<Button
+									onClick={() => addProductToCart(product.id)}
+									sx={{ marginTop: "25px", marginBottom: "75px" }}
+									variant="contained"
+									color="primary"
+								>
+									Do koszyka
+								</Button>
+							</Grid>
+						</>
+					)
+				)}
+			</Grid>
+		</div>
 	);
 }

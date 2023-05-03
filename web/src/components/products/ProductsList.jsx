@@ -52,7 +52,10 @@ const ProductsList = ({ products, onDelete, addProductToCart }) => {
 	};
 
 	const displayedProducts = useMemo(() => {
-		const newProducts = filterProducts(products, [queryFilter(searchQuery)]);
+		const newProducts = filterProducts(
+			products.filter((product) => product.quantity !== 0),
+			[queryFilter(searchQuery)]
+		);
 
 		return sortProducts(newProducts);
 	}, [products, searchQuery, sortProducts]);
@@ -60,12 +63,7 @@ const ProductsList = ({ products, onDelete, addProductToCart }) => {
 	return (
 		<>
 			<Box className={classes.grid}>
-				<Grid
-					container
-					rowSpacing={2}
-					columnSpacing={2}
-					flexDirection={"row-reverse"}
-				>
+				<Grid container rowSpacing={2} columnSpacing={2}>
 					<Grid item>
 						<Paper className={classes.searchInput}>
 							<FilledInput
@@ -80,13 +78,11 @@ const ProductsList = ({ products, onDelete, addProductToCart }) => {
 					<Grid item>
 						<Paper className={classes.sortPaper}>
 							<Box className={classes.alignCenter}>
-								<Typography variant="body1" display="inline">
-									{"Sortuj wg:\u00A0"}
-								</Typography>
+								<Typography>Sortuj wg:</Typography>
 								<Select
 									className={classes.text}
 									value={sortMode}
-									label="Age"
+									label="Price"
 									onChange={handleChange}
 								>
 									<MenuItem value={"price-asc"}>Ceny rosnąco</MenuItem>
@@ -123,16 +119,19 @@ const useStyles = makeStyles((theme) => ({
 	alignCenter: {
 		display: "flex",
 		alignItems: "center",
+		gap: "5px",
 	},
 	topBar: {
 		display: "flex",
-		justifyContent: "flex-end",
+		justifyContent: "flex-start",
 	},
 	searchInput: {
 		padding: theme.spacing(1),
 	},
 	grid: {
-		margin: theme.spacing(2),
+		margin: `${theme.spacing(2)} auto 0 auto`,
+		maxWidth: "1280px",
+		padding: `0 ${theme.spacing(2)}`,
 	},
 }));
 

@@ -39,6 +39,7 @@ function App() {
 			newCart[productId] = 1;
 		}
 		setCart(newCart);
+		setAlert({ messageType: "success", message: "Produkt dodano do koszyka!" });
 	};
 
 	const handleCloseAlert = (event, reason) => {
@@ -69,7 +70,12 @@ function App() {
 					<Route path="/registerConfirmed" element={<RegisterConfirmed />} />
 					<Route
 						path="/products/:productId"
-						element={<ProductPage addProductToCart={addProductToCart} />}
+						element={
+							<ProductPage
+								addProductToCart={addProductToCart}
+								setAlert={setAlert}
+							/>
+						}
 					/>
 					<Route
 						path="/products/"

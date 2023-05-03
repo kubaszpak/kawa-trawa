@@ -9,7 +9,7 @@ import {
 
 export default function CartContentSummary({ products, cartContent, next }) {
 	return products.length > 0 ? (
-		<Container maxWidth="xl">
+		<Container maxWidth="lg">
 			<Grid
 				container
 				direction="column"
@@ -49,7 +49,7 @@ export default function CartContentSummary({ products, cartContent, next }) {
 									Cena: {cartContent[product.id]} x {product.price} ={" "}
 									{product.price * cartContent[product.id]}zł
 								</Typography>
-								{product.bestDiscount && (
+								{product.bestDiscount ? (
 									<Typography color="red">
 										Po promocji {product.bestDiscount}%:{" "}
 										{Math.floor(
@@ -60,6 +60,8 @@ export default function CartContentSummary({ products, cartContent, next }) {
 										)}
 										zł
 									</Typography>
+								) : (
+									""
 								)}
 							</Grid>
 						</Grid>

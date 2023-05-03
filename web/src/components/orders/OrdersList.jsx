@@ -1,14 +1,14 @@
 import React from "react";
-import Grid from "@mui/material/Grid";
+import { Container, Grid } from "@mui/material";
 import OrderCard from "./OrderCard";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
-const OrdersList = ({ orders, setOrders }) => {
+const OrdersList = ({ orders }) => {
 	const classes = useStyles();
 
 	return (
-		<>
+		<Container maxWidth="lg">
 			<Box className={classes.productGrid}>
 				<Grid container rowSpacing={2} columnSpacing={2}>
 					{orders.map((order, index) => (
@@ -18,7 +18,7 @@ const OrdersList = ({ orders, setOrders }) => {
 					))}
 				</Grid>
 			</Box>
-		</>
+		</Container>
 	);
 };
 

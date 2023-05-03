@@ -7,7 +7,7 @@ export default function Summary({ products, cartContent, address, setAlert }) {
 
 	return (
 		products.length > 0 && (
-			<Container maxWidth="xl">
+			<Container maxWidth="lg">
 				<Grid
 					container
 					direction="column"

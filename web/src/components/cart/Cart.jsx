@@ -8,6 +8,12 @@ import AddressForm from "./AddressForm";
 import CartContentSummary from "./CartContentSummary";
 import Summary from "./Summary";
 
+const removeItemFromTheCart = (id) => {
+	const newCart = JSON.parse(localStorage.getItem("cart"));
+	delete newCart[id];
+	localStorage.setItem("cart", JSON.stringify(newCart));
+};
+
 const steps = ["cart_summary", "address_form", "summary"];
 
 export default function Cart({ cartContent, setAlert }) {
@@ -34,9 +40,41 @@ export default function Cart({ cartContent, setAlert }) {
 				(response) => response.name !== "Error"
 			);
 			console.error(failedResponses);
+			for (const failedResponse of failedResponses) {
+				if (
+					failedResponse.response?.data?.message.includes("has been exceeded")
+				) {
+					setAlert({
+						messageType: "error",
+						message:
+							failedResponse.response.data.message +
+							"! Removing it from the cart!",
+					});
+					const id = /The quantity of the product with id: (\d+)/g.exec(
+						failedResponse.response.data.message
+					)[1];
+					removeItemFromTheCart(id);
+					continue;
+				}
+				if (
+					failedResponse.response?.data?.message.includes("No item with id")
+				) {
+					setAlert({
+						messageType: "error",
+						message:
+							failedResponse.response.data.message +
+							"! Removing it from the cart!",
+					});
+					const id = /No item with id: (\d+)/g.exec(
+						failedResponse.response.data.message
+					)[1];
+					removeItemFromTheCart(id);
+					continue;
+				}
+			}
 			setProducts(filteredResponses.map((r) => r.data));
 		});
-	}, [cartContent, setProducts]);
+	}, [cartContent, setProducts, setAlert]);
 
 	if (step === steps[0]) {
 		return (

@@ -89,9 +89,11 @@ export default function NavBar({ setAlert }) {
 	useEffect(() => {
 		const accessToken = Cookies.get("accessToken");
 		if (!accessToken) {
+			setIsUserLoggedIn(false);
 			setAccountType(null);
 			return;
 		}
+		setIsUserLoggedIn(true);
 		const { accountType } = decode(accessToken);
 		setAccountType(accountType);
 	}, [isUserLoggedIn]);
@@ -192,13 +194,13 @@ export default function NavBar({ setAlert }) {
 						</Typography>
 					)}
 
-					{(isUserLoggedIn || Cookies.get("accessToken") != null) && (
+					{isUserLoggedIn && (
 						<Link mx={2} href="/orders">
 							<Typography color="white">Zamówienia</Typography>
 						</Link>
 					)}
 
-					{isUserLoggedIn || Cookies.get("accessToken") != null ? (
+					{isUserLoggedIn ? (
 						<Box mx={2} sx={{ cursor: "pointer" }}>
 							<Typography color="orange" onClick={logOutUser}>
 								Wyloguj mnie
@@ -250,7 +252,7 @@ export default function NavBar({ setAlert }) {
 						categories={categories}
 						closeDrawer={() => setDrawerOpen(false)}
 					/>
-					<Divider />
+					<Divider sx={{ mb: 1 }} />
 					{isEmployee && (
 						<ListItemButton onClick={addNewProduct}>
 							Dodaj produkt
@@ -259,13 +261,13 @@ export default function NavBar({ setAlert }) {
 					<ListItemButton component="a" href="/cart">
 						<ListItemText primary="Koszyk" />
 					</ListItemButton>
-					{(isUserLoggedIn || Cookies.get("accessToken") != null) && (
+					{isUserLoggedIn && (
 						<ListItemButton component="a" href="/orders">
 							<ListItemText primary="Zamówienia" />
 						</ListItemButton>
 					)}
 
-					{isUserLoggedIn || Cookies.get("accessToken") != null ? (
+					{isUserLoggedIn ? (
 						<ListItemButton color="orange" onClick={logOutUser}>
 							<ListItemText primary="Wyloguj mnie" />
 						</ListItemButton>

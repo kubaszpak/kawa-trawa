@@ -30,15 +30,12 @@ const ProductCard = ({ product, onDelete, addProductToCart }) => {
 		setAccountType(accountType);
 	}, []);
 
-	useEffect(() => {
-		onDelete();
-	}, [productEditorOpen, onDelete]);
-
 	const showDetails = () => {
 		navigate(`/products/${product.id}`);
 	};
 
-	const deleteProduct = async () => {
+	const deleteProduct = async (e) => {
+		e.stopPropagation();
 		try {
 			await ProductsApi.deleteProduct(product);
 			onDelete();
@@ -51,16 +48,36 @@ const ProductCard = ({ product, onDelete, addProductToCart }) => {
 		return accountType === accountTypes.EMPLOYEE;
 	}, [accountType]);
 
-	const editProduct = () => {
+	const editProduct = (e) => {
+		e.stopPropagation();
 		setProductEditorOpen(true);
 	};
 
 	return (
 		<>
-			<Card sx={{ cursor: "pointer", p: "16px" }}>
+			<Card
+				sx={{
+					cursor: "pointer",
+					p: "16px",
+					display: "flex",
+					flexDirection: "column",
+				}}
+				onClick={showDetails}
+			>
 				<CardMedia component="img" image={product.pathToImage} />
-				<CardContent>
-					<Typography gutterBottom variant="h5" component="div">
+				<CardContent
+					sx={{
+						height: "160px",
+						textOverflow: "ellipsis",
+						overflow: "hidden",
+					}}
+				>
+					<Typography
+						gutterBottom
+						variant="h5"
+						component="div"
+						fontWeight="bold"
+					>
 						{product.name}
 					</Typography>
 					<Typography>Cena: {product.price}zł</Typography>
@@ -70,7 +87,7 @@ const ProductCard = ({ product, onDelete, addProductToCart }) => {
 						</Typography>
 					</Box>
 				</CardContent>
-				<CardActions>
+				<CardActions sx={{ justifyContent: "flex-end", flex: 1 }}>
 					<Button
 						size="small"
 						variant="contained"
@@ -78,14 +95,6 @@ const ProductCard = ({ product, onDelete, addProductToCart }) => {
 						onClick={() => addProductToCart(product.id)}
 					>
 						Dodaj do koszyka
-					</Button>
-					<Button
-						size="small"
-						variant="contained"
-						color="secondary"
-						onClick={showDetails}
-					>
-						Szczegóły
 					</Button>
 
 					{isEmployee && (
@@ -123,7 +132,7 @@ const ProductCard = ({ product, onDelete, addProductToCart }) => {
 
 const useStyles = makeStyles((theme) => ({
 	description: {
-		height: 80,
+		marginTop: "16px",
 		textOverflow: "ellipsis",
 		overflow: "hidden",
 		// Addition lines for 4 line ellipsis

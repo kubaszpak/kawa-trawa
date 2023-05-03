@@ -4,14 +4,12 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { makeStyles } from "@mui/styles";
 import { Box, Modal } from "@mui/material";
 import { useState } from "react";
 import ComplaintModal from "./ComplaintModal";
 
 const OrderCard = ({ order }) => {
 	const [isComplaintModalVisible, setIsComplaintModalVisible] = useState(false);
-	const classes = useStyles();
 
 	const openComplaintModal = () => {
 		setIsComplaintModalVisible(true);
@@ -33,20 +31,30 @@ const OrderCard = ({ order }) => {
 			<Card sx={{ cursor: "pointer", p: "16px" }}>
 				<CardContent>
 					<Typography gutterBottom variant="h6" component="div">
-						{order.date}
+						Zamówienie {order.id}
 					</Typography>
+					<Typography>{new Date(order.date).toLocaleDateString()}</Typography>
 					<Typography>Cena: {order.totalPrice}zł</Typography>
 
-					<Box className={classes.description}>
+					<Box>
+						<Typography variant="body2">
+							Status zamówienia:{" "}
+							{order.status === "placed" ? "Złożone" : order.status}
+						</Typography>
 						<Typography variant="body2">
 							Lista produktów (produkt/ilość):
 						</Typography>
-						<Typography variant="body2">
-							{JSON.stringify(order.products).split(",").join(",\n")}
-						</Typography>
-						<Typography variant="body2">
-							Status zamówienia: {order.status}
-						</Typography>
+						<ul>
+							{order.productList.map((product, idx) => {
+								return (
+									<li key={idx}>
+										<Typography variant="body2" sx={{ textAlign: "left" }}>
+											{product.name}/{product.amount}
+										</Typography>
+									</li>
+								);
+							})}
+						</ul>
 					</Box>
 				</CardContent>
 				<CardActions>
@@ -72,18 +80,5 @@ const OrderCard = ({ order }) => {
 		</div>
 	);
 };
-
-const useStyles = makeStyles((theme) => ({
-	description: {
-		height: 60,
-		textOverflow: "ellipsis",
-		overflow: "hidden",
-		// Addition lines for 4 line ellipsis
-		display: "-webkit-box !important",
-		"-webkitLine-clamp": 4,
-		"-webkit-box-orient": "vertical",
-		whiteSpace: "normal",
-	},
-}));
 
 export default OrderCard;

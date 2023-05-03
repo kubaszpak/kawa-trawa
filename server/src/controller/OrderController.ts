@@ -13,18 +13,36 @@ export default class OrderController {
 		const user = await this.userRepository.findOne({
 			where: { id: (request as any).userId },
 		});
-		if (user.accountType == AccountType.CLIENT) {
-			return await this.orderRepository.find({
-				where: {
-					user: {
-						id: user.id,
+		type OrderWithProductList = Order & {
+			productList?: { name: string; amount: number }[];
+		};
+		const orders: OrderWithProductList[] =
+			user.accountType == AccountType.CLIENT
+				? await this.orderRepository.find({
+						where: {
+							user: {
+								id: user.id,
+							},
+						},
+				  })
+				: await this.orderRepository.find();
+
+		for (const order of orders) {
+			for (const productId in order.products) {
+				const product = await this.productRepository.findOne({
+					where: {
+						id: Number(productId),
 					},
-				},
-			}); //user orders
-		} else {
-			//admin or employee
-			return this.orderRepository.find(); //all orders
+				});
+				if (!order.productList) order.productList = [];
+				if (!!product)
+					order.productList.push({
+						name: product.name,
+						amount: order.products[product.id],
+					});
+			}
 		}
+		return orders;
 	}
 
 	async one(request: Request, response: Response, next: NextFunction) {

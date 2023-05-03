@@ -2,7 +2,7 @@ import { Button, Container, Grid, TextField } from "@mui/material";
 
 export default function AddressForm({ address, setAddress, next }) {
 	return (
-		<Container maxWidth="xl">
+		<Container maxWidth="lg">
 			<Grid
 				container
 				direction="column"

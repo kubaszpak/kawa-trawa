@@ -9,12 +9,13 @@ const OrdersPage = () => {
 	useEffect(() => {
 		async function fetchOrders() {
 			const { data } = await OrdersApi.getOrders();
+			console.log(data);
 			setOrders(data);
 		}
 		fetchOrders();
 	}, [setOrders]);
 
-	return <OrdersList orders={orders} setOrders={setOrders} />;
+	return <OrdersList orders={orders} />;
 };
 
 export default OrdersPage;
