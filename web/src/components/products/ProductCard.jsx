@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import decode from "jwt-decode";
 import accountTypes from "../../utils/accountTypes";
 import ProductEditor from "./ProductEditor";
+import DiamondIcon from "@mui/icons-material/Diamond";
 
 const ProductCard = ({ product, onDelete, addProductToCart }) => {
 	const navigate = useNavigate();
@@ -80,7 +81,12 @@ const ProductCard = ({ product, onDelete, addProductToCart }) => {
 					>
 						{product.name}
 					</Typography>
-					<Typography>Cena: {product.price}zł</Typography>
+					<Typography>
+						Cena: {product.price}
+						<DiamondIcon
+							sx={{ position: "relative", top: "6px", left: "3px" }}
+						/>
+					</Typography>
 					<Box className={classes.description}>
 						<Typography variant="body2" color="text.secondary">
 							{product.description}

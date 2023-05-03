@@ -1,6 +1,7 @@
 import { Button, Container, Grid, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { OrdersApi } from "../../api/OrdersApi";
+import DiamondIcon from "@mui/icons-material/Diamond";
 
 export default function Summary({
 	products,
@@ -50,7 +51,10 @@ export default function Summary({
 									<Typography>Ilość: {cartContent[product.id]}</Typography>
 									<Typography>
 										Cena: {cartContent[product.id]} x {product.price} ={" "}
-										{product.price * cartContent[product.id]}zł
+										{product.price * cartContent[product.id]}
+										<DiamondIcon
+											sx={{ position: "relative", top: "3px", left: "3px" }}
+										/>
 									</Typography>
 									{product.bestDiscount && (
 										<Typography color="red">
@@ -61,7 +65,9 @@ export default function Summary({
 													(100 - product.bestDiscount)) /
 													100
 											)}
-											zł
+											<DiamondIcon
+												sx={{ position: "relative", top: "3px", left: "3px" }}
+											/>
 										</Typography>
 									)}
 								</Grid>
@@ -103,7 +109,15 @@ export default function Summary({
 									),
 								0
 							)}
-							zł
+							<DiamondIcon
+								sx={{
+									position: "relative",
+									top: "9px",
+									left: "3px",
+									height: "2em",
+									width: "2em",
+								}}
+							/>
 						</Typography>
 					</Grid>
 					<Button

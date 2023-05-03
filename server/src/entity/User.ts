@@ -47,7 +47,7 @@ export class User {
     accountType?: AccountType;
 
     @Column({
-        default: 0
+        default: 100
     })
     balance?: number;
 

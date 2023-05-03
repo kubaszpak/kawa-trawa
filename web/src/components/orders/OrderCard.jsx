@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import { Box, Modal } from "@mui/material";
 import { useState } from "react";
 import ComplaintModal from "./ComplaintModal";
+import DiamondIcon from "@mui/icons-material/Diamond";
 
 const OrderCard = ({ order }) => {
 	const [isComplaintModalVisible, setIsComplaintModalVisible] = useState(false);
@@ -34,7 +35,12 @@ const OrderCard = ({ order }) => {
 						Zamówienie {order.id}
 					</Typography>
 					<Typography>{new Date(order.date).toLocaleDateString()}</Typography>
-					<Typography>Cena: {order.totalPrice}zł</Typography>
+					<Typography>
+						Cena: {order.totalPrice}
+						<DiamondIcon
+							sx={{ position: "relative", top: "6px", left: "3px" }}
+						/>
+					</Typography>
 
 					<Box>
 						<Typography variant="body2">

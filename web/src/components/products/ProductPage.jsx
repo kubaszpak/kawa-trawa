@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { REACT_APP_PRODUCTS_ENDPOINT } from "../../config";
 import PageNotFound from "../PageNotFound";
+import DiamondIcon from "@mui/icons-material/Diamond";
 
 export default function ProductPage({ addProductToCart }) {
 	let params = useParams();
@@ -86,7 +87,11 @@ export default function ProductPage({ addProductToCart }) {
 										},
 									}}
 								>
-									Cena: {product.price} zł / sztuka
+									Cena: {product.price}{" "}
+									<DiamondIcon
+										sx={{ position: "relative", top: "3px", left: "3px" }}
+									/>{" "}
+									/ sztuka
 								</Typography>
 								<Typography mt={5} variant="body2">
 									{product.description}

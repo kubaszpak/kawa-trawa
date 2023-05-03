@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { LoginContext } from "../../App";
 import { useContext } from "react";
+import DiamondIcon from "@mui/icons-material/Diamond";
 
 export default function CartContentSummary({
 	products,
@@ -37,6 +38,7 @@ export default function CartContentSummary({
 					sx={{ mb: 3 }}
 				>
 					Balance: {userDetails.balance}
+					<DiamondIcon sx={{ position: "relative", top: "3px", left: "3px" }} />
 				</Typography>
 				<Grid
 					container
@@ -75,7 +77,10 @@ export default function CartContentSummary({
 									<Typography>Ilość: {cartContent[product.id]}</Typography>
 									<Typography>
 										Cena: {cartContent[product.id]} x {product.price} ={" "}
-										{product.price * cartContent[product.id]}zł
+										{product.price * cartContent[product.id]}
+										<DiamondIcon
+											sx={{ position: "relative", top: "6px", left: "3px" }}
+										/>
 									</Typography>
 									{product.bestDiscount ? (
 										<Typography color="red">
@@ -86,7 +91,9 @@ export default function CartContentSummary({
 													(100 - product.bestDiscount)) /
 													100
 											)}
-											zł
+											<DiamondIcon
+												sx={{ position: "relative", top: "6px", left: "3px" }}
+											/>
 										</Typography>
 									) : (
 										""
@@ -122,7 +129,15 @@ export default function CartContentSummary({
 								),
 							0
 						)}
-						zł
+						<DiamondIcon
+							sx={{
+								position: "relative",
+								top: "9px",
+								left: "3px",
+								height: "2em",
+								width: "2em",
+							}}
+						/>
 					</Typography>
 					<Button
 						sx={{ marginY: "16px" }}
