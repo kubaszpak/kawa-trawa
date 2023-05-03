@@ -7,7 +7,7 @@ export const AppDataSource = new DataSource({
 	username: process.env.PGUSER || "postgres",
 	password: process.env.PGPASSWORD || "postgres",
 	database: process.env.PGDATABASE || "postgres",
-	synchronize: true,
+	synchronize: !process.env.PGHOST,
 	logging: true,
 	entities: ["src/entity/*.{js,ts}"],
 });
