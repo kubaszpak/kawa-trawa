@@ -9,9 +9,9 @@ import {
 import ReportIcon from "@mui/icons-material/Report";
 import React from "react";
 import { useState } from "react";
-import API from "../../api/ApiConnector";
 import { REACT_APP_POST_COMPLAINT_ENDPOINT } from "../../config";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function ComplaintModal({ closeComplaintModal, order }) {
 	const [complaintValue, setComplaintValue] = useState("");
@@ -25,7 +25,6 @@ export default function ComplaintModal({ closeComplaintModal, order }) {
 		}
 
 		const body = {
-			date: Date.now(),
 			order: order,
 			description: complaintValue,
 		};
@@ -35,7 +34,7 @@ export default function ComplaintModal({ closeComplaintModal, order }) {
 			url: REACT_APP_POST_COMPLAINT_ENDPOINT,
 			data: body,
 			headers: {
-				authorization: `Bearer ${API.getAccessToken}`,
+				authorization: `Bearer ${Cookies.get("accessToken")}`,
 			},
 		})
 			.then((response) => {
@@ -47,7 +46,7 @@ export default function ComplaintModal({ closeComplaintModal, order }) {
 			})
 			.catch((error) => {
 				console.log("error", error.response.data.error);
-				setError(error.response.data.error);
+				setError(error.response.data?.error);
 			});
 	}
 

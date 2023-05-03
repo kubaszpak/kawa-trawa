@@ -8,4 +8,8 @@ export class CategoriesApi {
     static getCategories() {
         return API.get("/categories/", authHeader());
     }
+
+    static getCategoryList() {
+        return API.get("/categoryList");
+    }
 }

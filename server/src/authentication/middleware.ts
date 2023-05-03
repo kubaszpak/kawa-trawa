@@ -119,6 +119,7 @@ async function tokenMiddleware(
 		console.log(`Recognized user ${firstName} ${lastName}`);
 		return next();
 	} catch (err) {
+		console.error(err);
 		res.status(400).send("Invalid Token");
 		return;
 	}

@@ -39,10 +39,17 @@ export default class ComplaintController {
 	}
 
 	async save(request: Request, response: Response, next: NextFunction) {
-		request.body.user = await this.userRepository.findOne({
+		const user = await this.userRepository.findOne({
 			where: { id: (request as any).userId },
 		});
-		return this.complaintRepository.save(request.body);
+
+		const complaint = {
+			...request.body,
+			date: new Date(),
+			user,
+		};
+
+		return this.complaintRepository.save(complaint);
 	}
 
 	async remove(request: Request, response: Response, next: NextFunction) {

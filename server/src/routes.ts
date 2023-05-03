@@ -194,6 +194,13 @@ export const Routes = [
 	},
 	{
 		method: "get",
+		route: "/categoryList",
+		controller: CategoryController,
+		middleware: [],
+		action: "categoryList",
+	},
+	{
+		method: "get",
 		route: "/categories/:id",
 		controller: CategoryController,
 		middleware: [],

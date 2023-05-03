@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ProductsApi } from "../../api/ProductsApi";
 import {
 	Button,
@@ -14,17 +14,27 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
+import DiamondIcon from "@mui/icons-material/Diamond";
+import { CategoriesApi } from "../../api/CategoriesApi";
 
 const ProductEditor = ({ product, mode, open, setOpen }) => {
-	// const [initialValues, setInitialValues] = useState();
 	const [name, setName] = useState(product.name || "");
 	const [description, setDescription] = useState(product.description || "");
 	const [quantity, setQuantity] = useState(product.quantity || 1);
 	const [price, setPrice] = useState(product.price || 1);
 	const [pathToImage, setPathToImage] = useState(product.pathToImage || "");
-	const [category, setCategory] = useState(1);
+	const [category, setCategory] = useState("");
+	const [categories, setCategories] = useState([]);
 
 	const [error, setError] = useState("");
+
+	useEffect(() => {
+		const fetchCategories = async () => {
+			const categories = await CategoriesApi.getCategoryList();
+			setCategories(categories.data);
+		};
+		fetchCategories();
+	}, []);
 
 	const submitChange = async (fields) => {
 		const APIRequest = getAPIRequest();
@@ -32,10 +42,8 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 
 		try {
 			await APIRequest(payload);
-			console.log("successssss!");
 			closeDialog();
 		} catch (err) {
-			console.log("noooooo");
 			setError("Error");
 		}
 	};
@@ -65,10 +73,6 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 
 		return payload;
 	};
-	const tfStyle = {
-		marginTop: "16px",
-		// width: '500px'
-	};
 
 	return (
 		<Dialog open={open} onClose={closeDialog} fullWidth maxWidth="sm">
@@ -81,7 +85,9 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 				<TextField
 					fullWidth
 					value={name}
-					style={tfStyle}
+					style={{
+						marginTop: "16px",
+					}}
 					label="Nazwa"
 					variant="outlined"
 					onChange={(e) => setName(e.target.value)}
@@ -90,7 +96,9 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 				<TextField
 					fullWidth
 					value={description}
-					style={tfStyle}
+					style={{
+						marginTop: "16px",
+					}}
 					label="Opis"
 					multiline
 					variant="outlined"
@@ -100,7 +108,9 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 				<TextField
 					fullWidth
 					value={quantity}
-					style={tfStyle}
+					style={{
+						marginTop: "16px",
+					}}
 					label="Ilość"
 					multiline
 					variant="outlined"
@@ -110,7 +120,9 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 				<TextField
 					fullWidth
 					value={pathToImage}
-					style={tfStyle}
+					style={{
+						marginTop: "16px",
+					}}
 					label="Ścieżka do zdjęcia"
 					multiline
 					variant="outlined"
@@ -122,21 +134,31 @@ const ProductEditor = ({ product, mode, open, setOpen }) => {
 					fullWidth
 					value={price}
 					onChange={(e) => setPrice(e.target.value)}
-					startAdornment={<InputAdornment position="start">PLN</InputAdornment>}
+					startAdornment={
+						<InputAdornment position="start">
+							<DiamondIcon />
+						</InputAdornment>
+					}
 					label="Cena"
 				/>
 
 				<Select
 					fullWidth
-					style={tfStyle}
+					style={{
+						marginTop: "16px",
+					}}
 					value={category}
 					label="Kategoria"
 					onChange={(e) => setCategory(e.target.value)}
 				>
-					<MenuItem value={2}>Coffee</MenuItem>
-					<MenuItem value={3}>Sub Coffee 1</MenuItem>
-					<MenuItem value={4}>Sub Coffee 2</MenuItem>
-					<MenuItem value={1}>Grass</MenuItem>
+					{categories.length !== 0 &&
+						categories.map((category) => {
+							return (
+								<MenuItem key={category.id} value={category.id}>
+									{category.name}
+								</MenuItem>
+							);
+						})}
 				</Select>
 			</DialogContent>
 

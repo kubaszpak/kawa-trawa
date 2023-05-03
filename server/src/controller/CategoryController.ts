@@ -70,6 +70,10 @@ export default class CategoryController {
 		return this.getAllCategories();
 	}
 
+	async categoryList(request: Request, response: Response, next: NextFunction) {
+		return await this.categoryRepository.find();
+	}
+
 	async one(request: Request, response: Response, next: NextFunction) {
 		let sorted_categories = await this.getAllCategories();
 		return findCategory(sorted_categories, parseInt(request.params.id));
