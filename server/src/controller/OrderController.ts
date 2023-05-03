@@ -106,10 +106,16 @@ export default class OrderController {
 			const productFromDatabase = await this.productRepository.findOne({
 				where: { id: product.id },
 			});
+			if (!productFromDatabase) {
+				response
+					.status(400)
+					.send(`Product ${product.id} does not exist!`);
+					return;
+			}
 			if (productFromDatabase.quantity < product.quantity) {
-				next(
-					new Error(`Product ${product.id} not available in the given quantity`)
-				);
+				response
+					.status(400)
+					.send(`Product ${product.id} not available in the given quantity!`);
 				return;
 			}
 		});
