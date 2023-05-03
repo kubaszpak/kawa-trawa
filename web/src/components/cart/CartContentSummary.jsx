@@ -22,24 +22,32 @@ export default function CartContentSummary({
 	return !!products ? (
 		products.length > 0 ? (
 			<Container maxWidth="lg">
-				<Typography
-					variant="h4"
-					fontWeight="bold"
-					color="white"
-					textAlign={"left"}
-				>
-					{userDetails.email}
-				</Typography>
-				<Typography
-					variant="h5"
-					fontWeight="bold"
-					color="white"
-					textAlign={"left"}
-					sx={{ mb: 3 }}
-				>
-					Balance: {userDetails.balance}
-					<DiamondIcon sx={{ position: "relative", top: "3px", left: "3px" }} />
-				</Typography>
+				{!!userDetails ? (
+					<>
+						<Typography
+							variant="h4"
+							fontWeight="bold"
+							color="white"
+							textAlign={"left"}
+						>
+							{userDetails.email}
+						</Typography>
+						<Typography
+							variant="h5"
+							fontWeight="bold"
+							color="white"
+							textAlign={"left"}
+							sx={{ mb: 3 }}
+						>
+							Balance: {userDetails.balance}
+							<DiamondIcon
+								sx={{ position: "relative", top: "3px", left: "3px" }}
+							/>
+						</Typography>
+					</>
+				) : (
+					""
+				)}
 				<Grid
 					container
 					direction="column"

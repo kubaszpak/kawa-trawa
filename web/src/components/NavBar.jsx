@@ -117,6 +117,8 @@ export default function NavBar({ setAlert }) {
 		Cookies.remove("accountType");
 
 		setIsUserLoggedIn(false);
+		setAccountType(null);
+		setUserDetails(null);
 	};
 
 	const style = {
