@@ -31,6 +31,12 @@ html {
 	color: white;
 }
 
+@media screen and (max-height: 660px) {
+	.App-header {
+		margin-top: 20px;
+	}
+}
+
 .navbar-wrapper {
 	margin-inline: auto;
 	width: min(100% - 3rem, 1280px);

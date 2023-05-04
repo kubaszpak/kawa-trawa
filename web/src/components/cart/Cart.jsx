@@ -41,35 +41,34 @@ export default function Cart({
 		).then((fetchedResponses) => {
 			const [filteredResponses, failedResponses] = partition(
 				fetchedResponses,
-				(response) => response.name !== "Error"
+				(response) => {
+					console.log("response", response);
+					return !!response.data;
+				}
 			);
 			for (const failedResponse of failedResponses) {
-				if (
-					failedResponse.response?.data?.message.includes("has been exceeded")
-				) {
+				if (failedResponse.response?.data?.includes("has been exceeded")) {
 					setAlert({
 						messageType: "error",
 						message:
-							failedResponse.response.data.message +
+							failedResponse.response.data +
 							"! Removing it from the cart!",
 					});
 					const id = /The quantity of the product with id: (\d+)/g.exec(
-						failedResponse.response.data.message
+						failedResponse.response.data
 					)[1];
 					removeItemFromTheCart(id);
 					continue;
 				}
-				if (
-					failedResponse.response?.data?.message.includes("No item with id")
-				) {
+				if (failedResponse.response?.data?.includes("No item with id")) {
 					setAlert({
 						messageType: "error",
 						message:
-							failedResponse.response.data.message +
+							failedResponse.response.data +
 							"! Removing it from the cart!",
 					});
 					const id = /No item with id: (\d+)/g.exec(
-						failedResponse.response.data.message
+						failedResponse.response.data
 					)[1];
 					removeItemFromTheCart(id);
 					continue;
@@ -78,7 +77,10 @@ export default function Cart({
 
 			setProducts(
 				filteredResponses.length !== 0
-					? filteredResponses.map((r) => r.data)
+					? filteredResponses.map((r) => {
+							console.log("Tutaj", r);
+							return r.data;
+					  })
 					: null
 			);
 		});

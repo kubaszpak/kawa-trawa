@@ -26,6 +26,11 @@ function findParent(category: Category, categories: any[]): boolean {
 function findCategory(categories: any[], id: number): any {
 	for (let category of categories) {
 		if (category.id === id) {
+			if (category.children) {
+				for (const child of category.children) {
+					category.products.push(...child.products);
+				}
+			}
 			return category;
 		}
 		if (category.children) {
@@ -76,6 +81,7 @@ export default class CategoryController {
 
 	async one(request: Request, response: Response, next: NextFunction) {
 		let sorted_categories = await this.getAllCategories();
+		console.log(sorted_categories);
 		return findCategory(sorted_categories, parseInt(request.params.id));
 	}
 

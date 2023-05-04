@@ -18,16 +18,23 @@ export default class ProductController {
 				categories: true,
 			},
 		});
-		if (!product) throw new Error("No item with id: " + request.params.id);
+		if (!product) {
+			response.status(400).send("No item with id: " + request.params.id);
+			return;
+		}
 		if (
 			request.params.quantity &&
 			parseInt(request.params.quantity) > product.quantity
-		)
-			throw new Error(
-				"The quantity of the product with id: " +
-					request.params.id +
-					" has been exceeded"
-			);
+		) {
+			response
+				.status(400)
+				.send(
+					"The quantity of the product with id: " +
+						request.params.id +
+						" has been exceeded"
+				);
+			return;
+		}
 
 		// search the categories for the discount that benefits the client the most
 		type ProductWithBestDiscount = Product & { bestDiscount: number };
