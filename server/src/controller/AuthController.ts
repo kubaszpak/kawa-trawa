@@ -201,7 +201,7 @@ export default class AuthController {
 			jwt.verify(token, user.password);
 			response
 				.cookie("resetToken", token, {
-					sameSite: "lax",
+					domain: "up.railway.app",
 				})
 				.redirect(`${process.env.FRONTEND_URL}/passwordResetApply`);
 			return next();
