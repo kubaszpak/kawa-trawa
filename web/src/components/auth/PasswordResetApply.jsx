@@ -19,7 +19,6 @@ export default function PasswordResetApply({ setAlert }) {
 		/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?"()[\]-]{8,25}$/;
 
 	const resetPassword = () => {
-		console.log(changeData);
 		console.log(REACT_APP_PASSWORD_RESET_APPLY_ENDPOINT);
 
 		if (changeData.password.localeCompare(changeData.repeatedPassword) !== 0) {

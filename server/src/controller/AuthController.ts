@@ -201,7 +201,7 @@ export default class AuthController {
 			jwt.verify(token, user.password);
 			response
 				.cookie("resetToken", token, {
-					domain: process.env.FRONTEND_URL.split("//")[1],
+					sameSite: "lax",
 				})
 				.redirect(`${process.env.FRONTEND_URL}/passwordResetApply`);
 			return next();
