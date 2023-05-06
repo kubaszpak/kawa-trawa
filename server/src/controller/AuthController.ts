@@ -199,8 +199,11 @@ export default class AuthController {
 
 		try {
 			jwt.verify(token, user.password);
-			response.cookie("resetToken", token);
-			response.redirect(`${process.env.FRONTEND_URL}/passwordResetApply`);
+			response
+				.cookie("resetToken", token, {
+					domain: process.env.FRONTEND_URL.split("//")[1],
+				})
+				.redirect(`${process.env.FRONTEND_URL}/passwordResetApply`);
 			return next();
 		} catch (err) {
 			response.status(400).send("Invalid Token");
