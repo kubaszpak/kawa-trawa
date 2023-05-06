@@ -30,7 +30,7 @@ export const sendEmail = async (
 	const { text, html } = template.render(data);
 
 	await mailTransport.sendMail({
-		from: "noreply@kawaitrawa.com",
+		from: process.env.EMAIL_FROM || "noreply@kawa-trawa.pl",
 		to: recipients,
 		subject: subject,
 		text: text,
