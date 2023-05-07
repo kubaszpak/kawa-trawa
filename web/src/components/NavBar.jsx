@@ -97,10 +97,10 @@ export default function NavBar({ setAlert }) {
 			return;
 		}
 		setIsUserLoggedIn(true);
-		const { accountType, balance, email } = decode(accessToken);
+		const { accountType, email, id } = decode(accessToken);
 		setUserDetails({
+			id,
 			email,
-			balance,
 		});
 		setAccountType(accountType);
 	}, [isUserLoggedIn, setIsUserLoggedIn, setUserDetails]);

@@ -42,7 +42,6 @@ export default function Cart({
 			const [filteredResponses, failedResponses] = partition(
 				fetchedResponses,
 				(response) => {
-					console.log("response", response);
 					return !!response.data;
 				}
 			);
@@ -51,8 +50,7 @@ export default function Cart({
 					setAlert({
 						messageType: "error",
 						message:
-							failedResponse.response.data +
-							"! Removing it from the cart!",
+							failedResponse.response.data + "! Removing it from the cart!",
 					});
 					const id = /The quantity of the product with id: (\d+)/g.exec(
 						failedResponse.response.data
@@ -64,8 +62,7 @@ export default function Cart({
 					setAlert({
 						messageType: "error",
 						message:
-							failedResponse.response.data +
-							"! Removing it from the cart!",
+							failedResponse.response.data + "! Removing it from the cart!",
 					});
 					const id = /No item with id: (\d+)/g.exec(
 						failedResponse.response.data
@@ -78,7 +75,6 @@ export default function Cart({
 			setProducts(
 				filteredResponses.length !== 0
 					? filteredResponses.map((r) => {
-							console.log("Tutaj", r);
 							return r.data;
 					  })
 					: null

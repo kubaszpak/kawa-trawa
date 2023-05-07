@@ -199,11 +199,17 @@ export default class AuthController {
 
 		try {
 			jwt.verify(token, user.password);
-			response
-				.cookie("resetToken", token, {
-					domain: "up.railway.app",
-				})
-				.redirect(`${process.env.FRONTEND_URL}/passwordResetApply`);
+			if (
+				process.env.EMAIL_DOMAIN &&
+				process.env.EMAIL_DOMAIN === "localhost"
+			) {
+				response.cookie("resetToken", token);
+			} else {
+				response.cookie("resetToken", token, {
+					domain: process.env.EMAIL_DOMAIN || "up.railway.app",
+				});
+			}
+			response.redirect(`${process.env.FRONTEND_URL}/passwordResetApply`);
 			return next();
 		} catch (err) {
 			response.status(400).send("Invalid Token");

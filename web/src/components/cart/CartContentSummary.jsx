@@ -7,8 +7,9 @@ import {
 	Typography,
 } from "@mui/material";
 import { LoginContext } from "../../App";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import DiamondIcon from "@mui/icons-material/Diamond";
+import { UserApi } from "../../api/UserApi";
 
 export default function CartContentSummary({
 	products,
@@ -18,33 +19,50 @@ export default function CartContentSummary({
 	removeItemFromTheCart,
 }) {
 	const { isUserLoggedIn, userDetails } = useContext(LoginContext);
+	const [balance, setBalance] = useState(null);
+
+	useEffect(() => {
+		const fetchUser = async () => {
+			const user = await UserApi.getUser(userDetails.id);
+			setBalance(user.data.balance);
+		};
+		if (isUserLoggedIn && userDetails && userDetails.id !== null) {
+			try {
+				fetchUser();
+			} catch (err) {
+				console.err(err);
+			}
+		}
+	});
 
 	return !!products ? (
 		products.length > 0 ? (
 			<Container maxWidth="lg">
 				{!!userDetails ? (
-					<>
-						<Typography
-							variant="h4"
-							fontWeight="bold"
-							color="white"
-							textAlign={"left"}
-						>
-							{userDetails.email}
-						</Typography>
-						<Typography
-							variant="h5"
-							fontWeight="bold"
-							color="white"
-							textAlign={"left"}
-							sx={{ mb: 3 }}
-						>
-							Balance: {userDetails.balance}
-							<DiamondIcon
-								sx={{ position: "relative", top: "3px", left: "3px" }}
-							/>
-						</Typography>
-					</>
+					<Typography
+						variant="h4"
+						fontWeight="bold"
+						color="white"
+						textAlign={"left"}
+					>
+						{userDetails.email}
+					</Typography>
+				) : (
+					""
+				)}
+				{balance !== null ? (
+					<Typography
+						variant="h5"
+						fontWeight="bold"
+						color="white"
+						textAlign={"left"}
+						sx={{ mb: 3 }}
+					>
+						Balance: {balance}
+						<DiamondIcon
+							sx={{ position: "relative", top: "3px", left: "3px" }}
+						/>
+					</Typography>
 				) : (
 					""
 				)}

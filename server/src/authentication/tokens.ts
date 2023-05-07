@@ -8,7 +8,6 @@ async function generatePayload(user: User) {
 		firstName: user.firstName,
 		lastName: user.lastName,
 		accountType: user.accountType,
-		balance: user.balance,
 	};
 }
 
