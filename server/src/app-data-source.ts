@@ -10,4 +10,5 @@ export const AppDataSource = new DataSource({
 	synchronize: !process.env.PGHOST,
 	logging: true,
 	entities: ["src/entity/*.{js,ts}"],
+	ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
