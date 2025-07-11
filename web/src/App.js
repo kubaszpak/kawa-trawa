@@ -12,127 +12,130 @@ import { useEffect, useState, createContext } from "react";
 import Cart from "./components/cart/Cart";
 import PasswordResetApply from "./components/auth/PasswordResetApply";
 import { Alert, Snackbar } from "@mui/material";
+import axios from "axios";
+
+axios.defaults.timeout = 60_000;
 
 const cartFromLocalStorage = () => {
-	return JSON.parse(localStorage.getItem("cart") || "{}");
+  return JSON.parse(localStorage.getItem("cart") || "{}");
 };
 
 export const LoginContext = createContext(null);
 
 function App() {
-	const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-	const [userDetails, setUserDetails] = useState(null);
-	const [cart, setCart] = useState(cartFromLocalStorage);
-	const [alert, setAlert] = useState({
-		messageType: "success",
-		message: "",
-	});
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
+  const [cart, setCart] = useState(cartFromLocalStorage);
+  const [alert, setAlert] = useState({
+    messageType: "success",
+    message: "",
+  });
 
-	useEffect(() => {
-		localStorage.setItem("cart", JSON.stringify(cart));
-	}, [cart]);
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
-	const addProductToCart = (productId) => {
-		let newCart = {
-			...cart,
-		};
-		if (productId in cart) {
-			newCart[productId] += 1;
-		} else {
-			newCart[productId] = 1;
-		}
-		setCart(newCart);
-		setAlert({ messageType: "success", message: "Produkt dodano do koszyka!" });
-	};
+  const addProductToCart = (productId) => {
+    let newCart = {
+      ...cart,
+    };
+    if (productId in cart) {
+      newCart[productId] += 1;
+    } else {
+      newCart[productId] = 1;
+    }
+    setCart(newCart);
+    setAlert({ messageType: "success", message: "Produkt dodano do koszyka!" });
+  };
 
-	const handleCloseAlert = (event, reason) => {
-		if (reason === "clickaway") {
-			return;
-		}
+  const handleCloseAlert = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-		setAlert({
-			messageType: "success",
-			message: "",
-		});
-	};
+    setAlert({
+      messageType: "success",
+      message: "",
+    });
+  };
 
-	const setAlertBasedOnPromiseResult = async (promise) => {
-		try {
-			await promise;
-			setAlert({
-				messageType: "success",
-				message: "Zamówienie zostało złożone!",
-			});
-			localStorage.setItem("cart", JSON.stringify({}));
-		} catch (err) {
-			setAlert({
-				messageType: "error",
-				message: err.response?.data || "Podczas zamówienia wystąpił błąd!",
-			});
-		}
-	};
+  const setAlertBasedOnPromiseResult = async (promise) => {
+    try {
+      await promise;
+      setAlert({
+        messageType: "success",
+        message: "Zamówienie zostało złożone!",
+      });
+      localStorage.setItem("cart", JSON.stringify({}));
+    } catch (err) {
+      setAlert({
+        messageType: "error",
+        message: err.response?.data || "Podczas zamówienia wystąpił błąd!",
+      });
+    }
+  };
 
-	return (
-		<LoginContext.Provider
-			value={{ isUserLoggedIn, setIsUserLoggedIn, userDetails, setUserDetails }}
-		>
-			<div className="App">
-				<BrowserRouter>
-					<NavBar setAlert={setAlert} />
-					<Routes>
-						<Route path="/" element={<HomePage />} />
-						<Route
-							path="/passwordResetApply"
-							element={<PasswordResetApply setAlert={setAlert} />}
-						/>
-						<Route
-							path="/categories/:categoryId"
-							element={<CategoryPage addProductToCart={addProductToCart} />}
-						/>
-						<Route path="/registerConfirmed" element={<RegisterConfirmed />} />
-						<Route
-							path="/products/:productId"
-							element={
-								<ProductPage
-									addProductToCart={addProductToCart}
-									setAlert={setAlert}
-								/>
-							}
-						/>
-						<Route
-							path="/products/"
-							element={<ProductsPage addProductToCart={addProductToCart} />}
-						/>
-						<Route path="/orders/" element={<OrdersPage />} />
-						<Route
-							path="/cart"
-							element={
-								<Cart
-									cartContent={cart}
-									setAlert={setAlert}
-									setAlertBasedOnPromiseResult={setAlertBasedOnPromiseResult}
-								/>
-							}
-						/>
-						<Route path="*" element={<PageNotFound />} />
-					</Routes>
-					<Snackbar
-						open={alert.message !== ""}
-						onClose={handleCloseAlert}
-						autoHideDuration={6000}
-					>
-						<Alert
-							onClose={handleCloseAlert}
-							severity={alert.messageType}
-							sx={{ width: "100%" }}
-						>
-							{alert.message}
-						</Alert>
-					</Snackbar>
-				</BrowserRouter>
-			</div>
-		</LoginContext.Provider>
-	);
+  return (
+    <LoginContext.Provider
+      value={{ isUserLoggedIn, setIsUserLoggedIn, userDetails, setUserDetails }}
+    >
+      <div className="App">
+        <BrowserRouter>
+          <NavBar setAlert={setAlert} />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/passwordResetApply"
+              element={<PasswordResetApply setAlert={setAlert} />}
+            />
+            <Route
+              path="/categories/:categoryId"
+              element={<CategoryPage addProductToCart={addProductToCart} />}
+            />
+            <Route path="/registerConfirmed" element={<RegisterConfirmed />} />
+            <Route
+              path="/products/:productId"
+              element={
+                <ProductPage
+                  addProductToCart={addProductToCart}
+                  setAlert={setAlert}
+                />
+              }
+            />
+            <Route
+              path="/products/"
+              element={<ProductsPage addProductToCart={addProductToCart} />}
+            />
+            <Route path="/orders/" element={<OrdersPage />} />
+            <Route
+              path="/cart"
+              element={
+                <Cart
+                  cartContent={cart}
+                  setAlert={setAlert}
+                  setAlertBasedOnPromiseResult={setAlertBasedOnPromiseResult}
+                />
+              }
+            />
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+          <Snackbar
+            open={alert.message !== ""}
+            onClose={handleCloseAlert}
+            autoHideDuration={6000}
+          >
+            <Alert
+              onClose={handleCloseAlert}
+              severity={alert.messageType}
+              sx={{ width: "100%" }}
+            >
+              {alert.message}
+            </Alert>
+          </Snackbar>
+        </BrowserRouter>
+      </div>
+    </LoginContext.Provider>
+  );
 }
 
 export default App;
