@@ -98,12 +98,15 @@ export default function Categories({ categories, closeDrawer }) {
             alignItems: "center",
             justifyContent: "center",
             gap: "1rem",
-            textAlign: "center"
+            textAlign: "center",
           }}
         >
           <Typography>
             Hang tight — the serverless backend is waking up from a cold start,
-            so this may take a few extra seconds.<br>If the list doesn’t load within a few seconds, please refresh the page.
+            so this may take a few extra seconds.
+            <br />
+            If the list doesn’t load within a few seconds, please refresh the
+            page.
           </Typography>
           <CircularProgress size={50} />
         </ListItem>
